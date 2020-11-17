@@ -10,13 +10,21 @@ CHANGELOG 1.1:
   * Leaving as a mothership will result in a new one being assigned
   * Players will take damage every second whilst in enemy base
   * Mothership is no longer immune to enemy bases
-  * Added barriers behind the spawns; players will die instantly if it is passed
+  * Added barriers behind the spawns; players will die instantly if they pass it
   * Fixed minor bugs and errors
-NERFS:
-  * Mothership shield capcity (500000->300000)
-
-BUFFS:
-
+BALANCING:   
+  LUNATIC: 
+    * Lunatic Battleship: Energy regen Increase (210->280) + Front cannon & turret fire rate decrease + Turret damage buff
+    * Lunar Blade: Agility Increase (10 > 15) + Shield Cap Increase (1575->1620)
+    * Lunatic Lobos: Acceleration Increase (55 > 75) + Mass Increase (800->900)
+    * Lunatic Tarantula: Added anti-trolling system
+    * Lunatic Falling Star: Mass Increase (580->620) + Laser Pattern Change & damage buff.  
+  SOLARIUM:
+    * Solarium Warder: Energy regen Decrease (200->150)
+    * Solarium Artillery: Energy Cap Decrease (465->415) + Rotation Increase (20->24)
+    * Solar Spear: Rotation Decrease (16->12) + Shield Cap Increase (1405->1505) +  Mass Decrease (890->880)
+    * Solarium Barricade: Shield Cap Increase (925->995) Rotation Decrease (40->28)
+    * Solarium Berserker: Energy Regen Decrease (145->130)
 */
 
 var mothership_health = 300000;
