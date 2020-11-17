@@ -20,6 +20,8 @@ BUFFS:
 */
 
 var mothership_health = 300000;
+var map_size = 150;
+var base_AoE_radius = 90;
 var map =
 "9      6                         6           9             66      6              6      96      9                  6                         6      9\n"+
 "9 9                 6          6       6           9     6    66     9  6    6    9   66    6               9 6       6       9  6       9           9\n"+
@@ -274,7 +276,7 @@ this.options = {
   ships: ships,
   reset_tree: true,
   starting_ship: 801,
-  map_size: 150,
+  map_size: map_size,
   crystal_value: 0,
   asteroids_strength: 1.5,
   radar_zoom: 2,
@@ -705,7 +707,7 @@ function configship(ship,t){
 
 function setup(ship){
   let x = teams.x[ship.custom.team];
-  ship.set({x:x,y:30,stats:88888888,invulnerable:100,shield:9999,crystals:980});
+  ship.set({x:x,y:0,stats:88888888,invulnerable:100,shield:9999,crystals:980});
 }
 
 function isRange(a,b,c){
@@ -743,59 +745,37 @@ function endgame(game, succ, message){
 }
 
 function checkteambase(game){
-  let coords = [
-    [{x:-325,x2:-465,y:-25,y2:115},{x:325,x2:465,y:-25,y2:115}],
-    [{x:-325+15,x2:-465+15,y:-25+15,y2:115-15},{x:325-15,x2:465-15,y:-25+15,y2:115-15}]
-  ];
   for (let ship of game.ships){
-    if (ship.type < 790){
-      let t = ship.custom.team;
-      let u = coords[0][t];
-      if (isRange(u.x,u.x2,ship.x) && isRange(u.y,u.y2,ship.y)){
-        ship.set({invulnerable:100,generator:0});
-        if (game.step > delay)
-        ship.setUIComponent({
-          id: "open",
-          visible: true,
-          clickable: true,
-          shortcut: "0",
-          position: [5,30,10,10],
-          components: [
-            {type:"box",position:[0,0,100,100],fill:"hsla(0, 0%, 10%, 1)",stroke:def_clr,width:5},
-          	{type: "text",position:[9,0,60*1.4,40*1.4],value:"Switch Ship",color:def_clr},
-            {type: "text",position:[20,42,60,40],value:"[0]",color:def_clr},
-          ]
-        });
-      } else {
-        ship.setUIComponent({id:"open",visible:false});
-        selectship(ship,false,true);
-      }
-      let q = 1-ship.custom.team;
-      let w = coords[1][q];
-      if (isRange(w.x,w.x2,ship.x) && isRange(w.y,w.y2,ship.y)){
-        rekt(ship,10*Math.trunc(ship.type/100));
-        ship.setUIComponent({
-          id: "warning",
-          position: [34,20,40,40],
-          visible: true,
-          components: [{type:"text",position:[0,0,80,33],value:"You are in the emeny's base - your ship will take damage!",color:"hsla(0, 88%, 80%, 1)"}]
-        });
-      } else ship.setUIComponent({id:"warning",visible:false});
-    }
-    if (ship.type > 790){
+    let t = ship.custom.team;
+    if (dist2points(ship.x, ship.y, teams.x[t], 0) <= base_AoE_radius && ship.type < 790){
+      ship.set({invulnerable:100,generator:0});
+      if (game.step > delay)
+      ship.setUIComponent({
+        id: "open",
+        visible: true,
+        clickable: true,
+        shortcut: "0",
+        position: [5,30,10,10],
+        components: [
+          {type:"box",position:[0,0,100,100],fill:"hsla(0, 0%, 10%, 1)",stroke:def_clr,width:5},
+          {type: "text",position:[9,0,60*1.4,40*1.4],value:"Switch Ship",color:def_clr},
+          {type: "text",position:[20,42,60,40],value:"[0]",color:def_clr},
+        ]
+      });
+    } else {
       ship.setUIComponent({id:"open",visible:false});
-      let q = 1-ship.custom.team;
-      let w = coords[1][q];
-      if (isRange(w.x,w.x2,ship.x) && isRange(w.y,w.y2,ship.y)){
-        rekt(ship,2000);
-        ship.setUIComponent({
-          id: "warning",
-          position: [34,20,40,40],
-          visible: true,
-          components: [{type:"text",position:[0,0,80,33],value:"You are in the enemy's base - your ship will take damage!",color:"hsl(0, 88%, 80%, 1)"}]
-        });
-      } else ship.setUIComponent({id:"warning",visible:false});
+      selectship(ship,false,true);
     }
+    let q = 1-ship.custom.team;
+    if (dist2points(ship.x, ship.y, teams.x[q], 0) <= base_AoE_radius) {
+      rekt(ship,(ship.type < 790)?(10*Math.trunc(ship.type/100)):2000);
+      ship.setUIComponent({
+        id: "warning",
+        position: [34,20,40,40],
+        visible: true,
+        components: [{type:"text",position:[0,0,80,33],value:"You are in the emeny's base - your ship will take damage!",color:"hsla(0, 88%, 80%, 1)"}]
+      });
+    } else ship.setUIComponent({id:"warning",visible:false});
   }
 }
 
@@ -882,25 +862,27 @@ function getcolor(color,alpha = 1){
   return `hsla(${color},100%,50%,${alpha})`;
 }
 
-var size = 150, zoom = 10/size;
 var transform = {
-  X: x => x+size*5,
-  Y: y => -y+size*5
+  zoom: () => 10/map_size,
+  scale: 1.5,
+  X: x => x+map_size*5,
+  Y: y => -y+map_size*5
 };
 let t = num => Math.max(num,0) || 0;
-var rsize = 15*1.5;
 
 function getRadarInfo(){
-  var data = [];
-  let s = 1.8;
-  for (let i=0;i<2;i++)
+  let zoom = transform.zoom(), rsize = base_AoE_radius*zoom*transform.scale, data = [];
+  for (let i=0;i<2;i++) {
+    let pos = [t(transform.X(teams.x[i])*zoom-rsize),t(transform.Y(0)*zoom-rsize),rsize*2,rsize*2];
     data.push(
-      {type:"text",position:[5+t(transform.X(teams.x[i])*zoom-(rsize/2)),3+t(transform.Y(0)*zoom-(rsize/2)),rsize/2,rsize/2],value:"\u{25ef}",color:getcolor(teams.hues[i])},
-      {type:"text",position:[5+t(transform.X(teams.x[i])*zoom-(rsize/2)),3+t(transform.Y(0)*zoom-(rsize/2)),rsize/2,rsize/2],value:"\u{2b24}",color:getcolor(teams.hues[i])},
-      {type:"text",position:[5+t(transform.X(teams.x[i])*zoom-(rsize/2)),3+t(transform.Y(0)*zoom-(rsize/2)),rsize/2,rsize/2],value:"\u{1f6f0}",color:"hsla(0, 0%, 0%, 1)"}
+      {type:"text",position:pos,value:"\u{25ef}",color:getcolor(teams.hues[i])},
+      {type:"text",position:pos,value:"\u{2b24}",color:getcolor(teams.hues[i])},
+      {type:"text",position:pos,value:"\u{1f6f0}",color:"hsla(0, 0%, 0%, 1)"}
     );
+  }
   return {
     id: "radar_background",
+    position: [0,0,100,100],
     components: [...data]
   };
 }
@@ -911,7 +893,7 @@ function secondary(game){
     let x = Math.cos(Math.random()*Math.PI*2)*15;
     let y = Math.sin(Math.random()*Math.PI*2)*15;
     for (let i=0; i<2; i++)
-    game.addCollectible({code:c[~~(Math.random()*c.length)],x:teams.x[i]+x,y:30+y});
+    game.addCollectible({code:c[~~(Math.random()*c.length)],x:teams.x[i]+x,y:y});
   }
 }
 
@@ -1112,7 +1094,7 @@ var M = {
 game.setObject({
   id: "M-1",
   type: M,
-  position: {x:-400,y:30,z:-50},
+  position: {x:-400,y:0,z:-50},
   scale: {x:15,y:15,z:15},
   rotation: {x:1.2,y:~~(Math.random()*10),z:90}
 });
@@ -1130,7 +1112,7 @@ var M2 = {
 game.setObject({
   id: "M-2",
   type: M2,
-  position: {x:400,y:30,z:-50},
+  position: {x:400,y:0,z:-50},
   scale: {x:15,y:15,z:15},
   rotation: {x:1.2,y:~~(Math.random()*10),z:90}
 });
