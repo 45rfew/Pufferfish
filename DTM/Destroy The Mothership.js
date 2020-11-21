@@ -12,13 +12,13 @@ CHANGELOG 1.1:
   * Mothership is no longer immune to enemy bases
   * Added barriers behind the spawns; players will die instantly if they pass it
   * Fixed minor bugs and errors
-BALANCING:   
-  LUNATIC: 
+BALANCING:
+  LUNATIC:
     * Lunatic Battleship: Energy regen Increase (210->280) + Front cannon & turret fire rate decrease + Turret damage buff
     * Lunar Blade: Agility Increase (10 > 15) + Shield Cap Increase (1575->1620)
     * Lunatic Lobos: Acceleration Increase (55 > 75) + Mass Increase (800->900)
     * Lunatic Tarantula: Added anti-trolling system
-    * Lunatic Falling Star: Mass Increase (580->620) + Laser Pattern Change & damage buff.  
+    * Lunatic Falling Star: Mass Increase (580->620) + Laser Pattern Change & damage buff.
   SOLARIUM:
     * Solarium Warder: Energy regen Decrease (200->150)
     * Solarium Artillery: Energy Cap Decrease (465->415) + Rotation Increase (20->24)
@@ -1072,13 +1072,14 @@ this.event = function(event,game) {
       break;
     case "ship_destroyed":
       let killer = event.killer;
-      killer.frags++;
-      ship.deaths++;
-      killer.set({score:Math.round(killer.score+ship.score/2+2000)});
-      ship.set({score:Math.round(ship.score/2)});
-      if (killer != null) echoc(`${killer.name} killed ${ship.name}`,"#e5ffe5");
-      else {
+      if (killer != null) {
+        killer.frags++;
+        killer.set({score:Math.round(killer.score+ship.score/2+2000)});
+        echoc(`${killer.name} killed ${ship.name}`,"#e5ffe5");
+      }
+      else if (ship != null) {
         echoc(`${ship.name} killed themselves`,"#e5ffe5");
+        ship.deaths++;
         ship.set({score:ship.score/2});
       }
       break;
