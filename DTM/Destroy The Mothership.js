@@ -1075,12 +1075,10 @@ this.event = function(event,game) {
       if (killer != null) {
         killer.frags++;
         killer.set({score:Math.round(killer.score+ship.score/2+2000)});
-        echoc(`${killer.name} killed ${ship.name}`,"#e5ffe5");
       }
-      else if (ship != null) {
-        echoc(`${ship.name} killed themselves`,"#e5ffe5");
+      if (ship != null) {
         ship.deaths++;
-        ship.set({score:ship.score/2});
+        ship.set({score:Math.round(ship.score/2)});
       }
       break;
     case "ship_spawned":
