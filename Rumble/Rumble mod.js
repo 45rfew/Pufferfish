@@ -1687,7 +1687,7 @@ this.event = function(event, game){
         optionopenmenu(ship);
         ship.custom.hasbeenkilled = false;
       }
-      setup(ship);
+      if (ship.custom.team != null) setup(ship);
       update = 1;
       break;
     case "ui_component_clicked":
