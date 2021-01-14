@@ -5,6 +5,7 @@ CREDITS:
 * Coding: 45rfew (with some help from Bhpsngum & Notus)
 * Testing and debugging: 45rfew, Bhpsngum
 * Poster design: Tournebulle
+
 CHANGELOG 1.1:
   * Leaving as a mothership will result in a new one being assigned
   * Players will take damage every second whilst in enemy base
@@ -336,6 +337,7 @@ var mothershipability = {
     if (ship.custom.overdrive) ship.set({shield:ship.shield-1500});
   },
   names: ["Hyperspeed","Missile Swarm","Absolute Kuntrol","Burst Heal","Overdrive"],
+  callers: ["hyperspeed","missile_swarm","absolute_control","burst_heal","overdrive"],
   abilityinfo: function(ship){
     let a = this.names.length;
     for (let i=0; i<a; i++)
@@ -381,14 +383,13 @@ var mothershipability = {
     }
   },
   abilityeffect: function(ship,effect){
-    ship.custom.a[effect].fill = "hsla(0, 100%, 50%, 1)";
-    ship.custom.a[effect].ready = 0;
-    ship.custom.a[effect].clickable = false;
-    if (effect == 0) this.hyperspeed(ship);
-    if (effect == 1) this.missile_swarm(ship);
-    if (effect == 2) this.absolute_control(ship);
-    if (effect == 3) this.burst_heal(ship);
-    if (effect == 4) this.overdrive(ship);
+    if ((ship.custom.a[effect].ready||0) >= 1) {
+      ship.custom.a[effect].fill = "hsla(0, 100%, 50%, 1)";
+      ship.custom.a[effect].ready = 0;
+      ship.custom.a[effect].clickable = false;
+      let caller = this[this.callers[effect]];
+      typeof caller == "function" && caller.call(this, ship);
+    }
   },
   hyperspeed: function(ship){
     ship.set({type:792});
