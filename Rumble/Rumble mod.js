@@ -589,7 +589,7 @@ var maps = [
     "     999     999             999              999       999 \n"+
     "      999     999999999999999999999999999999999999       999\n"+
     "9      999     999999999999999999999999999999999999       99",
-  shipspawn: [{x:-70,y:70},{x:260,y:-260}],
+  shipspawn: [{x:-90,y:-260},{x:260,y:90}],
   radar: {type:"box",width:0,height:0},
   basedmg: [{x:0,x2:0,y:0,y2:0},{x:0,x2:0,y:0,y2:0}]
   },
@@ -1392,7 +1392,7 @@ function setup(ship){
   let level = Math.trunc(ship.type/100); //level = (level<4)?4:level;
   let gems = ((modifier.round_ship_tier**2)*20)/1.5;
   let x = maps[map_id].shipspawn[ship.custom.team].x,
-  y = maps[map_id].shipspawn[Math.abs(ship.custom.team-1)].y,r=0;
+  y = maps[map_id].shipspawn[ship.custom.team].y,r=0;
   ship.set({x:x,y:y,stats:88888888,invulnerable:100,shield:999,crystals:gems});
 }
 
