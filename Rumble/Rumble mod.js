@@ -1481,7 +1481,7 @@ function sort(arr){
 function updatescoreboard(game){
   if (game.step >= delay){
     let t=[[],[]];
-    for (let ship of game.ships) t[ship.team].push(ship);
+    for (let ship of game.ships) t[ship.custom.team].push(ship);
     scoreboard.components = [
       { type:"box",position:[0,0,50,8],fill:getcolor(teams.hues[0])},
       { type: "text",position: [0,0,50,8],color:"#e5e5e5",value: teams.names[0]},
@@ -1507,19 +1507,19 @@ function updatescoreboard(game){
 function outputscoreboard(game,tm){
   let origin =[...scoreboard.components];
   for (let ship of game.ships){
-    let j=0,team=tm[ship.team];
+    let j=0,team=tm[ship.custom.team];
     for (j=0;j<team.length;j++){
       if (ship.id === team[j].id){
-        scoreboard.components.splice((j*2+ship.team)*2+4,0,
-          new PlayerBox(ship.team*50,(j+1)*10)
+        scoreboard.components.splice((j*2+ship.custom.team)*2+4,0,
+          new PlayerBox(ship.custom.team*50,(j+1)*10)
         );
         break;
       }
     }
-    if (j == team.length) scoreboard.components.splice((20+ship.team)*2,2,
-      new PlayerBox(ship.team*50,90),
-      new Tag("text",ship.frags,ship.team*50,90,ship.team,"right",2),
-      new Tag("player",ship.id,ship.team*50,90,ship.team,"left")
+    if (j == team.length) scoreboard.components.splice((20+ship.custom.team)*2,2,
+      new PlayerBox(ship.custom.team*50,90),
+      new Tag("text",ship.frags,ship.custom.team*50,90,ship.custom.team,"right",2),
+      new Tag("player",ship.id,ship.custom.team*50,90,ship.custom.team,"left")
     );
     ship.setUIComponent(scoreboard);
     scoreboard.components = [...origin];
@@ -1669,7 +1669,7 @@ this.event = function(event, game){
     case "ship_destroyed":
       let killer = event.killer;
       if (killer != null) {
-        teams.points[killer.team]++;
+        teams.points[killer.custom.team]++;
         killer.frags++;
         echo(`${killer.name} killed ${ship.name}`);
       } else {
