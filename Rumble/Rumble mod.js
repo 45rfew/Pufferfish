@@ -590,7 +590,7 @@ var maps = [
     "      999     999999999999999999999999999999999999       999\n"+
     "9      999     999999999999999999999999999999999999       99",
   shipspawn: [{x:-90,y:-260},{x:260,y:90}],
-  radar: {type:"box",width:0,height:0},
+  radar: {type:"box",width:10,height:10},
   basedmg: [{x:0,x2:0,y:0,y2:0},{x:0,x2:0,y:0,y2:0}]
   },
   {name: "Heartache", author: "GumZ", map:
@@ -1179,7 +1179,10 @@ var maps = [
   basedmg: [{x:-25,x2:25,y:-225,y2:-275},{x:-25,x2:25,y:225,y2:275}]
   },
 ];
-
+var radar_background = {
+  id: "radar_background",
+  components: [],
+};
 var update = 1;
 var delay = 1*3600;
 var map;
@@ -1366,11 +1369,6 @@ this.tick = function(game){
 function endgame(game){
   game.setOpen(false);
 }
-
-var radar_background = {
-  id: "radar_background",
-  components: [],
-};
 
 var scale_pos = 100 / (this.options.map_size * 10);
 var scale_size = 50 / this.options.map_size;
