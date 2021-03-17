@@ -1180,9 +1180,21 @@ var maps = [
   },
 ];
 
+var update = 1;
+var delay = 1*3600;
+var map;
+if (!game.custom.map) {
+  game.custom.map = maps[Math.trunc(Math.random()*maps.length)];
+  map = game.custom.map;
+  for (let i=0; i<map.shipspawn.length; i++){
+    addRadarSpot(map.shipspawn[i].x,map.shipspawn[i].y,map.radar.type,map.radar.width,map.radar.height,0.3,teams.hues[i]);
+    addRadarSpot(map.shipspawn[i].x,map.shipspawn[i].y,map.radar.type,map.radar.width-2,map.radar.height-2,0.2,teams.hues[i]);
+  }
+}
+else map = game.custom.map; // for debugging
 this.options = {
   vocabulary: vocabulary,
-  custom_map: "",
+  custom_map: map.map,
   soundtrack: music[~~(Math.random()*music.length)],
   weapons_store: false,
   friendly_colors: 2,
@@ -1201,21 +1213,8 @@ this.options = {
   max_level: 1
 };
 
-var update = 1;
-var delay = 1*3600;
-var map_id;
-var map;
 this.tick = function(game){
   modUtils.tick();
-  if (!game.step){
-    map_id = ~~(Math.random()*maps.length);
-    map = maps[map_id];
-    game.setCustomMap(map.map);
-    for (let i=0; i<maps[map_id].shipspawn.length; i++){
-      addRadarSpot(maps[map_id].shipspawn[i].x,maps[map_id].shipspawn[i].y,map.radar.type,map.radar.width,map.radar.height,0.3,teams.hues[i]);
-      addRadarSpot(maps[map_id].shipspawn[i].x,maps[map_id].shipspawn[i].y,map.radar.type,map.radar.width-2,map.radar.height-2,0.2,teams.hues[i]);
-    }
-  }
   if (game.step === delay){
     checkscores(game);
     updatescoreboard(game);
@@ -1391,8 +1390,8 @@ function addRadarSpot (x, y, type, width, height, alpha, color){
 function setup(ship){
   let level = Math.trunc(ship.type/100); //level = (level<4)?4:level;
   let gems = ((modifier.round_ship_tier**2)*20)/1.5;
-  let x = maps[map_id].shipspawn[ship.custom.team].x,
-  y = maps[map_id].shipspawn[ship.custom.team].y,r=0;
+  let x = map.shipspawn[ship.custom.team].x,
+  y = map.shipspawn[ship.custom.team].y,r=0;
   ship.set({x:x,y:y,stats:88888888,invulnerable:100,shield:999,crystals:gems});
 }
 
@@ -1425,8 +1424,8 @@ function isRange(a,b,c){
 function checkteambase(game){
   for (let ship of game.ships){
     let u=1-ship.custom.team;
-    let x = maps[map_id].basedmg[u];
-    let y = maps[map_id].basedmg[u];
+    let x = map.basedmg[u];
+    let y = map.basedmg[u];
     if (isRange(x.x,x.x2,ship.x) && isRange(y.y,y.y2,ship.y)){
       rekt(ship,10*Math.trunc(ship.type/100));
       ship.setUIComponent({
@@ -1555,7 +1554,7 @@ function joinmessage(ship){
     position: [2,88,24,22],
     visible: true,
     components: [
-      {type: "text",position:[0,0,100,50],value:`Map: ${maps[map_id].name} by ${maps[map_id].author}`,color:"#cde"},
+      {type: "text",position:[0,0,100,50],value:`Map: ${map.name} by ${map.author}`,color:"#cde"},
     ]
   });
   modUtils.setTimeout(function(){
