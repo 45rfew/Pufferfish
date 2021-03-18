@@ -105,12 +105,11 @@ var colors = [
   {team:"Green",hue:120,team2:"Purple",hue2:270},
   {team:"Aqua",hue:150,team2:"Orange",hue2:30}
 ];
-
-if (!game.custom.init){
+if (!game.custom.ship_name){
   game.custom.init = true;
   if (modifier.round_ship_tier === "random")
   modifier.round_ship_tier = getRandByRatio(tierratio);
-  var tier = modifier.round_ship_tier,rand_ships,ship_name,yeetus = 4;
+  var tier = modifier.round_ship_tier,ship_name,rand_ships,yeetus = 4;
   switch (modifier.round_ship_tier){
     case 3: yeetus = 3; break; case 4: yeetus = 3; break;
     case 5: yeetus = 3; break; case 7: yeetus = false;
@@ -127,8 +126,9 @@ if (!game.custom.init){
     modifier.kills_to_win = 50;
     modifier.round_timer = 15;
   }
+  game.custom.ship_name = ship_name;
 }
-
+var ship_name = game.custom.ship_name;
 var teams = {
   names: [colors[0].team,colors[0].team2],
   points: [0,0],
@@ -591,7 +591,7 @@ var maps = [
     "9      999     999999999999999999999999999999999999       99",
   shipspawn: [{x:-90,y:-260},{x:260,y:90}],
   radar: {type:"box",width:10,height:10},
-  basedmg: [{x:0,x2:0,y:0,y2:0},{x:0,x2:0,y:0,y2:0}]
+  basedmg: [{x:240,x2:280,y:70,y2:110},{x:-110,x2:-70,y:-280,y2:-240}]
   },
   {name: "Heartache", author: "GumZ", map:
     "999999999999999999999999999999999999999999999999999999999999\n"+
@@ -1179,22 +1179,33 @@ var maps = [
   basedmg: [{x:-25,x2:25,y:-225,y2:-275},{x:-25,x2:25,y:225,y2:275}]
   },
 ];
-var radar_background = {
+game.custom.radar_background = {
   id: "radar_background",
   components: [],
 };
+
+var scale_pos = 100 / (modifier.map_size * 10);
+var scale_size = 50 / modifier.map_size;
+function addRadarSpot (x, y, type, width, height, alpha, color){
+  game.custom.radar_background.components.push({
+    type: type,
+    position: [
+      50+x*scale_pos-width*scale_size/2,
+      50-y*scale_pos-height*scale_size/2,
+      width*scale_size, height*scale_size,
+    ],
+    fill:`hsla(${color},100%,50%,${alpha})`
+  });
+}
+
 var update = 1;
 var delay = 1*3600;
-var map;
-if (!game.custom.map) {
-  game.custom.map = maps[Math.trunc(Math.random()*maps.length)];
-  map = game.custom.map;
-  for (let i=0; i<map.shipspawn.length; i++){
-    addRadarSpot(map.shipspawn[i].x,map.shipspawn[i].y,map.radar.type,map.radar.width,map.radar.height,0.3,teams.hues[i]);
-    addRadarSpot(map.shipspawn[i].x,map.shipspawn[i].y,map.radar.type,map.radar.width-2,map.radar.height-2,0.2,teams.hues[i]);
-  }
+if (!game.custom.map) game.custom.map = maps.find(map => map.name == "Stadium 2.0")/*maps[Math.trunc(Math.random()*maps.length)]*/;
+var map = game.custom.map; // for debugging
+for (let i=0; i<map.shipspawn.length; i++){
+  addRadarSpot(map.shipspawn[i].x,map.shipspawn[i].y,map.radar.type,map.radar.width,map.radar.height,0.3,teams.hues[i]);
+  addRadarSpot(map.shipspawn[i].x,map.shipspawn[i].y,map.radar.type,map.radar.width-2,map.radar.height-2,0.2,teams.hues[i]);
 }
-else map = game.custom.map; // for debugging
 this.options = {
   vocabulary: vocabulary,
   custom_map: map.map,
@@ -1240,7 +1251,7 @@ this.tick = function(game){
         ship.deaths = 0;
         setteam(ship);
         setup(ship);
-        ship.setUIComponent(radar_background);
+        ship.setUIComponent(game.custom.radar_background);
         echo(`${ship.name} spawned`);
         if (!game.custom.delayed){
           game.custom.delayed = true;
@@ -1370,26 +1381,12 @@ function endgame(game){
   game.setOpen(false);
 }
 
-var scale_pos = 100 / (this.options.map_size * 10);
-var scale_size = 50 / this.options.map_size;
-
-function addRadarSpot (x, y, type, width, height, alpha, color){
-  radar_background.components.push({
-    type: type,
-    position: [
-      50+x*scale_pos-width*scale_size/2,
-      50+y*scale_pos-height*scale_size/2,
-      width*scale_size, height*scale_size,
-    ],
-    fill:`hsla(${color},100%,50%,${alpha})`,
-  });
-}
-
 function setup(ship){
+  let t = ship.custom.team;
   let level = Math.trunc(ship.type/100); //level = (level<4)?4:level;
   let gems = ((modifier.round_ship_tier**2)*20)/1.5;
-  let x = map.shipspawn[ship.custom.team].x,
-  y = map.shipspawn[ship.custom.team].y,r=0;
+  let x = map.shipspawn[t].x,
+  y = map.shipspawn[t].y,r=0;
   ship.set({x:x,y:y,stats:88888888,invulnerable:100,shield:999,crystals:gems});
 }
 
@@ -1421,7 +1418,7 @@ function isRange(a,b,c){
 
 function checkteambase(game){
   for (let ship of game.ships){
-    let u=1-ship.custom.team;
+    let u = ship.custom.team;
     let x = map.basedmg[u];
     let y = map.basedmg[u];
     if (isRange(x.x,x.x2,ship.x) && isRange(y.y,y.y2,ship.y)){
@@ -1662,7 +1659,7 @@ function removemenu(ship){
 
 this.event = function(event, game){
   let ship = event.ship;
-  switch (event.name){
+  if (ship != null) switch (event.name){
     case "ship_destroyed":
       let killer = event.killer;
       if (killer != null) {
@@ -1677,7 +1674,7 @@ this.event = function(event, game){
       update = 1;
       ship.custom.hasbeenkilled = true;
       echo(`${teams.names[0]}:${teams.points[0]},${teams.names[1]}:${teams.points[1]}`);
-    break;
+      break;
     case "ship_spawned":
       if (ship.custom.hasbeenkilled === true){
         ship.custom.buttons = true;
