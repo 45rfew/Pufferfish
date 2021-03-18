@@ -264,9 +264,9 @@ var maps = [
     "9999    99999       99999997    79999999       99999    9999\n"+
     "9999    99999        99999        99999        99999    9999\n"+
     "9999    99999        99999        99999        99999    9999",
-  shipspawn: [{x:-248,y:0},{x:248,y:0}],
+  shipspawn: [{x:-250,y:0},{x:250,y:0}],
   radar: {type:"box",width:10,height:10},
-  basedmg: [{x:-165,x2:-215,y:25,y2:-25},{x:165,x2:215,y:25,y2:-25}]
+  basedmg: [{x:-270,x2:-230,y:-40,y2:40},{x:230,x2:270,y:-40,y2:40}]
   },
   {name: "Slides", author: "Healer", map:
     "999999999999999999999999999999999999999999999999999999999999\n"+
@@ -329,7 +329,7 @@ var maps = [
     "9   999   9999    9999    999  99              9999999999  9\n"+
     "9          999999999999999999  999999999999999999          9\n"+
     "999999999999999999999999999999999999999999999999999999999999",
-  shipspawn: [{x:-220,y:-220},{x:220,y:220}],
+  shipspawn: [{x:-220,y:220},{x:220,y:-220}],
   radar: {type:"box",width:8,height:8},
   basedmg: [{x:-200,x2:-235,y:200,y2:240},{x:200,x2:235,y:-200,y2:-240}]
   },
@@ -394,7 +394,7 @@ var maps = [
     "                                                            \n"+
     "                                                            \n"+
     "                                                            ",
-  shipspawn: [{x:-204,y:185},{x:204,y:-185}],
+  shipspawn: [{x:-204,y:-185},{x:204,y:185}],
   radar: {type:"round",width:15,height:15},
   basedmg: [{x:-175,x2:-230,y:-150,y2:-215},{x:175,x2:230,y:150,y2:215}]
   },
@@ -461,7 +461,7 @@ var maps = [
     "999999999999999999999999999999999999999999999999999999999999",
   shipspawn: [{x:0,y:-255},{x:0,y:255}],
   radar: {type:"box",width:13,height:7},
-  basedmg: [{x:-30,x2:30,y:240,y2:270},{x:-30,x2:30,y:-240,y2:-270}]
+  basedmg: [{x:-30,x2:30,y:-240,y2:-270},{x:-30,x2:30,y:240,y2:270}]
   },
   {name: "Barriers", author: "Healer", map:
     "9999999999       9999999999      9999999999       9999999999\n"+
@@ -591,7 +591,7 @@ var maps = [
     "9      999     999999999999999999999999999999999999       99",
   shipspawn: [{x:-90,y:-260},{x:260,y:90}],
   radar: {type:"box",width:10,height:10},
-  basedmg: [{x:240,x2:280,y:70,y2:110},{x:-110,x2:-70,y:-280,y2:-240}]
+  basedmg: [{x:-110,x2:-70,y:-280,y2:-240},{x:240,x2:280,y:70,y2:110}]
   },
   {name: "Heartache", author: "GumZ", map:
     "999999999999999999999999999999999999999999999999999999999999\n"+
@@ -719,9 +719,9 @@ var maps = [
     "99999999999 555555 595    99999999    995 555555 99999999999\n"+
     "999999999999999999999999999999999999999999999999999999999999\n"+
     "999999999999999999999999999999999999999999999999999999999999",
-  shipspawn: [{x:-240,y:-240},{x:240,y:240}],
+  shipspawn: [{x:-240,y:240},{x:240,y:-240}],
   radar: {type:"box",width:8,height:8},
-  basedmg: [{x:0,x2:0,y:0,y2:0},{x:0,x2:0,y:0,y2:0}]
+  basedmg: [{x:-220,x2:-260,y:220,y2:260},{x:220,x2:260,y:-220,y2:-260}]
   },
   {name: "Butterfly", author: "Healer", map:
     "   99999  9999999     999999    999999     9999999  99999   \n"+
@@ -786,7 +786,7 @@ var maps = [
     "   99999  9999999     999999    999999     9999999  99999   ",
   shipspawn: [{x:0,y:-250},{x:0,y:250}],
   radar: {type:"box",width:10,height:10},
-  basedmg: [{x:25,x2:-25,y:215,y2:255},{x:25,x2:-25,y:-215,y2:-255}]
+  basedmg: [{x:25,x2:-25,y:-215,y2:-255},{x:25,x2:-25,y:215,y2:255}]
   },
   {name: "Duality", author: "crispybreads", map:
     "999999999999999999999999999999999999999999999999999999999999\n"+
@@ -849,9 +849,9 @@ var maps = [
     "99                                  99999                 99\n"+
     "999999999999999999999999999999999999999999999999999999999999\n"+
     "999999999999999999999999999999999999999999999999999999999999",
-  shipspawn: [{x:-220,y:220},{x:220,y:-220}],
+  shipspawn: [{x:-220,y:-220},{x:220,y:220}],
   radar: {type:"box",width:12,height:12},
-  basedmg: [{x:-190,x2:-250,y:-190,y2:250},{x:190,x2:250,y:190,y2:250}]
+  basedmg: [{x:-190,x2:-250,y:-190,y2:-250},{x:190,x2:250,y:190,y2:250}]
   },
   {name: "Dominus", author: "SChickenMan", map:
     "999999999999999999999999999999999999999999999999999999999999\n"+
@@ -914,7 +914,7 @@ var maps = [
     "9                       99                          999999 9\n"+
     "9                       999999999999999999999999999999     9\n"+
     "999999999999999999999999999999999999999999999999999999999999",
-  shipspawn: [{x:-220,y:-220},{x:220,y:220}],
+  shipspawn: [{x:-220,y:220},{x:220,y:-220}],
   radar: {type:"box",width:8,height:8},
   basedmg: [{x:-200,x2:-235,y:200,y2:240},{x:200,x2:235,y:-200,y2:-240}]
   },
@@ -1044,9 +1044,9 @@ var maps = [
     " 9 99  9  9             999      999             9  99      \n"+
     " 999 99999999   99999  999        999  99999   99999999     \n"+
     "9   99   999 9999    9999          9999    9999 999   99    ",
-  shipspawn: [{x:220,y:-220},{x:-220,y:220}],
+  shipspawn: [{x:-220,y:-220},{x:220,y:220}],
   radar: {type:"box",width:8,height:8},
-  basedmg: [{x:200,x2:235,y:200,y2:240},{x:-200,x2:-235,y:-200,y2:-240}]
+  basedmg: [{x:-200,x2:-235,y:-200,y2:-240},{x:200,x2:235,y:200,y2:240}]
   },
   {name: "Passages", author: "Healer", map:
     "9   99   99999999     999999    999999     99999999   99   9\n"+
@@ -1109,7 +1109,7 @@ var maps = [
     " 9 99  9  9                                      9  9  99 9 \n"+
     " 999 9999999    9999999     9999     9999999    9999999 999 \n"+
     "9   99   99999999     999999    999999     99999999   99   9",
-  shipspawn: [{x:0,y:250},{x:0,y:-250}],
+  shipspawn: [{x:0,y:-250},{x:0,y:250}],
   radar: {type:"box",width:5,height:5},
   basedmg: [{x:-15,x2:15,y:-235,y2:-265},{x:-15,x2:15,y:235,y2:265}]
   },
@@ -1174,11 +1174,12 @@ var maps = [
     "99999                                                  99999\n"+
     "999999                                                999999\n"+
     "999999999999999999999999999999999999999999999999999999999999",
-  shipspawn: [{x:0,y:250},{x:0,y:-250}],
+  shipspawn: [{x:0,y:-250},{x:0,y:250}],
   radar: {type:"box",width:10,height:10},
   basedmg: [{x:-25,x2:25,y:-225,y2:-275},{x:-25,x2:25,y:225,y2:275}]
   },
 ];
+
 game.custom.radar_background = {
   id: "radar_background",
   components: [],
@@ -1200,7 +1201,7 @@ function addRadarSpot (x, y, type, width, height, alpha, color){
 
 var update = 1;
 var delay = 1*3600;
-if (!game.custom.map) game.custom.map = maps.find(map => map.name == "Stadium 2.0")/*maps[Math.trunc(Math.random()*maps.length)]*/;
+if (!game.custom.map) game.custom.map = maps[Math.trunc(Math.random()*maps.length)];
 var map = game.custom.map; // for debugging
 for (let i=0; i<map.shipspawn.length; i++){
   addRadarSpot(map.shipspawn[i].x,map.shipspawn[i].y,map.radar.type,map.radar.width,map.radar.height,0.3,teams.hues[i]);
@@ -1418,7 +1419,7 @@ function isRange(a,b,c){
 
 function checkteambase(game){
   for (let ship of game.ships){
-    let u = ship.custom.team;
+    let u = 1 - ship.custom.team;
     let x = map.basedmg[u];
     let y = map.basedmg[u];
     if (isRange(x.x,x.x2,ship.x) && isRange(y.y,y.y2,ship.y)){
