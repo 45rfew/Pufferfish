@@ -5,7 +5,6 @@ CREDITS:
 * Coding: 45rfew (with some help from Bhpsngum & Notus)
 * Testing and debugging: 45rfew, Bhpsngum
 * Poster design: Tournebulle
-
 CHANGELOG 1.1:
   * Leaving as a mothership will result in a new one being assigned
   * Players will take damage every second whilst in enemy base
@@ -25,6 +24,8 @@ BALANCING:
     * Solar Spear: Rotation Decrease (16->12) + Shield Cap Increase (1405->1505) +  Mass Decrease (890->880)
     * Solarium Barricade: Shield Cap Increase (925->995) Rotation Decrease (40->28)
     * Solarium Berserker: Energy Regen Decrease (145->130)
+CHANGELOG 1.1.5:
+  * Motherships can no longer camp inside their base
 */
 
 var mothership_health = 300000;
@@ -755,7 +756,7 @@ function endgame(game, succ, message){
 function checkteambase(game){
   for (let ship of game.ships){
     let t = ship.custom.team;
-    if (dist2points(ship.x, ship.y, teams.x[t], 0) <= base_AoE_radius && ship.type < 790){
+    if (dist2points(ship.x, ship.y, teams.x[t], 0) <= base_AoE_radius && ship.type < 780){
       ship.set({invulnerable:100,generator:0});
       if (game.step > delay)
       ship.setUIComponent({
@@ -770,12 +771,21 @@ function checkteambase(game){
           {type: "text",position:[20,42,60,40],value:"[0]",color:def_clr},
         ]
       });
-    } else {
+    } else if (dist2points(ship.x, ship.y, teams.x[t], 0) <= base_AoE_radius && ship.type > 780){
+      if (game.step-delay > 3600/2){
+        rekt(ship,mothership_health/120);
+        ship.setUIComponent({
+          id: "warnin",
+          position: [28,20,40*1.4,40],
+          visible: true,
+          components: [{type:"text",position:[0,0,80,33*1.4],value:"Camping in your base ruins the game for others - your ship will take damage whilst inside the base!",color:"hsla(0, 88%, 80%, 1)"}]
+        });              
+      } 
       ship.setUIComponent({id:"open",visible:false});
       selectship(ship,false,true);
-    }
+    } else ship.setUIComponent({id:"warnin",visible:false});
     let q = 1-ship.custom.team;
-    if (dist2points(ship.x, ship.y, teams.x[q], 0) <= base_AoE_radius) {
+    if (dist2points(ship.x, ship.y, teams.x[q], 0) <= base_AoE_radius){
       rekt(ship,(ship.type < 790)?(10*Math.trunc(ship.type/100)):2000);
       ship.setUIComponent({
         id: "warning",
@@ -931,10 +941,10 @@ function shortestPath(x1, y1, x2, y2, wrapV = true, wrapH = true){
   var coords = [];
   var xx = x2-x1;
   var yy = y2-y1;
-  if(!wrapH&&!wrapV)return [xx, yy];
+  if (!wrapH&&!wrapV) return [xx, yy];
   coords.push(xx, yy);
   var shortest = [xx, yy];
-  if(wrapH){
+  if (wrapH){
     xx = x2+map_size*2-x1;
     yy = y2-y1;
     coords.push(xx, yy);
@@ -942,7 +952,7 @@ function shortestPath(x1, y1, x2, y2, wrapV = true, wrapH = true){
     yy = y2-y1;
     coords.push(xx, yy);
   }
-  if(wrapV){
+  if (wrapV){
     xx = x2-x1;
     yy = y2+map_size*2-y1;
     coords.push(xx, yy);
@@ -950,7 +960,7 @@ function shortestPath(x1, y1, x2, y2, wrapV = true, wrapH = true){
     yy = y2-map_size*2-y1;
     coords.push(xx, yy);
   }
-  if(wrapV&&wrapH){
+  if (wrapV&&wrapH){
     xx = x2+map_size*2-x1;
     yy = y2+map_size*2-y1;
     coords.push(xx, yy);
@@ -964,7 +974,7 @@ function shortestPath(x1, y1, x2, y2, wrapV = true, wrapH = true){
     yy = y2-map_size*2-y1;
     coords.push(xx, yy);
   }
-  for(var i = 0; i<9; i++){
+  for (var i = 0; i<9; i++){
     var dist = sqrDist(coords[i*2], coords[i*2+1]);
     if(dist<shortestDist){
       shortestDist = dist;
