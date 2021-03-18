@@ -1223,7 +1223,7 @@ this.options = {
   choose_ship: chooseships,
   release_crystal: modifier.yeet_gems,
   hues: [colors[0].hue,colors[0].hue2],
-  asteroids_strength: 69420,
+  asteroids_strength: 1e6,
   crystal_drop: 0,
   max_level: 1
 };
@@ -1566,7 +1566,7 @@ function joinmessage(ship){
     });
     modUtils.setTimeout(function(){
       ship.setUIComponent({id:"yeet2",visible:false});
-    },60);
+    },300);
   },480);
 }
 
