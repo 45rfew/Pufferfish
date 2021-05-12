@@ -771,9 +771,13 @@ function checkteambase(game){
           {type: "text",position:[20,42,60,40],value:"[0]",color:def_clr},
         ]
       });
-    } else if (dist2points(ship.x, ship.y, teams.x[t], 0) <= base_AoE_radius && ship.type > 780){
+    } else {
+      ship.setUIComponent({id:"open",visible:false});
+      selectship(ship,false,true);      
+    }
+    if (dist2points(ship.x, ship.y, teams.x[t], 0) <= base_AoE_radius && ship.type > 780){
       if (game.step-delay > 3600/2){
-        rekt(ship,mothership_health/120);
+        rekt(ship,mothership_health/150);
         ship.setUIComponent({
           id: "warnin",
           position: [28,20,40*1.4,40],
