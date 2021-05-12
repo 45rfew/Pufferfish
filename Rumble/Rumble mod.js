@@ -76,6 +76,7 @@ function findShipCode(name){
   for (let i=0;i<ships_list.length;i++)
   for (let j=0;j<ships_list[i].length;j++)
   if (ships_list[i][j] == name) return (i+3)*100+j+1;
+  return null;
 }
 
 function shuffle(array,yeetus){
@@ -1261,7 +1262,11 @@ this.tick = function(game){
         if (game.step > delay){
           joinmessage(ship);}
         else {ship.custom.wait = true;}
-      } teams.count[ship.custom.team]++;
+        ship.custom.rand = ["","",""];
+        ship.custom.buttons = false;
+      }
+      checkButtons(ship);
+      teams.count[ship.custom.team]++;
       (ship.score != ship.frags) && ship.set({score:ship.frags});
     }
     if (game.step < delay){
@@ -1570,49 +1575,14 @@ function joinmessage(ship){
   },480);
 }
 
-function checkButtons(ship){
-  if (!ship.custom.buttons){
-    ship.setUIComponent({id:"open",visible:false});
-    ship.setUIComponent({id:"heal",visible:false});
-    for (let i=0;i<9;i++){ ship.setUIComponent({id:ship_name[i],visible:false});}
-    ship.setUIComponent({id:"close",visible:false});
-  }
-}
-
-function optionopenmenu(ship){
-  addShipSelection(ship);
-  ship.custom.rand = shuffle(ship_name);
-  (modifier.healer_button) && confighealing(ship);
-  echo("Opened");
-  modUtils.setTimeout(function(){
-    ship.custom.buttons = false;
-    checkButtons(ship);
-  },540);
-}
-
-function confighealing(ship) {
-  ship.setUIComponent({
-    id: "heal",
-    position: [3,42,16,20/2],
-    visible: true,
-    clickable: true,
-    shortcut: "J",
-    components: [
-      {type: "box",position:[0,0,88,40*2],stroke:"#191919",fill:"#333333",width:5},
-      {type: "text",position:[6,4,88/1.2,40/1.2*2],value:`${(ship.healing)?"Attacker":"Healer"} [J]`,color:"#cde"},
-    ]
-  });
-}
-
-function addMenu(ship){
+function checkButtons(ship) {
   let shortcut = ["5","6","7"];
   for (let i=0; i<3; i++){
-    ship.setUIComponent({id:"open",visible:false});
     ship.setUIComponent({
-      id: ship.custom.rand[i],
+      id: "ship_selection_"+i,
       position: [36,26+i*7,34,18/2],
-      visible: true,
-      clickable: true,
+      visible: ship.custom.buttons&&ship.custom.opened,
+      clickable: ship.custom.buttons&&ship.custom.opened,
       shortcut: shortcut[i],
       components: [
         {type: "box",position:[0,0,88,40*2],stroke:"#191919",fill:"#333333",width:5},
@@ -1620,42 +1590,39 @@ function addMenu(ship){
       ]
     });
   }
-}
-
-function drawmenu(ship){
-  addMenu(ship);
   ship.setUIComponent({
     id: "close",
     position: [43,26+4*7,34/2,18/2],
-    visible: true,
-    clickable: true,
+    visible: ship.custom.buttons&&ship.custom.opened,
+    clickable: ship.custom.buttons&&ship.custom.opened,
     shortcut: "4",
     components: [
       {type: "box",position:[0,0,88,40*2],stroke:"#191919",fill:"#333333",width:5},
       {type: "text",position:[0,4,88/1.2,40/1.2*2],value:"    Close [4]",color:"#cde"},
     ]
   });
-}
-
-function addShipSelection(ship){
   ship.setUIComponent({
     id: "open",
     position: [3,33,16,20/2],
-    visible: true,
-    clickable: true,
+    visible: ship.custom.buttons&&!ship.custom.opened,
+    clickable: ship.custom.buttons&&!ship.custom.opened,
     shortcut: "4",
     components: [
       {type: "box",position:[0,0,88,40*2],stroke:"#191919",fill:"#333333",width:5},
       {type: "text",position:[6,4,88/1.2,40/1.2*2],value:"Select ship [4]",color:"#cde"},
     ]
   });
-}
-
-function removemenu(ship){
-  for (let i=0; i<9; i++){
-    ship.setUIComponent({id:ship_name[i],visible:false});
-  }
-  ship.setUIComponent({id:"close",visible:false});
+  ship.setUIComponent({
+    id: "heal",
+    position: [3,42,16,20/2],
+    visible: ship.custom.buttons&&modifier.healer_button,
+    clickable: ship.custom.buttons&&modifier.healer_button,
+    shortcut: "J",
+    components: [
+      {type: "box",position:[0,0,88,40*2],stroke:"#191919",fill:"#333333",width:5},
+      {type: "text",position:[6,4,88/1.2,40/1.2*2],value:`${(ship.healing)?"Offensive":"Healing"} [J]`,color:"#cde"},
+    ]
+  });
 }
 
 this.event = function(event, game){
@@ -1678,29 +1645,37 @@ this.event = function(event, game){
       break;
     case "ship_spawned":
       if (ship.custom.hasbeenkilled === true){
+        ship.custom.rand = shuffle(ship_name);
         ship.custom.buttons = true;
-        optionopenmenu(ship);
+        ship.custom.opened = false;
+        modUtils.setTimeout(function(){
+          ship.custom.buttons = false;
+        },540);
         ship.custom.hasbeenkilled = false;
       }
       if (ship.custom.team != null) setup(ship);
       update = 1;
       break;
     case "ui_component_clicked":
-      let component = event.id;
-      switch (component){
-        case "open": drawmenu(ship); break;
-        case "heal": confighealing(ship);ship.set({healing:!ship.healing});
-          ship.setUIComponent({id:"heal",visible:false}); break;
-        case "close": removemenu(ship);addShipSelection(ship); break;
-        default:
-          ship.set({type:findShipCode(component),stats:88888888,shield:1,generator:0,idle:true});
-          removemenu(ship);
-          modUtils.setTimeout(function(){
-            ship.set({idle:false,shield:999});
-          },120);
-        break;
+      if (ship.custom.buttons) {
+        let component = event.id;
+        switch (component){
+          case "open": ship.custom.opened = true; break;
+          case "heal": ship.set({healing:!ship.healing}); break;
+          case "close": ship.custom.opened = false; break;
+          default:
+            if (component.startsWith("ship_selection_") && ship.custom.opened) {
+              let ship_code = findShipCode(ship.custom.rand[parseInt(component.replace(/^ship_selection_/,"")) || 0]);
+              if (ship_code) {
+                ship.set({type:ship_code,stats:88888888,shield:999,generator:0,idle:true});
+                modUtils.setTimeout(function(){
+                  ship.set({idle:false});
+                },120);
+              }
+            }
+          break;
+        }
       }
-      checkButtons(ship);
     break;
   }
 };
