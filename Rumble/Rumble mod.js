@@ -112,14 +112,14 @@ if (!game.custom.ship_name){
   modifier.round_ship_tier = getRandByRatio(tierratio);
   var tier = modifier.round_ship_tier,ship_name,rand_ships,ship_choices = 4;
   switch (modifier.round_ship_tier){
-    case 3: 
-    case 4: 
-      ship_choices = 3; 
+    case 3:
+    case 4:
+      ship_choices = 3;
       break;
-    case 5: 
-      ship_choices = 3; 
+    case 5:
+      ship_choices = 3;
       break;
-    case 7: 
+    case 7:
       ship_choices = false;
     break;
   }
@@ -1230,6 +1230,7 @@ this.tick = function(game){
         if (!game.custom.ended2){
           game.custom.ended2 = true;
           endgame(game);
+          game.ships.forEach(ship => ship.set({collider: false}));
           game.setUIComponent({
             id: "end",
             position: [39,18,42,40],
@@ -1605,7 +1606,7 @@ this.event = function(event, game){
               if (ship_code){
                 if (ship.type != ship_code) ship.set({type:ship_code,stats:88888888,shield:999,collider:true});
               }
-              ship.custom.opened = false; 
+              ship.custom.opened = false;
               checkButtons(ship);
             }
           break;
