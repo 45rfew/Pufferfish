@@ -1,3 +1,4 @@
+
 //Thanks to Destroy & Dimed for the idea & Bhpsngum for code help
 //Based on Team Rumble from Fortnite
 var modifier = {
@@ -1136,8 +1137,8 @@ function addRadarSpot (x, y, type, width, height, alpha, color){
 }
 
 var update = 1;
-var delay = 1*3600;
-if (!game.custom.map) game.custom.map = maps[Math.trunc(Math.random()*maps.length)];
+var delay = .1*3600;
+if (!game.custom.map) game.custom.map = maps[9]//maps[Math.trunc(Math.random()*maps.length)];
 var map = game.custom.map; // for debugging
 for (let i=0; i<map.shipspawn.length; i++){
   addRadarSpot(map.shipspawn[i].x,map.shipspawn[i].y,map.radar.type,map.radar.width,map.radar.height,0.3,teams.hues[i]);
@@ -1330,7 +1331,7 @@ function setup(ship){
   let gems = ((modifier.round_ship_tier**2)*20)/1.5;
   let x = map.shipspawn[t].x,
   y = map.shipspawn[t].y,r=0;
-  ship.set({x:x,y:y,stats:88888888,invulnerable:100,shield:999,crystals:gems});
+  ship.set({x:x,y:y,stats:88888888,invulnerable:300,shield:999,crystals:gems});
 }
 
 function setteam(ship){
@@ -1343,7 +1344,7 @@ function setteam(ship){
 }
 
 function configship(ship,t){
-  ship.set({hue:teams.hues[t],team:t,invulnerable:100,stats:88888888});
+  ship.set({hue:teams.hues[t],team:t,invulnerable:300,stats:88888888});
 }
 
 function rekt(ship,num){
