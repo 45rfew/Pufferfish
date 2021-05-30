@@ -1504,7 +1504,7 @@ function joinmessage(ship){
   });
   modUtils.setTimeout(function(){
     sendUI(ship, {id:"join",visible:false});
-    /*sendUI(ship, {
+    sendUI(ship, {
       id: "tips",
       position: [36,16,34,32],
       visible: true,
@@ -1515,7 +1515,7 @@ function joinmessage(ship){
     });
     modUtils.setTimeout(function(){
       sendUI(ship, {id:"tips",visible:false});
-    },300);*/
+    },300);
   },480);
 }
 
