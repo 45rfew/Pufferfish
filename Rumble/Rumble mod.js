@@ -34,6 +34,12 @@ var modUtils = {
     }
   }
 };
+var sendUI = function(ship, UI) {
+  if (ship != null) {
+    if (UI.visible || typeof UI.visible == "undefined") ship.setUIComponent(UI);
+    else ship.setUIComponent({id: UI.id, position: [0,0,0,0], visible: false})
+  }
+}
 
 var a = {};
 a.Barracuda = '{"name":"Barracuda","level":6,"model":7,"size":2.4,"specs":{"shield":{"capacity":[300,400],"reload":[8,12]},"generator":{"capacity":[100,150],"reload":[8,14]},"ship":{"mass":550,"speed":[70,90],"rotation":[30,45],"acceleration":[130,150],"dash":{"rate":2,"burst_speed":[160,180],"speed":[100,130],"acceleration":[70,70],"initial_energy":[50,75],"energy":[20,30]}}},"bodies":{"body":{"section_segments":12,"offset":{"x":0,"y":0,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[-90,-100,-60,-10,0,20,50,80,100,90],"z":[0,0,0,0,0,0,0,0,0,0,0]},"width":[0,5,20,25,35,40,40,35,30,0],"height":[0,5,40,45,40,60,70,60,30,0],"texture":[10,2,10,2,3,13,13,63,12],"propeller":true},"front":{"section_segments":8,"offset":{"x":0,"y":-20,"z":0},"position":{"x":[0,0,0,0,0],"y":[-90,-85,-70,-60,-20],"z":[0,0,0,0,0]},"width":[0,40,45,10,12],"height":[0,15,18,8,12],"texture":[8,63,4,4,4],"propeller":true},"propeller":{"section_segments":10,"offset":{"x":40,"y":40,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[-20,-15,0,10,20,25,30,40,70,60],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[0,10,15,15,15,10,10,20,15,0],"height":[0,10,15,15,15,10,10,18,8,0],"texture":[4,4,10,3,3,63,4,63,12],"propeller":true},"sides":{"section_segments":6,"angle":90,"offset":{"x":0,"y":0,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[-80,-75,-60,-50,-10,10,50,60,75,80],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[0,30,35,10,12,12,10,35,30,0],"height":[0,10,12,8,12,12,8,12,10,0],"texture":[4,63,4,4,4,4,4,63,4]},"cockpit":{"section_segments":12,"offset":{"x":0,"y":-20,"z":30},"position":{"x":[0,0,0,0,0,0,0,0],"y":[-50,-20,0,10,30,50],"z":[0,0,0,0,0,0]},"width":[0,12,18,20,15,0],"height":[0,20,22,24,20,0],"texture":[9]}},"wings":{"top":{"doubleside":true,"offset":{"x":0,"y":20,"z":15},"length":[70],"width":[70,30],"angle":[90],"position":[0,30],"texture":[63],"bump":{"position":10,"size":30}},"top2":{"doubleside":true,"offset":{"x":0,"y":51,"z":5},"length":[70],"width":[50,20],"angle":[90],"position":[0,60],"texture":[63],"bump":{"position":10,"size":30}}},"typespec":{"name":"Barracuda","level":6,"model":7,"code":607,"specs":{"shield":{"capacity":[300,400],"reload":[8,12]},"generator":{"capacity":[100,150],"reload":[8,14]},"ship":{"mass":550,"speed":[70,90],"rotation":[30,45],"acceleration":[130,150],"dash":{"rate":2,"burst_speed":[160,180],"speed":[100,130],"acceleration":[70,70],"initial_energy":[50,75],"energy":[20,30]}}},"shape":[5.28,5.25,5.332,5.393,4.944,1.997,1.745,1.556,1.435,3.587,3.81,3.779,3.838,3.84,3.779,3.81,3.587,3.205,3.571,3.9,5.132,5.888,5.835,5.551,4.886,5.808,4.886,5.551,5.835,5.888,5.132,3.9,3.571,3.205,3.587,3.81,3.779,3.838,3.84,3.779,3.81,3.587,1.435,1.556,1.745,1.997,4.944,5.393,5.332,5.25],"lasers":[],"radius":5.888}}';
@@ -1171,10 +1177,10 @@ this.tick = function(game){
   if (game.step === delay){
     checkscores(game);
     updatescoreboard(game);
-    modUtils.setTimeout(function(){game.setUIComponent({id:"delay time",visible:false});},6);
+    modUtils.setTimeout(function(){sendUI(game, {id:"delay time",visible:false});},6);
     for (let ship of game.ships){
       ship.set({idle:false,collider:true});
-      ship.setUIComponent({id:"delay",visible:false});
+      sendUI(ship, {id:"delay",visible:false});
       if (ship.custom.wait){
         ship.custom.wait = false;
         joinmessage(ship);
@@ -1190,7 +1196,7 @@ this.tick = function(game){
         ship.deaths = 0;
         setteam(ship);
         setup(ship);
-        ship.setUIComponent(game.custom.radar_background);
+        sendUI(ship, game.custom.radar_background);
         echo(`${ship.name} spawned`);
         if (!game.custom.delayed){
           game.custom.delayed = true;
@@ -1209,7 +1215,7 @@ this.tick = function(game){
     if (game.step < delay){
       for (let ship of game.ships){
         ship.set({idle:true,collider:false});
-        ship.setUIComponent({
+        sendUI(ship, {
           id: "delay",
           position: [39,18,42,40],
           visible: true,
@@ -1217,7 +1223,7 @@ this.tick = function(game){
             {type: "text",position:[2,5,80/1.5,33/1.5],value:"Waiting for more players...",color:"#cde"},
           ]
         });
-        ship.setUIComponent({
+        sendUI(ship, {
           id: "scoreboard",
           visible: true,
           components: [
@@ -1232,7 +1238,7 @@ this.tick = function(game){
           game.custom.ended2 = true;
           endgame(game);
           game.ships.forEach(ship => ship.set({collider: false}));
-          game.setUIComponent({
+          sendUI(game, {
             id: "end",
             position: [39,18,42,40],
             visible: true,
@@ -1255,7 +1261,7 @@ this.tick = function(game){
         let seconds = ~~((steps % 3600) / 60);
         if (seconds < 10) seconds = "0" + seconds;
         if (minutes < 10) minutes = "0" + minutes;
-        game.setUIComponent({
+        sendUI(game, {
           id: "timer",
           position: [2.5,28,15,10],
           visible: true,
@@ -1269,7 +1275,7 @@ this.tick = function(game){
           let minutes = ~~(steps / 3600);
           let seconds = ~~((steps % 3600) / 60);
           if (seconds < 10) seconds = "0" + seconds;
-          game.setUIComponent({
+          sendUI(game, {
             id: "delay time",
             position: [45.7,26,10,7],
             visible: true,
@@ -1283,7 +1289,7 @@ this.tick = function(game){
       if (!game.custom.ended){
         game.custom.ended = true;
         endgame(game);
-        game.setUIComponent({
+        sendUI(game, {
           id: "timer",
           position: [2.5,28,15,10],
           visible: true,
@@ -1296,7 +1302,7 @@ this.tick = function(game){
           win = teams.points.indexOf(Math.max(...teams.points));
           text = `${teams.names[win]} team wins!`;
         } else text = "It's a draw!";
-        game.setUIComponent({
+        sendUI(game, {
           id: "end",
           position: [39,18,42,40],
           visible: true,
@@ -1367,13 +1373,13 @@ function checkteambase(game){
     let y = map.basedmg[u];
     if (isRange(x.x,x.x2,ship.x) && isRange(y.y,y.y2,ship.y)){
       rekt(ship,10*Math.trunc(ship.type/100));
-      ship.setUIComponent({
+      sendUI(ship, {
         id: "dang",
         position: [34,20,40,40],
         visible: true,
         components: [{type:"text",position:[0,0,80,33],value:"You are in the emeny's base - your ship will take damage!",color:"#f99e9e"}]
       });
-    } else ship.setUIComponent({id:"dang",visible:true});
+    } else sendUI(ship, {id:"dang",visible:true});
   }
 }
 
@@ -1459,14 +1465,14 @@ function outputscoreboard(game,tm){
       new Tag("text",ship.frags,ship.custom.team*50,90,ship.custom.team,"right",2),
       new Tag("player",ship.id,ship.custom.team*50,90,ship.custom.team,"left")
     );
-    ship.setUIComponent(scoreboard);
+    sendUI(ship, scoreboard);
     scoreboard.components = [...origin];
   }
 }
 
 function checkscores(game){
   if (game.step >= delay)
-  game.setUIComponent({
+  sendUI(game, {
     id: "scores",
     position: [33,10,42,40],
     visible: true,
@@ -1479,7 +1485,7 @@ function checkscores(game){
 }
 
 function joinmessage(ship){
-  ship.setUIComponent({
+  sendUI(ship, {
     id: "join",
     position: [36,16,34,32],
     visible: true,
@@ -1488,7 +1494,7 @@ function joinmessage(ship){
       {type: "text",position:[5.5,20,80-4,33-4],value:"Good luck and have fun!",color:"#cde"},
     ]
   });
-  ship.setUIComponent({
+  sendUI(ship, {
     id: "map info",
     position: [2,88,24,22],
     visible: true,
@@ -1497,8 +1503,8 @@ function joinmessage(ship){
     ]
   });
   modUtils.setTimeout(function(){
-    ship.setUIComponent({id:"join",visible:false});
-    /*ship.setUIComponent({
+    sendUI(ship, {id:"join",visible:false});
+    /*sendUI(ship, {
       id: "tips",
       position: [36,16,34,32],
       visible: true,
@@ -1508,7 +1514,7 @@ function joinmessage(ship){
       ]
     });
     modUtils.setTimeout(function(){
-      ship.setUIComponent({id:"tips",visible:false});
+      sendUI(ship, {id:"tips",visible:false});
     },300);*/
   },480);
 }
@@ -1516,7 +1522,7 @@ function joinmessage(ship){
 function checkButtons(ship){
   let shortcut = ["5","6","7"];
   for (let i=0; i<3; i++){
-    ship.setUIComponent({
+    sendUI(ship, {
       id: "ship_selection_"+i,
       position: [36,26+i*7,34,18/2],
       visible: ship.custom.buttons&&ship.custom.opened,
@@ -1528,7 +1534,7 @@ function checkButtons(ship){
       ]
     });
   }
-  ship.setUIComponent({
+  sendUI(ship, {
     id: "close",
     position: [43,26+4*7,34/2,18/2],
     visible: ship.custom.buttons&&ship.custom.opened,
@@ -1539,7 +1545,7 @@ function checkButtons(ship){
       {type: "text",position:[0,4,88/1.2,40/1.2*2],value:"    Close [4]",color:"#cde"},
     ]
   });
-  ship.setUIComponent({
+  sendUI(ship, {
     id: "open",
     position: [3,33,16,20/2],
     visible: ship.custom.buttons&&!ship.custom.opened,
@@ -1550,7 +1556,7 @@ function checkButtons(ship){
       {type: "text",position:[6,4,88/1.2,40/1.2*2],value:"Select ship [4]",color:"#cde"},
     ]
   });
-  ship.setUIComponent({
+  sendUI(ship, {
     id: "heal",
     position: [3,42,16,20/2],
     visible: ship.custom.buttons&&modifier.healer_button,
