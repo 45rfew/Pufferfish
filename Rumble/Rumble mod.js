@@ -1144,7 +1144,7 @@ function addRadarSpot (x, y, type, width, height, alpha, color){
 
 var update = 1;
 var delay = .1*3600;
-if (!game.custom.map) game.custom.map = maps[9]//maps[Math.trunc(Math.random()*maps.length)];
+if (!game.custom.map) game.custom.map = maps[Math.trunc(Math.random()*maps.length)];
 var map = game.custom.map; // for debugging
 for (let i=0; i<map.shipspawn.length; i++){
   addRadarSpot(map.shipspawn[i].x,map.shipspawn[i].y,map.radar.type,map.radar.width,map.radar.height,0.3,teams.hues[i]);
