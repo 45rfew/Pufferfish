@@ -36,7 +36,7 @@ var modUtils = {
 };
 var sendUI = function(ship, UI) {
   if (ship != null && typeof ship.setUIComponent == "function") {
-    if (UI.visible || typeof UI.visible == "undefined") ship.setUIComponent(UI);
+    if (UI.visible || UI.visible == null) ship.setUIComponent(UI);
     else ship.setUIComponent({id: UI.id, position: [0,0,0,0], visible: false})
   }
 }
