@@ -20,6 +20,7 @@ var colors = [
   {team:"Yellow",hue:60,team2:"Pink",hue2:300,flagged:[100,340]},
   {team:"Aqua",hue:150,team2:"Orange",hue2:30,flagged:[190,0]}
 ];
+
 var modUtils = {
   setTimeout: function(f,time) {
     this.jobs.push({f: f,time: game.step+time}) ;
@@ -39,7 +40,15 @@ var modUtils = {
       }
     }
   }
-}
+};
+
+var sendUI = function(ship, UI) {
+  if (ship != null && typeof ship.setUIComponent == "function") {
+    if (UI.visible || UI.visible == null) ship.setUIComponent(UI);
+    else ship.setUIComponent({id: UI.id, position: [0,0,0,0], visible: false});
+  }
+};
+
 var teams = {
   names: [colors[randteam].team,colors[randteam].team2],
   hues: [colors[randteam].hue,colors[randteam].hue2],
@@ -88,7 +97,7 @@ function processMsg (id) {
 }
 
 var maps = [
-  {name: "Dimension 2.0", author: "Liberal", map:
+  /*{name: "Dimension 2.0", author: "Liberal", map:
     "999999999999999999999999999999999999999999999999999999999999\n"+
     "999999999999999999999999999999999999999999999999999999999999\n"+
     "999999999999999999999999999999999999999999999999999999  9999\n"+
@@ -664,70 +673,6 @@ var maps = [
   flags: [{x:-80,y:-135},{x:135,y:80}],
   ship_spawn: [{x:-165,y:-222},{x:242,y:150}],
   restrict_tiers: false},
-  {name: "Antebellum", author: "Liberal", map:
-    "                                                            \n"+
-    "                                                            \n"+
-    "                                                            \n"+
-    "                                                            \n"+
-    "                                                            \n"+
-    "                                                            \n"+
-    "                                                            \n"+
-    "                                                            \n"+
-    "                                                            \n"+
-    "                                                            \n"+
-    "                                                            \n"+
-    "                                                            \n"+
-    "                                                            \n"+
-    "99999999999999999999999              99999999999999999999999\n"+
-    "9                     99            99                     9\n"+
-    "                       99          99                       \n"+
-    "                        99        99                        \n"+
-    "  9999999     999999     9999999999     999999     9999999  \n"+
-    " 99                                                      99 \n"+
-    "99                                                        99\n"+
-    "9                                                          9\n"+
-    "    99    99999999999999999      99999999999999999    99    \n"+
-    "   99                                                  99   \n"+
-    "  99                                                    99  \n"+
-    "  9                                                      9  \n"+
-    "  9    999999                                  999999    9  \n"+
-    "  99    99      99   99    999999    99   99      99    99  \n"+
-    "   99    99    99   99    99    99    99   99    99    99   \n"+
-    "    99    99  99   99    99      99    99   99  99    99    \n"+
-    "9    99    9999   99    99        99    99   9999    99    9\n"+
-    "99    99    99   999    99        99    999   99    99    99\n"+
-    " 99    99       99 99    99      99    99 99       99    99 \n"+
-    "  99    99     99   99    99    99    99   99     99    99  \n"+
-    "   99    99    99999999    999999    99999999    99    99   \n"+
-    "    99    99                                    99    99    \n"+
-    "     99    99                                  99    99     \n"+
-    "      99    99                                99    99      \n"+
-    "999999999    99999999     99999999     99999999    999999999\n"+
-    "                    99     999999     99                    \n"+
-    "                     99              99                     \n"+
-    "                      99            99                      \n"+
-    "9999     999999999     99          99     999999999     9999\n"+
-    "   99     999999999     999      999     999999999     99   \n"+
-    "    99                                                99    \n"+
-    "     99                                              99     \n"+
-    "      99                                            99      \n"+
-    "       9999999999999999999999999999999999999999999999       \n"+
-    "                                                            \n"+
-    "                                                            \n"+
-    "                                                            \n"+
-    "                                                            \n"+
-    "                                                            \n"+
-    "                                                            \n"+
-    "                                                            \n"+
-    "                                                            \n"+
-    "                                                            \n"+
-    "                                                            \n"+
-    "                                                            \n"+
-    "                                                            \n"+
-    "                                                            ",
-  flags: [{x:-250,y:50},{x:250,y:50}],
-  ship_spawn: [{x:-165,y:30},{x:165,y:30}],
-  restrict_tiers: false},
   {name: "Agony", author: "Liberal", map:
     "              99   99                  99   99              \n"+
     "              99   99                  99   99              \n"+
@@ -1142,70 +1087,6 @@ var maps = [
     }
   },
   restrict_tiers: [1,3,4,5,6]},
-  {name: "Titan Maze", author: "ALPHA DYNASTY", map:
-    "999999999999999999999999999999999999999999999999999999999999\n"+
-    "999999999999999999999999999999999999999999999999999999999999\n"+
-    "99         999    99   99                99          99   99\n"+
-    "99        999     99   99               999           99  99\n"+
-    "99       99       99   99              999             99 99\n"+
-    "99      99    999999   99             999     9999     99 99\n"+
-    "99      99  99999999   99   999999999999     999 9     99 99\n"+
-    "99       99999         99   99999999999     999  99    99 99\n"+
-    "99   9    99           99   99              99   99    99 99\n"+
-    "99  999                 99  99               99  99    99 99\n"+
-    "99 99997          99     99999               99  99    99 99\n"+
-    "99999 99          9999    999      9999999   99  99    99 99\n"+
-    "9999  99   99       9999           9999999   99  9     99 99\n"+
-    "999   99   99         99           99   99   99 99     99 99\n"+
-    "99         999         99    99    999  99   9999      99 99\n"+
-    "99         9999999     99   999      99 99   9999      99 99\n"+
-    "9999   999999999999    99   999       9999   99        99 99\n"+
-    "9999   9999999   999   99    999       999   99        99 99\n"+
-    "999         99    99   9      999            99         9999\n"+
-    "99          999   99           999           99    9     999\n"+
-    "99           9999999            999               999     99\n"+
-    "99   99      999999              9999             9999    99\n"+
-    "99    99    9999                  999999          99999   99\n"+
-    "99     99   99                      99999         99 9999999\n"+
-    "999     999999     999                            99  999999\n"+
-    "9999     99999   9999                             99      99\n"+
-    "99999            99                               999     99\n"+
-    "99 999          99                       99        999    99\n"+
-    "99   999        99                       999999      99   99\n"+
-    "99    9999999   999                       999999      99  99\n"+
-    "99    9999999    99                          999      99  99\n"+
-    "99         99    99              99          99       99  99\n"+
-    "99         99    99              99          99       99  99\n"+
-    "99       9999    99              99          99      99   99\n"+
-    "99       9999    99              99           9    999    99\n"+
-    "99  9999999     99              9999              99      99\n"+
-    "99  9999999     99             98  89            99999999999\n"+
-    "99  99                        78    97           99999999999\n"+
-    "99 999                        98    89                   999\n"+
-    "99999                         98    89                    99\n"+
-    "9999                          98    89                   999\n"+
-    "99                 99         98    89     99      999999999\n"+
-    "99     99         999          988889     999       99999999\n"+
-    "99    99999      9999           9999     999         99   99\n"+
-    "99    99999     99       9              999          99   99\n"+
-    "99       999   999      999            999            99  99\n"+
-    "99        999 999      99999                           99999\n"+
-    "99         99999      9999999                  99999   99999\n"+
-    "99 99999    999      999   999                 999999  99999\n"+
-    "999999999           999     999     99             999999 99\n"+
-    "999     99         999       999    999             9999  99\n"+
-    "99      99        999        9999    999             99   99\n"+
-    "99      99         999        9999    99     999          99\n"+
-    "99      99   99     999                      99999        99\n"+
-    "99      79999999     999                       99999      99\n"+
-    "99      999999999     999                       999       99\n"+
-    "997777          999    999      99999999       999        99\n"+
-    "9999999          999    999999999999999       999         99\n"+
-    "999999999999999999999999999999999999999999999999999999999999\n"+
-    "999999999999999999999999999999999999999999999999999999999999",
-  flags: [{x:-200,y:200},{x:200,y:-200}],
-  ship_spawn: [{x:-250,y:250},{x:250,y:-250}],
-  restrict_tiers: [1,3,4,5,6]},
   {name: "Paths", author: "Healer", map:
     "   999999999999999999999            999999999999999999999   \n"+
     "    9 9  9      99    999          999    99      9  9 9    \n"+
@@ -1269,7 +1150,71 @@ var maps = [
     "   999999999999999999999            999999999999999999999   ",
   flags: [{x:-250,y:0},{x:250,y:0}],
   ship_spawn: [{x:-180,y:0},{x:180,y:0}],
-  restrict_tiers: [1,3,4,5,6]},
+  restrict_tiers: [1,3,4,5,6]},*/
+  {name: "Speedster's Rift", author: "Liberal", map:
+    "               9999999999999999999999999999999999999        \n"+
+    "            9999                                   99       \n"+
+    "           99                                       99      \n"+
+    "          99                            9999         99     \n"+
+    "        999                                           99    \n"+
+    "       99                                       9      9    \n"+
+    "      99          9999  999  9999999  9          9     9    \n"+
+    "      9        9   99         999999  9           9    9    \n"+
+    "     99       999                  9  99               9    \n"+
+    "     9         999    99   99      9   9               9    \n"+
+    "     9         999     99999   9   9   9     9         9    \n"+
+    "    9      9    9       999    99   9  9    9          9    \n"+
+    "    9     999       9           99     99  9        9  9    \n"+
+    "   99     9799    9999      99   99                 9  9    \n"+
+    "   9      9779   99  99    9     9   99             9  9    \n"+
+    "   9      99999   9   99  99 99     99     99       9  9    \n"+
+    "   9      99  9   99   9   999     99       999        9    \n"+
+    "   9      9   99      99                      9999     9    \n"+
+    "   9           9     9999                              9    \n"+
+    "   9        9         99     99  99      999           9    \n"+
+    "   9        99   9            9999      999999   9     9    \n"+
+    "   9     9   9   99       9    99           99   99    9    \n"+
+    "   9     9   9   999      999                99  99    9    \n"+
+    "   9     9   99  99         99       99  9    9  99    9    \n"+
+    "   9     9        9  999     99      9   999  9  99    9    \n"+
+    "   9     99       9  9999           99    999 9  99    9    \n"+
+    "   9      999    99     99          99           99    9    \n"+
+    "   9          9999       99          99          99    9    \n"+
+    "   9                 99   9      99       999          9    \n"+
+    "   9     9   9   99   99          99     99    99      9    \n"+
+    "   9     99  9  999   99           9999  9      99     9    \n"+
+    "   9     99  9   99  99      99          9       99    9    \n"+
+    "   9     99  99  9   9        99         9   99   9    9    \n"+
+    "   9     99   9                99       999   99  9    9    \n"+
+    "   9     99   99           99   99        99   9  9    9    \n"+
+    "   9     9    99999       9999                 9  9    9    \n"+
+    "   9           999       99  99    9                   9    \n"+
+    "   9                               9999      9         9    \n"+
+    "   9     99999                      99       9         9    \n"+
+    "   9         99        99     99    99   9   99   9    9    \n"+
+    "   9  9       99      99     99999  9    99   99  9    9    \n"+
+    "   9  9              999  9  9  99  99    9    99 9    9    \n"+
+    "   9  9               9   9     9    9   99    9999    9    \n"+
+    "   9  9        9  9       99    9    99999      999    9    \n"+
+    "   9          9   99       99                    9     9    \n"+
+    "   9         9     9   9           9                  99    \n"+
+    "   9               99  99       9999999   999         9     \n"+
+    "   9                9  99      99 999  9   999        9     \n"+
+    "   9                9  9       9            999      99     \n"+
+    "   9    9           9  9  999               99       9      \n"+
+    "   9     9          9  9  9799    99   999   9      99      \n"+
+    "   9      9         9  9  99999  9999   999         9       \n"+
+    "   9                                               99       \n"+
+    "   9                                             999        \n"+
+    "   99          9999                             99          \n"+
+    "    99                                        999           \n"+
+    "     99                                    9999             \n"+
+    "      99999999999999999999999999999999999999                \n"+
+    "                                                            \n"+
+    "                                                            ",
+  flags: [{x:-190,y:-190},{x:176,y:220}],
+  ship_spawn: [{x:-220,y:-220},{x:210,y:245}],
+  restrict_tiers: false},  
 ];
 
 var map_id, map;
@@ -1293,7 +1238,7 @@ function backupFlag(i) {
 }
 
 function mapcredit(ship){
-  ship.setUIComponent({
+  sendUI(ship, {
     id: "map info",
     position: [56,88,24,22],
     visible: true,
@@ -1331,24 +1276,24 @@ this.tick = function(game){
         setIdle(ship);
         ship.set({x:0,y:0});
         if (!ship.custom.delayed) {
-          ship.setUIComponent({
+          sendUI(ship, {
             id: "scoreboard",
             visible:true,
             components: [
               { type: "text",position:[15,0,70,10],value:"Waiting for more players...",color:"#cde"},
             ]
           });
-          ship.setUIComponent({
+          sendUI(ship, {
             id: "timer",
             visible:false,
             components: []
           });
-          ship.setUIComponent({
+          sendUI(ship, {
             id: "scores",
             visible:false,
             components: []
           });
-          ship.setUIComponent({
+          sendUI(ship, {
             id: "wait", position: [39,30,22,50], visible: true,
             components: [
               { type: "text",position:[0,0,100,10],value:"Waiting for more players...",color:"#cde"},
@@ -1358,7 +1303,7 @@ this.tick = function(game){
         }
         if (!ship.custom.remove_buttons){
           ship.custom.remove_buttons = true;
-          ship.setUIComponent(logo);
+          sendUI(ship, logo);
         }
         if (!game.custom.radar_hide) {
           game.setCustomMap("");
@@ -1389,7 +1334,7 @@ this.tick = function(game){
           }
           if (ship.custom.delayed)
           {
-            ship.setUIComponent({id:"wait",visible:false});
+            sendUI(ship, {id:"wait",visible:false});
             ship.custom.delayed = false;
           }
           if (!teams.flagholder[1-ship.custom.team]) checkFlag(ship);
@@ -1402,7 +1347,7 @@ this.tick = function(game){
           let sec = ~~(((ship.custom.choose_countdown||0)-game.step)/60);
           if (sec >= 0){
             ship.custom.countdown_hide = false;
-            ship.setUIComponent({
+            sendUI(ship, {
               id: "countdown",
               position:[45,85,10,10],
               components:[
@@ -1411,14 +1356,14 @@ this.tick = function(game){
             });
           }
           else if (!ship.custom.countdown_hide) {
-            ship.setUIComponent({id:"countdown",visible:false});
+            sendUI(ship, {id:"countdown",visible:false});
             ship.custom.countdown_hide = true;
           }
           let respawnDelay = Math.trunc((ship.custom.respawn_delay - game.step)/60);
           if (respawnDelay >= 0 && ship.death_stroke != 0 && ship.custom.respawnMsgIndex != null) {
             let rmsg = processMsg(ship.custom.respawnMsgIndex);
             if (ship.alive){
-              ship.setUIComponent({
+              sendUI(ship, {
                 id: "respawn_delay",
                 visible: true,
                 position: [39,70,22,18],
@@ -1433,7 +1378,7 @@ this.tick = function(game){
             ship.custom.respawn_hide = false;
           }
           else if (!ship.custom.respawn_hide) {
-            ship.setUIComponent({id:"respawn_delay",visible:false});
+            sendUI(ship, {id:"respawn_delay",visible:false});
             ship.custom.respawn_hide = true;
           }
         }
@@ -1443,7 +1388,7 @@ this.tick = function(game){
           let seconds = ~~((steps % 3600) / 60);
           if (seconds < 10) seconds = "0" + seconds;
           if (minutes < 10) minutes = "0" + minutes;
-          game.setUIComponent({
+          sendUI(game, {
             id: "timer",
             position: [3,28,17,15],
             visible: true,
@@ -1454,7 +1399,7 @@ this.tick = function(game){
           game.custom.timer_hide = false;
         }
         else if (!game.custom.timer_hide){
-          game.setUIComponent({id:"timer",visible:false});
+          sendUI(game, {id:"timer",visible:false});
           game.custom.timer_hide = true;
         }
         if (((teams.count.indexOf(0) != -1) || (game.step >= gamelength) || Math.max(...teams.points) >= pointsToWin) && (gamelength-game.step< toTick(match_time))){
@@ -1474,7 +1419,7 @@ this.tick = function(game){
           if (!teams.flagholder[i]) drawDirectionMarker(ship,flags_drop.x[i],flags_drop.y[i],true,true,`team${i+1}flag`,getcolor(teams.hues[i]),"\u{1F3F4}");
           else {
             if (ship.id != teams.flagholder[i].id) drawDirectionMarker(ship,teams.flagholder[i].x,teams.flagholder[i].y,true,true,`team${i+1}flag`,getcolor(teams.hues[i]),"\u{1F3F4}");
-            else ship.setUIComponent({id:`team${i+1}flag`,visible:false});
+            else sendUI(ship, {id:`team${i+1}flag`,visible:false});
           }
         }
         if (!ship.custom.flagged){
@@ -1568,8 +1513,8 @@ function selectship(ship){
   ship.custom.selected = false;
   ship.custom.choose_countdown = game.step+toTick(1/6);
   ship.set({vx:0,vy:0});
-  ship.setUIComponent(logo);
-  ship.setUIComponent({
+  sendUI(ship, logo);
+  sendUI(ship, {
     id: "ship text", position: [39,17,22,50], visible: true,
     components: [
       {type: "text",position:[0,0,100,60],value:"Choose your ship for this round",color:"#cde"},
@@ -1583,14 +1528,14 @@ function selectship(ship){
       { type: "text",position:[(100-len)/2,15,len,30],value:`${name} ${shc[i]}`,color:"#cde"},
     ];
   }
-  ship.setUIComponent(getRadarInfo());
-  for (let UI of shipUI) ship.setUIComponent(UI);
+  sendUI(ship, getRadarInfo());
+  for (let UI of shipUI) sendUI(ship, UI);
   modUtils.setTimeout(function(){
-    ship.setUIComponent({id:"ship text",visible:false});
-    ship.setUIComponent({id:"0",visible:false});
-    ship.setUIComponent({id:"1",visible:false});
-    ship.setUIComponent({id:"2",visible:false});
-    ship.setUIComponent({id:"logo",visible:false});
+    sendUI(ship, {id:"ship text",visible:false});
+    sendUI(ship, {id:"0",visible:false});
+    sendUI(ship, {id:"1",visible:false});
+    sendUI(ship, {id:"2",visible:false});
+    sendUI(ship, {id:"logo",visible:false});
     if (!ship.custom.selected){
       ship.set({type:data[rand(3)].code,invulnerable:200,stats:88888888,shield:999});
       shipgems(ship,data[rand(3)].code);
@@ -1663,12 +1608,12 @@ function restartgame(game,isGameOver){
       scale: {x:60,y:60,z:30}
     });
   }
-  game.setUIComponent({id:"logo",visible:false});
+  sendUI(game, {id:"logo",visible:false});
   splitIntoTeams(game);
   if (!isGameOver) gamelength = game.step+toTick(match_time+1/6);
   data=randomShips();
   teams.points = [0,0];
-  game.setUIComponent({id: "gamestat", visible: false});
+  sendUI(game, {id: "gamestat", visible: false});
   for (let ship of game.ships){
     checkscores(ship);
     ship.custom.flag = false;
@@ -1709,7 +1654,7 @@ function resetgame(game,isLeave){
     ship.flags = 0;
   }
   updateFlagStats();
-  game.setUIComponent({
+  sendUI(game, {
     id: "gamestat",
     position: [33.5,18,42,40],
     visible: true,
@@ -1737,8 +1682,8 @@ function resetgame(game,isLeave){
         updateFlagStats();
         endgame(game);
         teams.flagholder = [0,0];
-        game.setUIComponent({id:"gamestat",visible:true});
-        game.setUIComponent({
+        sendUI(game, {id:"gamestat",visible:true});
+        sendUI(game, {
           id: "gamestat",
           position: [33.5,18,42,40],
           visible: true,
@@ -1812,7 +1757,7 @@ function setteam(ship){
 
 function joinmessage(ship){
   modUtils.setTimeout(function(){
-    ship.setUIComponent({
+    sendUI(ship, {
       id: "yeet",
       position: [36-4,16,34*1.2,32*1.2],
       visible: true,
@@ -1823,8 +1768,8 @@ function joinmessage(ship){
       ]
     });
     modUtils.setTimeout(function(){
-      ship.setUIComponent({id:"yeet",visible:false});
-      ship.setUIComponent({
+      sendUI(ship, {id:"yeet",visible:false});
+      sendUI(ship, {
         id: "yeet2",
         position: [36,16,34,32],
         visible: true,
@@ -1834,7 +1779,7 @@ function joinmessage(ship){
         ]
       });
       modUtils.setTimeout(function(){
-        ship.setUIComponent({id:"yeet2",visible:false});
+        sendUI(ship, {id:"yeet2",visible:false});
       },180);
     },480);
   },600);
@@ -1846,7 +1791,7 @@ function calcRespawn(ship) {
 //End of team sorting///////////////////////////////////////////////////////////
 //Scores ;p
 function checkscores(ship){
-  ship.setUIComponent({
+  sendUI(ship, {
     id: "scores",
     position: [33,5,42,40],
     visible: true,
@@ -1856,7 +1801,7 @@ function checkscores(ship){
       {type: "text",position:[25,5,80/1.5,33/1.5],value:teams.points[1],color:getcolor(teams.hues[1])},
     ]
   });
-  ship.setUIComponent(getRadarInfo());
+  sendUI(ship, getRadarInfo());
 }
 
 function isWrongSpeed(car,vx,vy){
@@ -2005,7 +1950,7 @@ function checkTarget(ship){
 function hideNotif() {
   modUtils.setTimeout(function(){
     notif.splice(0,2);
-    if (notif.length == 0) game.setUIComponent({id:"logs",visible:false});
+    if (notif.length == 0) sendUI(game, {id:"logs",visible:false});
     else {
       notif[0].position[0] = 0;
       notif[1].position[0] = 0;
@@ -2037,7 +1982,7 @@ function setNotif(...messages){
         );
         break;
     }
-    game.setUIComponent({
+    sendUI(game, {
       id: "logs",
       position: [6,83,50,22/1.2],
       visible: true,
@@ -2055,7 +2000,7 @@ function checkspeed(ship){
     if (ship.custom.flag){
       ship.custom.slow = true;
       ship.set({type:ship.type+type,stats:88888888,hue:colors[randteam].flagged[ship.custom.team]});
-      ship.setUIComponent({
+      sendUI(ship, {
         id: "warn",
         position: [30,18,34*1.2,32*1.2],
         visible: true,
@@ -2065,7 +2010,7 @@ function checkspeed(ship){
       });
     } else if (!ship.custom.flag && ship.custom.slow){
       ship.set({type:ship.type-type,stats:88888888,hue:teams.hues[ship.custom.team]});
-      ship.setUIComponent({id:"warn",visible:false});
+      sendUI(ship, {id:"warn",visible:false});
     }
   }
 }
@@ -2079,7 +2024,7 @@ function checkflagholderstatus(ship){
   for (let i=0;i<2;i++){
     if (teams.flagholder[i]){
       let name = teams.flagholder[i].name, text= `${name} is now holding ${teams.names[i]}'s flag!`;
-      ship.setUIComponent({
+      sendUI(ship, {
         id: "flagstats"+i,
         position:[25,20+i*6,50,8],
         visible: true,
@@ -2089,7 +2034,7 @@ function checkflagholderstatus(ship){
         ]
       });
     }
-    else ship.setUIComponent({id:"flagstats"+i,visible:false});
+    else sendUI(ship, {id:"flagstats"+i,visible:false});
   }
 }
 
@@ -2098,7 +2043,7 @@ var drawDirectionMarker = function(ship, x, y, wrapV, wrapH, id, color, label){
   var dist = distance(sp[0],sp[1]);
   var x1 = sp[0]/dist;
   var y1 = sp[1]/dist;
-  ship.setUIComponent({
+  sendUI(ship, {
     id: id,
     position:[47+x1*30,49-y1*30,6*1.5,2*1.5],
     clickable: false,
@@ -2190,7 +2135,7 @@ function outputscoreboard(game,tm){
       new Tag("text",ship.flags,ship.custom.team*50,90,"#cde","right",2),
       new Tag("player",ship.id,ship.custom.team*50,90,"#cde","left")
     );
-    ship.setUIComponent(scoreboard);
+    sendUI(ship, scoreboard);
     scoreboard.components = [...origin];
   }
 }
@@ -2237,15 +2182,15 @@ this.event = function(event, game){
         var component = event.id;
         if (["0","1","2"].indexOf(component) != -1){
           if (gamelength-game.step <= toTick(match_time)){
-            ship.setUIComponent({id:"0",visible:false});
-            ship.setUIComponent({id:"1",visible:false});
-            ship.setUIComponent({id:"2",visible:false});
-            ship.setUIComponent({id:"ship text",visible:false});
+            sendUI(ship, {id:"0",visible:false});
+            sendUI(ship, {id:"1",visible:false});
+            sendUI(ship, {id:"2",visible:false});
+            sendUI(ship, {id:"ship text",visible:false});
             ship.custom.choose_countdown = game.step;
           } else {
             for (let i=0;i<3;i++) shipUI[i].components = [...shipUI[i].components.slice(0,2)];
             shipUI[component].components.push({type: "text",position:[22.5,50,50,30],value:"✓",color:"#cde"});
-            for (let UI of shipUI) ship.setUIComponent(UI);
+            for (let UI of shipUI) sendUI(ship, UI);
           }
           ship.custom.shiped = true;
           ship.custom.selected = true;
