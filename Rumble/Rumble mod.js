@@ -114,7 +114,7 @@ var colors = [
   {team:"Aqua",hue:150,team2:"Orange",hue2:30}
 ];
 if (!game.custom.ship_name){
-  game.custom.init = true;
+  game.custom.ship_name = true;
   if (modifier.round_ship_tier === "random")
   modifier.round_ship_tier = getRandByRatio(tierratio);
   var tier = modifier.round_ship_tier,ship_name,rand_ships,ship_choices = 4;
@@ -134,15 +134,20 @@ if (!game.custom.ship_name){
   rand_ships = JSON.parse(JSON.stringify(ships_list[tier-3])).map((n,p) => tier*100+p+1);
   chooseships = shuffle(rand_ships,ship_choices);
   shuffle(colors,false);
+  colors = colors[0];
+  game.custom.colors = colors;
   game.custom.ship_name = ship_name;
+  game.custom.modifier = modifier;
 }
+colors = game.custom.colors;
+modifier = game.custom.modifier;
 var ship_name = game.custom.ship_name;
 var teams = {
-  names: [colors[0].team,colors[0].team2],
+  names: [colors.team,colors.team2],
   points: [0,0],
   count: [0,0],
   ships: [[],[]],
-  hues: [colors[0].hue,colors[0].hue2]
+  hues: [colors.hue,colors.hue2]
 };
 
 var maps = [
@@ -1120,7 +1125,72 @@ var maps = [
   shipspawn: [{x:0,y:-250},{x:0,y:250}],
   radar: {type:"box",width:20,height:10},
   basedmg: [{x:-40,x2:40,y:-225,y2:-275},{x:-40,x2:40,y:225,y2:275}]
-  }
+  },
+  {name: "Crystalized", author: "EDEN", map:
+    "9999    99999999999999999999999999999999999999999999    9999\n"+
+    "    9999999999999999999999999999999999999999999999999999    \n"+
+    "                                                            \n"+
+    "                                                            \n"+
+    "                    9                  9                    \n"+
+    "                    9                  9                    \n"+
+    "                      9              9                      \n"+
+    "                      9              9                      \n"+
+    "                       99          99                       \n"+
+    "                      9 8          8 9                      \n"+
+    "                    99 8  8  99  8  8 99                    \n"+
+    "9                  9  8   9  99  9   8  9                  9\n"+
+    "9                  9  8  8  8  8  8  8  9                  9\n"+
+    "9                  998  89        98  899                  9\n"+
+    " 9                     8  9  99  9  8                     9 \n"+
+    " 9                     9  9  99  9  9                     9 \n"+
+    " 9                     999        999                     9 \n"+
+    " 9          99                                99          9 \n"+
+    "9 9         99                                99         9 9\n"+
+    "9 9        9  9              99              9  9        9 9\n"+
+    "9 9        9  9              99              9  9        9 9\n"+
+    "9 9        9  9             9  9             9  9        9 9\n"+
+    " 9 9      9 99 9            9  9            9 99 9      9 9 \n"+
+    " 9 9      9 99 9            9  9            9 99 9      9 9 \n"+
+    " 9 9      9 99 9           9 99 9           9 99 9      9 9 \n"+
+    " 9 9     9 9  9 9          9 99 9          9 9  9 9     9 9 \n"+
+    "9 9 9    9 9  9 9          9 99 9          9 9  9 9    9 9 9\n"+
+    "9 9 9    9 9  9 9         9  99  9         9 9  9 9    9 9 9\n"+
+    "9 9 9   9 9 99 9 9         99  99         9 9 99 9 9   9 9 9\n"+
+    "9 9 9   9 9 99 9 9                        9 9 99 9 9   9 9 9\n"+
+    "9 9 9   9 9 99 9 9                        9 9 99 9 9   9 9 9\n"+
+    "9 9 9   9 9 99 9 9         99  99         9 9 99 9 9   9 9 9\n"+
+    "9 9 9    9 9  9 9         9  99  9         9 9  9 9    9 9 9\n"+
+    "9 9 9    9 9  9 9          9 99 9          9 9  9 9    9 9 9\n"+
+    " 9 9     9 9  9 9          9 99 9          9 9  9 9     9 9 \n"+
+    " 9 9      9 99 9           9 99 9           9 99 9      9 9 \n"+
+    " 9 9      9 99 9            9  9            9 99 9      9 9 \n"+
+    " 9 9      9 99 9            9  9            9 99 9      9 9 \n"+
+    "9 9        9  9             9  9             9  9        9 9\n"+
+    "9 9        9  9              99              9  9        9 9\n"+
+    "9 9        9  9              99              9  9        9 9\n"+
+    "9 9         99                                99         9 9\n"+
+    " 9          99                                99          9 \n"+
+    " 9                     999        999                     9 \n"+
+    " 9                     9  9  99  9  9                     9 \n"+
+    " 9                     8  9  99  9  8                     9 \n"+
+    "9                  998  89        98  899                  9\n"+
+    "9                  9  8  8  8  8  8  8  9                  9\n"+
+    "9                  9  8   9  99  9   8  9                  9\n"+
+    "                    99 8  8  99  8  8 99                    \n"+
+    "                      9 8          8 9                      \n"+
+    "                       99          99                       \n"+
+    "                      9              9                      \n"+
+    "                      9              9                      \n"+
+    "                    9                  9                    \n"+
+    "                    9                  9                    \n"+
+    "                                                            \n"+
+    "                                                            \n"+
+    "    9999999999999999999999999999999999999999999999999999    \n"+
+    "9999    99999999999999999999999999999999999999999999    9999",
+  shipspawn: [{x:0,y:-250},{x:0,y:250}],
+  radar: {type:"box",width:20,height:10},
+  basedmg: [{x:-40,x2:40,y:-225,y2:-275},{x:-40,x2:40,y:225,y2:275}]
+  },  
 ];
 
 game.custom.radar_background = {
@@ -1166,72 +1236,102 @@ this.options = {
   ships: ships,
   choose_ship: chooseships,
   release_crystal: modifier.yeet_gems,
-  hues: [colors[0].hue,colors[0].hue2],
+  hues: [colors.hue,colors.hue2],
   asteroids_strength: 1e6,
   crystal_drop: 0,
   max_level: 1
 };
 
-this.tick = function(game){
+var check = function(game, isWaiting, isGameOver) {
+  if (game.step % 30 === 0) for (let ship of game.ships){
+    if (!ship.custom.init){
+      ship.custom.init = true;
+      ship.custom.frags = 0;
+      ship.custom.deaths = 0;
+      setteam(ship);
+      setup(ship);
+      ship.setUIComponent({
+        id: "buy_lifes_blocker",
+        visible: true,
+        clickable: true,
+        shortcut: String.fromCharCode(187),
+        position: [65,0,10,10],
+        components: []
+      });
+      sendUI(ship, game.custom.radar_background);
+      echo(`${ship.name} spawned`);
+      ship.custom.rand = ["","",""];
+      ship.custom.buttons = false;
+      if (isGameOver) gameover(ship);
+    }
+    else if (isGameOver && !ship.custom.exited) modUtils.setTimeout(function(){gameover(ship)},300);
+    if (!ship.custom.joined && !isWaiting && !isGameOver) {
+      joinmessage(ship);
+      ship.custom.joined = true;
+    }
+    ship.set({idle: !!isWaiting, collider: !(isWaiting || isGameOver)})
+    checkButtons(ship);
+    teams.count[ship.custom.team]++;
+    (ship.score != ship.custom.frags) && ship.set({score:ship.custom.frags});
+  }
+}
+
+var endgametext = "Unknown";
+var gameover = function (ship) {
+  ship.gameover({
+    "Match results": endgametext,
+    "Frags": ship.custom.frags,
+    "Deaths": ship.custom.deaths
+  });
+  ship.custom.exited = true;
+}
+
+var waiting = function (game) {
   modUtils.tick();
-  if (game.step === delay){
+  check(game, true);
+  if (game.step % 30 === 0) for (let ship of game.ships){
+    sendUI(ship, {
+      id: "delay",
+      position: [39,18,42,40],
+      visible: true,
+      components: [
+        {type: "text",position:[2,5,80/1.5,33/1.5],value:"Waiting for more players...",color:"#cde"},
+      ]
+    });
+    sendUI(ship, {
+      id: "scoreboard",
+      visible: true,
+      components: [
+        {type: "text",position:[15,0,70,10],value:"Waiting for more players...",color:"#cde"},
+      ]
+    });
+  }
+  if (game.step >= delay){
     checkscores(game);
     updatescoreboard(game);
-    modUtils.setTimeout(function(){sendUI(game, {id:"delay time",visible:false});},6);
-    for (let ship of game.ships){
-      ship.set({idle:false,collider:true});
-      sendUI(ship, {id:"delay",visible:false});
-      if (ship.custom.wait){
-        ship.custom.wait = false;
-        joinmessage(ship);
-      }
-    }
+    sendUI(game, {id:"delay time",visible:false});
+    sendUI(game, {id:"delay",visible:false});
+    this.tick = main_game;
   }
+  else {
+    let steps = delay - game.step;
+    let minutes = ~~(steps / 3600);
+    let seconds = ~~((steps % 3600) / 60);
+    if (seconds < 10) seconds = "0" + seconds;
+    sendUI(game, {
+      id: "delay time",
+      position: [45.7,26,10,7],
+      visible: true,
+      components: [
+        {type: "text",position:[0,0,100,50],value:`${minutes}:${seconds}`,color:"#cde"},
+      ]
+    });
+  }
+}, main_game = function(game){
+  modUtils.tick();
+  check(game);
   if (game.step % 30 === 0){
     teams.count = [0,0];
-    for (let ship of game.ships){
-      if (!ship.custom.init){
-        ship.custom.init = true;
-        ship.frags = 0;
-        ship.deaths = 0;
-        setteam(ship);
-        setup(ship);
-        sendUI(ship, game.custom.radar_background);
-        echo(`${ship.name} spawned`);
-        if (!game.custom.delayed){
-          game.custom.delayed = true;
-          delay += game.step;
-        }
-        if (game.step > delay){
-          joinmessage(ship);}
-        else {ship.custom.wait = true;}
-        ship.custom.rand = ["","",""];
-        ship.custom.buttons = false;
-      }
-      checkButtons(ship);
-      teams.count[ship.custom.team]++;
-      (ship.score != ship.frags) && ship.set({score:ship.frags});
-    }
-    if (game.step < delay){
-      for (let ship of game.ships){
-        ship.set({idle:true,collider:false});
-        sendUI(ship, {
-          id: "delay",
-          position: [39,18,42,40],
-          visible: true,
-          components: [
-            {type: "text",position:[2,5,80/1.5,33/1.5],value:"Waiting for more players...",color:"#cde"},
-          ]
-        });
-        sendUI(ship, {
-          id: "scoreboard",
-          visible: true,
-          components: [
-            {type: "text",position:[15,0,70,10],value:"Waiting for more players...",color:"#cde"},
-          ]
-        });
-      }
-    }
     for (let i=0; i<2; i++){
       if (teams.points[i] >= modifier.kills_to_win){
         if (!game.custom.ended2){
@@ -1246,7 +1346,7 @@ this.tick = function(game){
           });
           modUtils.setTimeout(function(){
             for (let ship of game.ships){
-              ship.gameover({"Winner":`${teams.names[i]} team`,"Frags":ship.frags,"Deaths":ship.deaths});
+              ship.gameover({"Winner":`${teams.names[i]} team`,"Frags":ship.custom.frags,"Deaths":ship.custom.deaths});
             }
           }, 300);
           echo(`${teams.names[i]} team wins!`);
@@ -1269,51 +1369,30 @@ this.tick = function(game){
             {type: "text",position:[0,0,100,50],value:`Time left: ${minutes}:${seconds}`,color:"#cde"},
           ]
         });
-      } else {
-        if (game.custom.delayed){
-          let steps = delay - game.step;
-          let minutes = ~~(steps / 3600);
-          let seconds = ~~((steps % 3600) / 60);
-          if (seconds < 10) seconds = "0" + seconds;
-          sendUI(game, {
-            id: "delay time",
-            position: [45.7,26,10,7],
-            visible: true,
-            components: [
-              {type: "text",position:[0,0,100,50],value:`${minutes}:${seconds}`,color:"#cde"},
-            ]
-          });
-        }
       }
     } else {
-      if (!game.custom.ended){
-        game.custom.ended = true;
-        endgame(game);
-        sendUI(game, {
-          id: "timer",
-          position: [2.5,28,15,10],
-          visible: true,
-          components: [
-            {type: "text",position:[0,0,100,50],value:`Time's up!`,color:"#cde"},
-          ]
-        });
-        let win,text;
-        if (teams.points[0] != teams.points[1]){
-          win = teams.points.indexOf(Math.max(...teams.points));
-          text = `${teams.names[win]} team wins!`;
-        } else text = "It's a draw!";
-        sendUI(game, {
-          id: "end",
-          position: [39,18,42,40],
-          visible: true,
-          components: [{type:"text",position:[2,5,80/1.5,33/1.5],value:text,color:"#cde"}]
-        });
-        modUtils.setTimeout(function(){
-          for (let ship of game.ships)
-          ship.gameover({"":text,"Frags":ship.frags,"Deaths":ship.deaths});
-        }, 300);
-        echo(text);
-      }
+      game.setOpen(false);
+      sendUI(game, {
+        id: "timer",
+        position: [2.5,28,15,10],
+        visible: true,
+        components: [
+          {type: "text",position:[0,0,100,50],value:`Time's up!`,color:"#cde"},
+        ]
+      });
+      let win;
+      if (teams.points[0] != teams.points[1]){
+        win = teams.points.indexOf(Math.max(...teams.points));
+        endgametext = `${teams.names[win]} team wins!`;
+      } else endgametext = "It's a draw!";
+      sendUI(game, {
+        id: "end",
+        position: [39,18,42,40],
+        visible: true,
+        components: [{type:"text",position:[2,5,80/1.5,33/1.5],value: "Game finished!" + endgametext,color:"#cde"}]
+      });
+      echo(endgametext);
+      this.tick = endgame;
     }
   }
   if (update){
@@ -1325,11 +1404,12 @@ this.tick = function(game){
     checkteambase(game)
     updatescoreboard(game);
   }
+}, endgame = function (game){
+  modUtils.tick();
+  check(game, false, true);
 };
 
-function endgame(game){
-  game.setOpen(false);
-}
+this.tick = waiting;
 
 function setup(ship){
   let t = ship.custom.team;
@@ -1413,7 +1493,7 @@ function Tag(indtext,param,posx,posy,hex,al,size) {
 function sort(arr){
   let array=[...arr],i=0;
   while (i<array.length-1) {
-    if (array[i].frags<array[i+1].frags) {
+    if (array[i].custom.frags<array[i+1].custom.frags) {
       array[i+1]=[array[i],array[i]=array[i+1]][0];
       if (i>0) i-=2;
     }
@@ -1437,7 +1517,7 @@ function updatescoreboard(game){
     for (let i=0;i<10;i++){
       for (let j=0;j<2;j++){
         if (sc[j][i]) scoreboard.components.push(
-          new Tag("text",sc[j][i].frags,j*50,line*10,"#cde","right",2),
+          new Tag("text",sc[j][i].custom.frags,j*50,line*10,"#cde","right",2),
           new Tag("player",sc[j][i].id,j*50,line*10,"#cde","left")
         );
         else scoreboard.components.push({},{});
@@ -1462,7 +1542,7 @@ function outputscoreboard(game,tm){
     }
     if (j == team.length) scoreboard.components.splice((20+ship.custom.team)*2,2,
       new PlayerBox(ship.custom.team*50,90),
-      new Tag("text",ship.frags,ship.custom.team*50,90,ship.custom.team,"right",2),
+      new Tag("text",ship.custom.frags,ship.custom.team*50,90,ship.custom.team,"right",2),
       new Tag("player",ship.id,ship.custom.team*50,90,ship.custom.team,"left")
     );
     sendUI(ship, scoreboard);
@@ -1577,13 +1657,13 @@ this.event = function(event, game){
       if (killer != null) {
         ship.set({collider:true});
         teams.points[killer.custom.team]++;
-        killer.frags++;
+        killer.custom.frags++;
         echo(`${killer.name} killed ${ship.name}`);
       } else {
         echo(ship.name + " killed themselves");
         //teams.points[Math.abs(ship.team-1)]++;
       }
-      ship.deaths++;
+      ship.custom.deaths++;
       update = 1;
       ship.custom.hasbeenkilled = true;
       echo(`${teams.names[0]}:${teams.points[0]},${teams.names[1]}:${teams.points[1]}`);
@@ -1615,7 +1695,7 @@ this.event = function(event, game){
                 if (ship.type != ship_code) ship.set({type:ship_code,stats:88888888,shield:999,collider:true});
               }
               ship.custom.opened = false;
-              checkButtons(ship);
+              ship.custom.buttons = false;
             }
           break;
         }
