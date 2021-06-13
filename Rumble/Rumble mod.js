@@ -1,4 +1,3 @@
-
 //Thanks to Destroy & Dimed for the idea & Bhpsngum for code help
 //Based on Team Rumble from Fortnite
 var modifier = {
@@ -34,12 +33,13 @@ var modUtils = {
     }
   }
 };
+
 var sendUI = function(ship, UI) {
   if (ship != null && typeof ship.setUIComponent == "function") {
     if (UI.visible || UI.visible == null) ship.setUIComponent(UI);
-    else ship.setUIComponent({id: UI.id, position: [0,0,0,0], visible: false})
+    else ship.setUIComponent({id: UI.id, position: [0,0,0,0], visible: false});
   }
-}
+};
 
 var a = {};
 a.Barracuda = '{"name":"Barracuda","level":6,"model":7,"size":2.4,"specs":{"shield":{"capacity":[300,400],"reload":[8,12]},"generator":{"capacity":[100,150],"reload":[8,14]},"ship":{"mass":550,"speed":[70,90],"rotation":[30,45],"acceleration":[130,150],"dash":{"rate":2,"burst_speed":[160,180],"speed":[100,130],"acceleration":[70,70],"initial_energy":[50,75],"energy":[20,30]}}},"bodies":{"body":{"section_segments":12,"offset":{"x":0,"y":0,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[-90,-100,-60,-10,0,20,50,80,100,90],"z":[0,0,0,0,0,0,0,0,0,0,0]},"width":[0,5,20,25,35,40,40,35,30,0],"height":[0,5,40,45,40,60,70,60,30,0],"texture":[10,2,10,2,3,13,13,63,12],"propeller":true},"front":{"section_segments":8,"offset":{"x":0,"y":-20,"z":0},"position":{"x":[0,0,0,0,0],"y":[-90,-85,-70,-60,-20],"z":[0,0,0,0,0]},"width":[0,40,45,10,12],"height":[0,15,18,8,12],"texture":[8,63,4,4,4],"propeller":true},"propeller":{"section_segments":10,"offset":{"x":40,"y":40,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[-20,-15,0,10,20,25,30,40,70,60],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[0,10,15,15,15,10,10,20,15,0],"height":[0,10,15,15,15,10,10,18,8,0],"texture":[4,4,10,3,3,63,4,63,12],"propeller":true},"sides":{"section_segments":6,"angle":90,"offset":{"x":0,"y":0,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[-80,-75,-60,-50,-10,10,50,60,75,80],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[0,30,35,10,12,12,10,35,30,0],"height":[0,10,12,8,12,12,8,12,10,0],"texture":[4,63,4,4,4,4,4,63,4]},"cockpit":{"section_segments":12,"offset":{"x":0,"y":-20,"z":30},"position":{"x":[0,0,0,0,0,0,0,0],"y":[-50,-20,0,10,30,50],"z":[0,0,0,0,0,0]},"width":[0,12,18,20,15,0],"height":[0,20,22,24,20,0],"texture":[9]}},"wings":{"top":{"doubleside":true,"offset":{"x":0,"y":20,"z":15},"length":[70],"width":[70,30],"angle":[90],"position":[0,30],"texture":[63],"bump":{"position":10,"size":30}},"top2":{"doubleside":true,"offset":{"x":0,"y":51,"z":5},"length":[70],"width":[50,20],"angle":[90],"position":[0,60],"texture":[63],"bump":{"position":10,"size":30}}},"typespec":{"name":"Barracuda","level":6,"model":7,"code":607,"specs":{"shield":{"capacity":[300,400],"reload":[8,12]},"generator":{"capacity":[100,150],"reload":[8,14]},"ship":{"mass":550,"speed":[70,90],"rotation":[30,45],"acceleration":[130,150],"dash":{"rate":2,"burst_speed":[160,180],"speed":[100,130],"acceleration":[70,70],"initial_energy":[50,75],"energy":[20,30]}}},"shape":[5.28,5.25,5.332,5.393,4.944,1.997,1.745,1.556,1.435,3.587,3.81,3.779,3.838,3.84,3.779,3.81,3.587,3.205,3.571,3.9,5.132,5.888,5.835,5.551,4.886,5.808,4.886,5.551,5.835,5.888,5.132,3.9,3.571,3.205,3.587,3.81,3.779,3.838,3.84,3.779,3.81,3.587,1.435,1.556,1.745,1.997,4.944,5.393,5.332,5.25],"lasers":[],"radius":5.888}}';
@@ -1056,6 +1056,71 @@ var maps = [
   radar: {type:"box",width:10,height:10},
   basedmg: [{x:-25,x2:25,y:-225,y2:-275},{x:-25,x2:25,y:225,y2:275}]
   },
+  {name: "Mothership", author: "EDEN", map:
+    "999999999999999999999999999999999999999999999999999999999999\n"+
+    "999999999999999999999999999999999999999999999999999999999999\n"+
+    "999999999999999999999999            999999999999999999999999\n"+
+    "9999999999999999999                      9999999999999999999\n"+
+    "9999999999999999                            9999999999999999\n"+
+    "99999999999999                                99999999999999\n"+
+    "999999999999                                    999999999999\n"+
+    "99999999999                                      99999999999\n"+
+    "9999999999               9999  9999               9999999999\n"+
+    "999999999             999 9      9 999             999999999\n"+
+    "99999999            999    99  99    999            99999999\n"+
+    "9999999           999  9999      9999  999           9999999\n"+
+    "999999           99  99   9      9   99  99           999999\n"+
+    "99999          999 99     9      9     99 999          99999\n"+
+    "9999          99  9       7      7       9  99          9999\n"+
+    "9999         99 99       7        7       99 99         9999\n"+
+    "999          9 9         9        9         9 9          999\n"+
+    "999         99 9         9        9         9 99         999\n"+
+    "99         99 9          9        9          9 99         99\n"+
+    "99         9 9           9        9           9 9         99\n"+
+    "99        99 9           9        9           9 99        99\n"+
+    "9         9 9            99      99            9 9         9\n"+
+    "9         9 9             9      9             9 9         9\n"+
+    "9        999     66  66   99    99   66  66     999        9\n"+
+    "         5         88      9    9      88         5         \n"+
+    "        5        66  66     9  9     66  66        5        \n"+
+    "   99   9                                          9   99   \n"+
+    "     99 9  5                                    5  9 99     \n"+
+    "       99   7                44                7   99       \n"+
+    "999          9              4884              9          999\n"+
+    "999          9              4884              9          999\n"+
+    "       99   7                44                7   99       \n"+
+    "     99 9  5                                    5  9 99     \n"+
+    "   99   9                                          9   99   \n"+
+    "        5        66  66     9  9     66  66        5        \n"+
+    "         5         88      9    9      88         5         \n"+
+    "9        999     66  66   99    99   66  66     999        9\n"+
+    "9         9 9             9      9             9 9         9\n"+
+    "9         9 9            99      99            9 9         9\n"+
+    "99        99 9           9        9           9 99        99\n"+
+    "99         9 9           9        9           9 9         99\n"+
+    "99         99 9          9        9          9 99         99\n"+
+    "999         99 9         9        9         9 99         999\n"+
+    "999          9 9         9        9         9 9          999\n"+
+    "9999         99 99       7        7       99 99         9999\n"+
+    "9999          99  9       7      7       9  99          9999\n"+
+    "99999          999 99     9      9     99 999          99999\n"+
+    "999999           99  99   9      9   99  99           999999\n"+
+    "9999999           999  9999      9999  999           9999999\n"+
+    "99999999            999    99  99    999            99999999\n"+
+    "999999999             999 9      9 999             999999999\n"+
+    "9999999999               9999  9999               9999999999\n"+
+    "99999999999                                      99999999999\n"+
+    "999999999999                                    999999999999\n"+
+    "99999999999999                                99999999999999\n"+
+    "9999999999999999                            9999999999999999\n"+
+    "9999999999999999999                      9999999999999999999\n"+
+    "999999999999999999999999            999999999999999999999999\n"+
+    "999999999999999999999999999999999999999999999999999999999999\n"+
+    "999999999999999999999999999999999999999999999999999999999999",
+  shipspawn: [{x:0,y:-250},{x:0,y:250}],
+  radar: {type:"box",width:20,height:10},
+  basedmg: [{x:-40,x2:40,y:-225,y2:-275},{x:-40,x2:40,y:225,y2:275}]
+  }
 ];
 
 game.custom.radar_background = {
@@ -1078,7 +1143,7 @@ function addRadarSpot (x, y, type, width, height, alpha, color){
 }
 
 var update = 1;
-var delay = .1*3600;
+var delay = 1*3600;
 if (!game.custom.map) game.custom.map = maps[Math.trunc(Math.random()*maps.length)];
 var map = game.custom.map; // for debugging
 for (let i=0; i<map.shipspawn.length; i++){
@@ -1510,6 +1575,7 @@ this.event = function(event, game){
     case "ship_destroyed":
       let killer = event.killer;
       if (killer != null) {
+        ship.set({collider:true});
         teams.points[killer.custom.team]++;
         killer.frags++;
         echo(`${killer.name} killed ${ship.name}`);
