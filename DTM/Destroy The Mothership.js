@@ -30,7 +30,7 @@ CHANGELOG 1.2.5
   * Fixed scoreboard positioning
   * Motherships are now teleported near the center when game starts 
   * Patched Solar blade infinite firerate bug 
-  * Removed player collision at start while in wating phase 
+  * Removed player collision at start while in waiting phase 
   * Improved client performance 
 */
 
