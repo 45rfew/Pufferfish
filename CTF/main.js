@@ -1324,6 +1324,14 @@ this.tick = function(game){
               ship.custom.wait = false;
               ship.set({type:121});
             }
+            sendUI(ship, setUIComponent({
+              id: "buy_lifes_blocker",
+              visible: true,
+              clickable: true,
+              shortcut: String.fromCharCode(187),
+              position: [65,0,10,10],
+              components: []
+            });
             setteam(ship);
             selectship(ship);
             mapcredit(ship);
