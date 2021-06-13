@@ -530,6 +530,14 @@ this.tick = function(game){
         ship.deaths = 0;
         setteam(ship);
         setup(ship);
+        sendUI(ship, {
+          id: "buy_lifes_blocker",
+          visible: true,
+          clickable: true,
+          shortcut: String.fromCharCode(187),
+          position: [65,0,10,10],
+          components: []
+        });
         sendUI(ship, getRadarInfo());
         echoc(`${ship.name} spawned`,"#fefecc");
         if (!game.custom.delayed){
