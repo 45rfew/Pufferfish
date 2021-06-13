@@ -1250,7 +1250,7 @@ var check = function(game, isWaiting, isGameOver) {
       ship.custom.deaths = 0;
       setteam(ship);
       setup(ship);
-      ship.setUIComponent({
+      sendUI(ship, {
         id: "buy_lifes_blocker",
         visible: true,
         clickable: true,
