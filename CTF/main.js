@@ -1324,7 +1324,7 @@ this.tick = function(game){
               ship.custom.wait = false;
               ship.set({type:121});
             }
-            sendUI(ship, setUIComponent({
+            sendUI(ship, {
               id: "buy_lifes_blocker",
               visible: true,
               clickable: true,
