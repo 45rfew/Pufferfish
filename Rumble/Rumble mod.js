@@ -1555,9 +1555,9 @@ function checkscores(game){
     position: [33,10,42,40],
     visible: true,
     components: [
-      {type: "text",position:[2,5,80/1.5,33/1.5],value:teams.points[0],color:getcolor(teams.hues[0])},
+      {type: "text",position:[2-((Math.log(teams.points[0])*Math.LOG10E+1|0)*5)/2,5,80/1.5,33/1.5],value:teams.points[0],color:getcolor(teams.hues[0])},
       {type: "text",position:[0,0,80,33],value:"-",color:"#CDE"},
-      {type: "text",position:[25,5,80/1.5,33/1.5],value:teams.points[1],color:getcolor(teams.hues[1])},
+      {type: "text",position:[25+((Math.log(teams.points[1])*Math.LOG10E+1|0)*5)/2,5,80/1.5,33/1.5],value:teams.points[1],color:getcolor(teams.hues[1])},
     ]
   });
 }
