@@ -1279,7 +1279,7 @@ var check = function(game, isWaiting, isGameOver) {
   }
 }
 
-var endgametext = "Unknown";
+var endgametext = ["Unknown" || "Unknown"];
 var gameover = function (ship) {
   ship.gameover({
     "Match status": endgametext[0],
