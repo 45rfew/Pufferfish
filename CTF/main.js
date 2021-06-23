@@ -1389,6 +1389,7 @@ this.tick = function(game){
             sendUI(ship, {id:"respawn_delay",visible:false});
             ship.custom.respawn_hide = true;
           }
+          ship.emptyWeapons();
         }
         let steps = gamelength - game.step;
         if (steps <= toTick(match_time)) {
@@ -2205,9 +2206,6 @@ this.event = function(event, game){
           shipgems(ship,data[0].code);
         }
         break;
-      case "collectible_picked":
-        ship.emptyWeapons();
-      break;
     }
   }
 };
