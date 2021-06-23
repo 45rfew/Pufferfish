@@ -1702,7 +1702,6 @@ function resetgame(game,isLeave){
         modUtils.setTimeout(function(){
           for (let ship of game.ships){
             ship.gameover({
-              "Score": ship.score,
               "Frags": ship.frags,
               "Deaths": ship.deaths,
               "Flags stolen": ship.flags_stolen,
