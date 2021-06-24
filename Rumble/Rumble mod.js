@@ -7,7 +7,7 @@ var modifier = {
   kills_to_win: 100,
   yeet_gems: true,
   healer_button: false,
-  round_timer: 30,
+  round_timer: 2,
   round_ship_tier: "random",//choose from 3-7 or "random"
   gems_upon_spawning: 0,//removed
   laggy_objs: false
@@ -1281,12 +1281,16 @@ var check = function(game, isWaiting, isGameOver) {
 }
 
 var endgametext = ["Unknown", "Unknown"];
-var gameover = function (ship) {
+var gameover = function (ship){
+  let top3 = game.ships.sort((a,b) => (b.custom.frags || 0) - (a.custom.frags || 0)).slice(0,3);
+  let endgamestatus = {[top3[0].name]:top3[0].custom.frags,[top3[1].name]:top3[1].custom.frags,[top3[2].name]:top3[2].custom.frags}
   ship.gameover({
     "Match status": endgametext[0],
     "Match results": endgametext[1],
     "Frags": ship.custom.frags,
-    "Deaths": ship.custom.deaths
+    "Deaths": ship.custom.deaths,
+    "Best killers":"Frags",
+    ...endgamestatus
   });
   ship.custom.exited = true;
 }
@@ -1351,7 +1355,7 @@ var waiting = function (game) {
           position: [2.5,28,15,10],
           visible: true,
           components: [
-            {type: "text",position:[0,0,100,50],value:`Time left: ${minutes}:${seconds}`,color:"#cde"},
+            {type: "text",position:[0,0,100,50],value:`Time left: ${hours}:${minutes}:${seconds}`,color:"#cde"},
           ]
         });
       }
