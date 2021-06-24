@@ -1355,7 +1355,7 @@ var waiting = function (game) {
           position: [2.5,28,15,10],
           visible: true,
           components: [
-            {type: "text",position:[0,0,100,50],value:`Time left: ${hours}:${minutes}:${seconds}`,color:"#cde"},
+            {type: "text",position:[0,0,100,50],value:`Time left: ${minutes}:${seconds}`,color:"#cde"},
           ]
         });
       }
