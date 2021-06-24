@@ -7,7 +7,7 @@ var modifier = {
   kills_to_win: 100,
   yeet_gems: true,
   healer_button: false,
-  round_timer: 2,
+  round_timer: 30,
   round_ship_tier: "random",//choose from 3-7 or "random"
   gems_upon_spawning: 0,//removed
   laggy_objs: false
