@@ -1348,6 +1348,7 @@ var waiting = function (game) {
         let steps = time - game.step;
         let minutes = ~~(steps / 3600);
         let seconds = ~~((steps % 3600) / 60);
+        let hours = ~~(minutes/60);
         if (seconds < 10) seconds = "0" + seconds;
         if (minutes < 10) minutes = "0" + minutes;
         sendUI(game, {
@@ -1355,7 +1356,7 @@ var waiting = function (game) {
           position: [2.5,28,15,10],
           visible: true,
           components: [
-            {type: "text",position:[0,0,100,50],value:`Time left: ${minutes}:${seconds}`,color:"#cde"},
+            {type: "text",position:[0,0,100,50],value:`Time left: ${hours}:${minutes-hours*60}:${seconds}`,color:"#cde"},
           ]
         });
       }
