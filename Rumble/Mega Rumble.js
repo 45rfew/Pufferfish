@@ -768,7 +768,7 @@ var waiting = function (game) {
     ]
   });
   echo(endgametext);
-  internals.tick = endgame;
+  this.tick = endgame;
 }.bind(this), endgame = function (game){
   modUtils.tick();
   check(game, false, true);
