@@ -1,125 +1,34 @@
-// /*
-// CREDITS:
-// * Idea: Nordic Commander and Dimed
-// * Code resource: Uranus
-// * Coding: 45rfew and Bhpsngum
-// * Testing and debugging: Notus and PMGL
-// * Poster design (as usual): Tournebulle
-// */
+/*
+CREDITS:
+* Idea: Nordic Commander and Dimed
+* Code resource: Uranus
+* Coding: 45rfew and Bhpsngum
+* Testing and debugging: Notus and PMGL
+* Poster design (as usual): Tournebulle
+*/
+
+var CONSTANTS = {
+  map_size: 60,
+  pointsToWin: 5,
+  match_time: 10,
+  match_point: 3,
+  custom_ships: true,
+  flags_can_drop: true,
+  flag_dropped_time: 1,
+  flag_lost_delay: 3,
+  immunity_duration: 3,
+  flag_weight: 1.2,
+  respawn_delay: {
+    min: 5,
+    max: 15,
+    kill_bonus: 1,
+    death_stroke: 2
+  }
+}
 //
-// var ms = 60;
-// var pointsToWin = 5;
-// var match_time = 10;
-// var match_point = 3;
-// var custom_ships = true;
-// var flags_can_drop = true;
-// var flag_dropped_time = 1;
-// var flag_lost_delay = 3;
-// var immunity_duration = 3;
-// var flag_weight = 1.2;
-// var respawn_delay = {
-//   min: 5,
-//   max: 15,
-//   kill_bonus: 1,
-//   death_stroke: 2
-// };
-//
-// var colors = [
-//   {team:"Red",hue:0,team2:"Blue",hue2:240,flagged:[40,180]},
-//   {team:"Green",hue:120,team2:"Purple",hue2:270,flagged:[80,310]},
-//   {team:"Yellow",hue:60,team2:"Pink",hue2:300,flagged:[100,340]},
-//   {team:"Aqua",hue:150,team2:"Orange",hue2:30,flagged:[190,0]}
-// ];
-// var dfl_tcl = "	hsl(210, 50%, 87%, 1)";
 // var team_matchups;
-// var modUtils = {
-//   setTimeout: function(f,time) {
-//     this.jobs.push({f: f,time: game.step+time}) ;
-//   },
-//   jobs: [],
-//   tick: function() {
-//     var t = game.step ;
-//     for (var i=this.jobs.length-1;i>=0;i--) {
-//       var job = this.jobs[i] ;
-//       if (t>=job.time) {
-//         try {
-//           job.f() ;
-//         }
-//         catch (err) {
-//         }
-//         this.jobs.splice(i,1) ;
-//       }
-//     }
-//   }
-// }
 // var rand = function (num){
 //   return Math.trunc(Math.random()*num);
-// }
-// var getcolor = function (color,alpha = 1){
-//   return `hsla(${color},100%,50%,${alpha})`;
-// }
-//
-// var toTick = function (num){
-//   return num*3600;
-// }
-//
-// var sqrDist = function (x, y){
-//   return x*x+y*y;
-// }
-//
-// var distance = function (x, y){
-//   return Math.sqrt(x*x+y*y);
-// }
-//
-// var dist2points = function (x, y, z, t){
-//   return Math.sqrt((z-x)**2+(t-y)**2);
-// }
-// var randteam = rand(4);
-// var teams = {
-//   names: [colors[randteam].team,colors[randteam].team2],
-//   hues: [colors[randteam].hue,colors[randteam].hue2],
-//   x: {
-//     spawn: [0,0],
-//     flag: [0,0],
-//     target: [0,0]
-//   },
-//   y: {
-//     spawn: [0,0],
-//     flag: [0,0],
-//     target: [0,0]
-//   },
-//   flag_dropped_time: [0,0],
-//   flagholder:[0,0],
-//   points:[0,0],
-//   count: [0,0],
-//   ships: [[],[]],
-//   round_points: [0,0]
-// };
-//
-// var flags_drop = {
-//   x: [0,0],
-//   y: [0,0]
-// };
-//
-// var respawnMsg = [
-//   "Restocking pilot essentials",
-//   "Repairing external damage",
-//   "Repairing internal damage",
-//   "Reconnecting to the system",
-//   "Refueling ship",
-//   "Cooking lunch",
-//   "Hunting ducks",
-//   "Building Yeetus",
-//   "Maintaining the engine",
-//   "Cleaning the ship",
-//   "Chanting explosion",
-//   "Watching anime",
-//   "Reading manga"
-// ];
-//
-// var processMsg = function(id) {
-//   let msg = respawnMsg[id], space = Math.max(...respawnMsg.map(x => x.length)) - msg.length;
-//   return Array(Math.round(space/2)).fill(" ").join("")+msg+"..."+Array(Math.trunc(space/2)).fill(" ").join("");
 // }
 //
 //
@@ -143,23 +52,8 @@
 //   teams.flag_dropped_time[i] = 0;
 // }
 //
-// var mapcredit = function (ship){
-//   ship.setUIComponent({
-//     id: "map info",
-//     position: [56,88,24,22],
-//     visible: true,
-//     components: [
-//       {type: "text",position:[0,0,100,50],value:`Map: ${maps[map_id].name} by ${maps[map_id].author}`,color:dfl_tcl},
-//     ]
-//   });
-// }
 //
 // var size = ms || 30, zoom = 10/size;
-// var transform = {
-//   X: x => x+size*5,
-//   Y: y => -y+size*5
-// };
-// let t = num => Math.max(num,0) || 0;
 // var flagstand_size = 10;
 // let map_size = 60;
 // let limit = map_size*5-10;
@@ -170,8 +64,113 @@
 //   return (((ship.custom.respawn_delay||0)>game.step)?(ship.custom.respawn_delay-game.step):0) + immunity_duration*60;
 // }
 CTF = {
+  constants: {
+    dfl_tcl: "hsl(210, 50%, 87%, 1)",
+    teams_properties: [
+      {names: ["Red", "Blue"], hues: [0, 240], flagged_hues: [40,180]},
+      {names: ["Green", "Purple"], hues: [120, 270], flagged_hues: [80,310]},
+      {names: ["Yellow", "Pink"], hues: [60, 300],flagged_hues: [100,340]},
+      {names: ["Aqua", "Orange"], hues: [150,30], flagged_hues:[190,0]}
+    ],
+  },
+  variables: {
+
+  },
   manager: {
-    map_size: 60,
+    time: {
+      setTimeout: function(f,time) {
+        this.jobs.push({f: f,time: game.step+time}) ;
+      },
+      jobs: [],
+      tick: function() {
+        var t = game.step ;
+        for (var i=this.jobs.length-1;i>=0;i--) {
+          var job = this.jobs[i] ;
+          if (t>=job.time) {
+            try {
+              job.f() ;
+            }
+            catch (err) {
+            }
+            this.jobs.splice(i,1) ;
+          }
+        }
+      }
+    },
+    teams: {
+      pickProperties: function () {
+        return Object.assign(this,CTF.utilities.randomItem(CTF.constants.teams_properties))
+      },
+      names: [],
+      hues: [],
+      flagged_hues: [],
+      ship_spawn: [
+        {x: 0, y: 0},
+        {x: 0, y: 0}
+      ],
+      flags: [
+        {x: 0, y: 0},
+        {x: 0, y: 0}
+      ],
+      target: [
+        {x: 0, y: 0},
+        {x: 0, y: 0}
+      ],
+      flags_drop: [
+        {x: 0, y: 0},
+        {x: 0, y: 0}
+      ],
+      flag_dropped_time: [0,0],
+      flagholder:[0,0],
+      points: [0,0],
+      count: [0,0],
+      ships: [[],[]],
+      round_points: [0,0]
+    },
+    respawn: {
+      messages: [
+        "Restocking pilot essentials",
+        "Repairing external damage",
+        "Repairing internal damage",
+        "Reconnecting to the system",
+        "Refueling ship",
+        "Cooking lunch",
+        "Hunting ducks",
+        "Building Yeetus",
+        "Maintaining the engine",
+        "Cleaning the ship",
+        "Chanting explosion",
+        "Watching anime",
+        "Reading manga"
+      ],
+      toMessage: function(id) {
+        let msg = this.messages[id] || this.list[0], space = Math.max(...this.messages.map(x => x.length)) - msg.length;
+        return Array(Math.round(space/2)).fill(" ").join("")+msg+"..."+Array(Math.trunc(space/2)).fill(" ").join("");
+      },
+      set: function (ship) {
+        let respawnDelay = Math.trunc((ship.custom.respawn_delay - game.step)/60);
+        if (respawnDelay >= 0 && ship.death_stroke != 0 && ship.custom.respawnMsgIndex != null) {
+          let rmsg = this.toMessage(ship.custom.respawnMsgIndex);
+          if (ship.alive) {
+            CTF.utilities.sendUI(ship, {
+              id: "respawn_delay",
+              visible: true,
+              position: [39,70,22,18],
+              components: [
+                {type: "text",position:[0,0,100,33.3],value:"Please stand by",color:CTF.constants.dfl_tcl},
+                {type: "text",position:[0,33.3,100,33.3],value:rmsg,color:CTF.constants.dfl_tcl},
+                {type: "text",position:[0,66.7,100,33.3],value:respawnDelay,color:CTF.constants.dfl_tcl}
+              ]
+            });
+          }
+          ship.custom.respawn_hide = false;
+        }
+        else if (!ship.custom.respawn_hide) {
+          ship.setUIComponent({id:"respawn_delay",visible:false});
+          ship.custom.respawn_hide = true;
+        }
+      }
+    },
     map: {
       list: [
         {name: "Dimension 2.0", author: "Liberal", map:
@@ -1297,8 +1296,21 @@ CTF = {
       randMap: function() {
         return this.current = CTF.utilities.randomItem(this.list)
       },
-      set: function(game) {
-        return game.setCustomMap(this.current.map)
+      initialize: function(game) {
+        this.randMap();
+        game.setCustomMap(this.current.map);
+        ["ship_spawn", "flags"].forEach(e => (CTF.manager.teams[e] = this.current[e]));
+        typeof (this.current||{}).traffic == "function" && map.traffic(game);
+      },
+      credit: function (ship) {
+        CTF.utilities.sendUI(ship, {
+          id: "map_info",
+          position: [56,88,24,22],
+          visible: true,
+          components: [
+            {type: "text",position:[0,0,100,50],value:`Map: ${this.current.name} by ${this.current.author}`,color:CTF.constants.dfl_tcl}
+          ]
+        });
       }
     },
     ship: {
@@ -1396,7 +1408,7 @@ CTF = {
           t.model = t.typespec.model += this.getTierCount(t.level);
           t.typespec.code = t.level * 100 + t.model;
           t.typespec.name = t.name += " - Flagged";
-          var flag_weight = this.flag_weight;
+          var flag_weight = CTF.constants.flag_weight;
           for (let i=0;i<2;i++) {
             t.typespec.specs.ship.speed[i] /= flag_weight;
             t.specs.ship.speed[i] /= flag_weight;
@@ -1456,18 +1468,38 @@ CTF = {
     ]
   },
   modules: {
-    stages: [],
-    setStage: function(stageIndex) {
+    context: this,
+    stages: [
+      function waiting (game) {
 
-    }
-  },
-  actions: {
+      },
+      function main_game (game) {
+
+      }
+    ],
+    initialize: function() {
+      Object.assign(CTF.constants, CONSTANTS);
+      CTF.manager.ship.initialize();
+      this.setOptions();
+      CTF.manager.teams.pickProperties();
+      this.setStage(0);
+      this.setEvent();
+    },
+    rounds: {
+      initialize: function(game) {
+        CTF.manager.map.initialize(game);
+      }
+    },
+    setStage: function(stageIndex) {
+      let stages = this.stages;
+      this.context.tick = stages[stageIndex] || stages[0]
+    },
     setOptions: function() {
-      this.options = {
+      this.context.options = {
         root_mode: "",
-        map_size: CTF.manager.map_size,
+        map_size: CTF.constants.map_size,
         vocabulary: CTF.manager.vocabulary,
-        custom_map: CTF.manager.map.randMap().map,
+        custom_map: "",
         radar_zoom: 1,
         ships: CTF.manager.ship.export(),
         reset_tree: true,
@@ -1481,7 +1513,19 @@ CTF = {
         crystal_value: 0,
         max_players: 20
       }
-    }.bind(this)
+    },
+    setEvent: function () {
+      this.context.event = function (event, game) {
+        switch (event.name) {
+          case "ship_destroyed":
+            ship.custom.respawnMsgIndex = CTF.utilities.random(CTF.manager.respawnMsg.list.length);
+            break
+        }
+      }
+    }
+  },
+  actions: {
+
   },
   utilities: {
     random: function (num) {
@@ -1489,9 +1533,34 @@ CTF = {
     },
     randomItem: function(list) {
       return list[this.random(list.length)]
+    },
+    sendUI: function(ship, UI) {
+      if (ship != null && typeof ship.setUIComponent == "function") {
+        if (UI.visible || UI.visible == null) ship.setUIComponent(UI);
+        else ship.setUIComponent({id: UI.id, position: [0,0,0,0], visible: false})
+      }
+    },
+    getcolor: function (color,alpha = 1){
+      return `hsla(${color},100%,50%,${alpha})`;
+    },
+    toTick: function (num){
+      return num*3600;
+    },
+    sqrDist: function (x, y){
+      return x*x+y*y;
+    },
+    distance: function (x, y){
+      return Math.sqrt(x*x+y*y);
+    },
+    dist2points: function (x, y, z, t){
+      return Math.sqrt((z-x)**2+(t-y)**2);
+    },
+    nonZero: num => Math.max(num,0) || 0,
+    transform: {
+      X: x => x+size*5,
+      Y: y => -y+size*5
     }
-  },
+  }
 }
 
-CTF.manager.ship.initialize();
-CTF.actions.setOptions();
+CTF.modules.initialize();
