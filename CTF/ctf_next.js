@@ -1293,8 +1293,12 @@ CTF = {
           ship_spawn: [{x:-180,y:0},{x:180,y:0}],
           restrict_tiers: [1,3,4,5,6]}
       ],
+      current: {},
       randMap: function() {
-        return CTF.utilities.randomItem(this.list)
+        return this.current = CTF.utilities.randomItem(this.list)
+      },
+      setMap: function(game) {
+        return game.setCustomMap(this.current.map)
       }
     },
     ship: {
