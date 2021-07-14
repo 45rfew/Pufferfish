@@ -1297,7 +1297,7 @@ CTF = {
       randMap: function() {
         return this.current = CTF.utilities.randomItem(this.list)
       },
-      setMap: function(game) {
+      set: function(game) {
         return game.setCustomMap(this.current.map)
       }
     },
