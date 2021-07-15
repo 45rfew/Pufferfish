@@ -3,13 +3,13 @@ var PointsRange = 10; // ranges between checkpoints
 var progressBar = {
   px: 40, // width of the progress bar (global)
   py: 1, // height of the progress bar (global)
-  dbx: 1/20, // ratio of (big checkpoint witdth diameter)/(progressbar width)
+  dbx: 1/23, // ratio of (big checkpoint witdth diameter)/(progressbar width)
   dby: 3, // ratio of (big checkpoint height diameter)/(progressbar height)
-  dx: 1/30, // ratio of (small checkpoints witdth diameter)/(progressbar width)
+  dx: 1/35, // ratio of (small checkpoints witdth diameter)/(progressbar width)
   dy: 2, // ratio of (small checkpoints height diameter)/(progressbar height)
   offsetY: 13.2, //position from the top of screen (global)
   distanceY: 2 // height distance multiplier (global)
-}
+};
 
 var modifier = {
   map_size: 60,
@@ -26,21 +26,21 @@ var modifier = {
 };
 
 var modUtils = {
-  setTimeout: function(f,time) {
-    this.jobs.push({f: f,time: game.step+time}) ;
+  setTimeout: function(f,time){
+    this.jobs.push({f:f,time:game.step+time});
   },
   jobs: [],
-  tick: function() {
+  tick: function(){
     var t = game.step;
-    for (var i=this.jobs.length-1;i>=0;i--) {
-      var job = this.jobs[i] ;
-      if (t>=job.time) {
+    for (var i=this.jobs.length-1;i>=0;i--){
+      var job = this.jobs[i];
+      if (t>=job.time){
         try {
-          job.f() ;
+          job.f();
         }
-        catch (err) {
+        catch (err){
         }
-        this.jobs.splice(i,1) ;
+        this.jobs.splice(i,1);
       }
     }
   }
@@ -92,6 +92,7 @@ var ships_list = [
   ["Advanced-Fighter","Scorpion","Marauder","Condor","A-Speedster","Rock-Tower","Baracuda","O-Defender","H-Mercury"],
   ["Odyssey","Shadow X-3","Bastion","Aries"]
 ], ship_codes = ships_list, remove_ships = [101,601,602,703];
+
 for (let i=0; i<ship_codes.length; i++){
   for (let j=0;j<ship_codes[i].length; j++){
     ship_codes[i][j] = ((i+1)*100+j+1);
@@ -152,25 +153,13 @@ function findShipCode(name){
   return null;
 }
 
-var chooseships,maps = [1761,1749,77,45,4360,3604,5575,4990],music = ["crystals.mp3","argon.mp3"],
-tierratio = [{t:3,r:[0,6]},{t:4,r:[7,16]},{t:5,r:[17,41]},{t:6,r:[42,74]},{t:7,r:[75,100]}/*6,17,25,33,17*/];
+var music = ["crystals.mp3","argon.mp3"];
 var colors = [
   {team:"Red",hue:0,team2:"Blue",hue2:240},
   {team:"Yellow",hue:60,team2:"Pink",hue2:300},
   {team:"Green",hue:120,team2:"Purple",hue2:270},
   {team:"Aqua",hue:150,team2:"Orange",hue2:30}
 ];
-
-if (!game.custom.ship_name){
-  game.custom.ship_name = true;
-  colors = colors[0];
-  game.custom.colors = colors;
-  game.custom.ship_name = ship_name;
-  game.custom.modifier = modifier;
-}
-colors = game.custom.colors;
-modifier = game.custom.modifier;
-var ship_name = game.custom.ship_name;
 
 var maps = [
   {name: "Heart's Edge", author: "X7", map:
@@ -249,13 +238,15 @@ function addRadarSpot (x, y, type, width, height, alpha, color){
 }
 var teams = {
   names: ["Red","Blue"],
-  points: [9,9],
+  points: [19,19],
+  points2: [19,19],
   count: [0,0],
   ships: [[],[]],
   hues: [0,240],
   level: [1,1],
   update: [false,false]
 };
+
 var update = 1;
 var delay = modifier.game_delay * 60;
 if (!game.custom.map) game.custom.map = maps[Math.trunc(Math.random()*maps.length)];
@@ -283,10 +274,9 @@ this.options = {
   asteroids_strength: 1e6,
   crystal_drop: 0,
   max_level: 1,
-  shield_regen_factor: 0.5
+  shield_regen_factor: 0.6
 };
 
-var a = [["a"],["a"]];
 this.tick = function(game){
   if (game.step % 30 === 0){
     teams.count = [0,0];
@@ -297,9 +287,12 @@ this.tick = function(game){
         ship.custom.frags = 0;
         ship.custom.kills = 0;
       }
+      if (ship.score != ship.custom.frags) ship.set({score:ship.custom.frags});
       teams.count[ship.custom.team]++;
     }
     checkscores(game);
+    checkstatus(game);
+    updatescoreboard(game);
   }
 }
 
@@ -334,25 +327,30 @@ function checkscores(game){
 
 function checkstatus(game, team){
   let upgraded = [[],[]];
-  if (!game.custom.checkpoints){
+  let checkpoints = Array.from(Array(12).fill({1:0}).map(a => a*13).keys()).map((a,b) => (b+1)*10);
+  /*if (!game.custom.checkpoints){
     game.custom.checkpoints = true;
     for (let j=0; j<2; j++){
       for (let i=0; i<12; i++){
          upgraded[j].push({[(i+1)*10]:0});
       }
     }
+  }*/
+  for (let i=0; i<2; i++){
+    if (teams.points2[i] % 10 === 0 && teams.points2[i] > 1){
+      teams.points2[i] += .05
+      teams.level[i]++;
+      for (let ship of game.ships)
+        if (ship.team == i) 
+        ship.set({type:stages[`level_${teams.level[i]}`],invulnerable:60,stats:88888888,shield:999});
+    }
   }
-  let checkpoints = Array.from(Array(12).fill({1:0}).map(a => a*13)
-  .keys()).map((a,b) => (b+1)*10);
-
-  let upgraded = Array(12).fill({1:2})
-
 }
 
 function setup(ship){
   let t = ship.custom.team;
-  let level = Math.trunc(ship.type/100); //level = (level<4)?4:level;
-  let gems = ((modifier.round_ship_tier**2)*20)/1.5;
+  let level = Math.trunc(ship.type/100);
+  let gems = ((ship.type**2)*20)/1.5;
   let x = map.shipspawn[t].x,
   y = map.shipspawn[t].y,r=0;
   ship.set({x:x,y:y,stats:88888888,invulnerable:300,shield:999,crystals:gems});
@@ -467,6 +465,8 @@ this.event = function(event, game){
       if (killer != null) {
         ship.set({collider:true});
         teams.points[killer.custom.team]++;
+        teams.points2[killer.custom.team]++;
+        teams.points2[killer.custom.team] = Math.trunc(teams.points2[killer.custom.team]);
         killer.custom.frags++;
       } else {
         //teams.points[Math.abs(ship.team-1)]++;
@@ -474,9 +474,7 @@ this.event = function(event, game){
       ship.custom.deaths++;
       update = 1;
       ship.custom.hasbeenkilled = true;
-      //if (teams.points[ship.team] % 10 === 0 && teams.points[ship.team] > 1)
-      //checkstatus(game, ship.team);
-      //console.log(teams)
+      checkstatus(game);
       break;
     case "ship_spawned":
       if (ship.custom.hasbeenkilled === true){
