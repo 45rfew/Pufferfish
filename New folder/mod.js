@@ -1,7 +1,7 @@
 var pointsToWin = 120;
 var PointsRange = 10; // ranges between checkpoints
 var delay = 90; // in seconds
-var timer = 15; // in minutes
+var timer = 15**100; // in minutes
 var progressBar = {
   px: 40, // width of the progress bar (global)
   py: 1, // height of the progress bar (global)
@@ -12,6 +12,10 @@ var progressBar = {
   offsetY: 13.2, //position from the top of screen (global)
   distanceY: 2 // height distance multiplier (global)
 };
+//todo: add balancing; winning team 10 points ahead = they spawn with half health 
+//todo: add more colors to scorebar 
+//todo: improve scoreboard
+//todo: imrove ship spawing function (randomize)
 
 var modUtils = {
   setTimeout: function(f,time){
@@ -78,7 +82,7 @@ var ships_list = [
   ["U-Sniper","FuryStar","T-Warrior","Aetos","Shadow X-2","Howler","Bat-Defender","Toscain"],
   ["Advanced-Fighter","Scorpion","Marauder","Condor","A-Speedster","Rock-Tower","Baracuda","O-Defender","H-Mercury"],
   ["Odyssey","Shadow X-3","Bastion","Aries"]
-], ship_codes = ships_list, remove_ships = [101,601,602,703];
+], ship_codes = ships_list, remove_ships = [101,201,202,601,602,703];
 
 for (let i=0; i<ship_codes.length; i++){
   for (let j=0;j<ship_codes[i].length; j++){
@@ -125,11 +129,11 @@ var stages = {
   level_1: [703,601,601].map((a) => ({sort:Math.random(),value:a})).sort((a, b) => a.sort - b.sort).map((a) => a.value)[0],
   level_2: [703,601,602].filter(a => a != 703)[1],
   level_3: ship_codes[4][~~(Math.random()*ship_codes[4].length)],
-  level_13: [101,607][~~(Math.random()*2)] 
+  level_12: 101
 };
 
-let random_ships = randomPath(ship_codes,2).concat().filter(a => a != stages.level_3);
-for (let i=4; i<13; i++){
+let random_ships = randomPath(ship_codes,1).concat().filter(a => a != stages.level_3);
+for (let i=4; i<12; i++){
   stages[`level_${i}`] = random_ships[i]; 
 }
 
@@ -139,7 +143,7 @@ function findShipCode(name){
   if (ships_list[i][j] == name) return (i+3)*100+j+1;
   return null;
 }
-
+console.log(stages);
 var maps = [
   {name: "Heart's Edge", author: "X7", map:
     "    9999999999999999999    9999999999999999999    \n"+
@@ -194,7 +198,223 @@ var maps = [
     "    9999999999999999999    9999999999999999999    ",
   shipspawn: [{x:-210,y:0},{x:210,y:0}],
   radar: {type:"box",width:10,height:18}
-  }
+  },
+  {name: "Torment", author: "Gumz", map:
+    "    8999999999999999999    9999999999999999998    \n"+
+    "    8999999999999778  9    9  8779999999999998    \n"+
+    "     799999999778                877999999997     \n"+
+    "      89999998        9    9        89999998      \n"+
+    "88     799977                        779997     88\n"+
+    "997     898                            898     799\n"+
+    "9998     7            9    9            7     8999\n"+
+    "99997                99977999                79999\n"+
+    "999998                9    9                899999\n"+
+    "9999997     9                        9     7999999\n"+
+    "999998       9                      9       899999\n"+
+    "99997       7                        7       79999\n"+
+    "99997                                        79999\n"+
+    "9998            6                6            8999\n"+
+    "997                                            799\n"+
+    "997                                            799\n"+
+    "998                9          9                899\n"+
+    "97                7 9        9 7                79\n"+
+    "97                                              79\n"+
+    "98                                              89\n"+
+    "9                      9998                      9\n"+
+    "9      9                  9               9      9\n"+
+    "99 9  999                                999  9 99\n"+
+    "       9            89 7  7  9            9       \n"+
+    "       7            9        9            7       \n"+
+    "       7            9        9            7       \n"+
+    "       9            9  7  7 98            9       \n"+
+    "99 9  999                                999  9 99\n"+
+    "9      9               9                  9      9\n"+
+    "9                      8999                      9\n"+
+    "98                                              89\n"+
+    "97                                              79\n"+
+    "97                  9        9                  79\n"+
+    "998                9          9                899\n"+
+    "997                 7        7                 799\n"+
+    "997                                            799\n"+
+    "9998            6                6            8999\n"+
+    "99997                                        79999\n"+
+    "99997       7                        7       79999\n"+
+    "999998       9                      9       899999\n"+
+    "9999997     9                        9     7999999\n"+
+    "999998                9    9                899999\n"+
+    "99997                99977999                79999\n"+
+    "9998     7            9    9            7     8999\n"+
+    "997     898                            898     799\n"+
+    "88     799977                        779997     88\n"+
+    "      89999998        9    9        89999998      \n"+
+    "     799999999778                877999999997     \n"+
+    "    8999999999999778  9    9  8779999999999998    \n"+
+    "    8999999999999999999    9999999999999999998    ",
+  shipspawn: [{x:-100,y:0},{x:100,y:0}],
+  radar: {type:"box",width:10,height:18}
+  },
+  {name: "VY Asylum", author: "Gumz", map:
+    "997    898    799999997    799999997    898    799\n"+
+    "997  7 8998    7 7 7 7      7 7 7 7    8998 7  799\n"+
+    "77      88                              88      77\n"+
+    "    98   8                              8   89    \n"+
+    "   99                                        99   \n"+
+    " 7 8 8        8                             8 8 7 \n"+
+    "      8      898                99         8      \n"+
+    "88                               9              88\n"+
+    "998                                            899\n"+
+    "8998                                          8998\n"+
+    " 8                                 7            8 \n"+
+    "                                  7     5         \n"+
+    "         5       7                                \n"+
+    "                  7                               \n"+
+    "7                        5                       7\n"+
+    "97                       5                      79\n"+
+    "9                        7        5      8       9\n"+
+    "97    99    9            7       5      9       79\n"+
+    "9     9                 79             8 8       9\n"+
+    "97             5        999    7                79\n"+
+    "9               77     79999  7                  9\n"+
+    "97               777  999999999                 79\n"+
+    "7                 7999999999997                  7\n"+
+    "                   79999999999997777555           \n"+
+    "                   79999999999999775              \n"+
+    "                    999999999997                  \n"+
+    "          99        7999999999           3        \n"+
+    "7                   9999999999                   7\n"+
+    "97                 79999999997              99  79\n"+
+    "9                  999999999999             99   9\n"+
+    "97                79999     9997      99        79\n"+
+    "9     8 8        79999       7775                9\n"+
+    "97     9         797           75               79\n"+
+    "9       8       777             55               9\n"+
+    "97             77                               79\n"+
+    "7              7                  5        5     7\n"+
+    "              5                    5              \n"+
+    "             5                                    \n"+
+    "                                                  \n"+
+    " 8                                              8 \n"+
+    "8998      5                          8        8998\n"+
+    "998                                  98        899\n"+
+    "88              9                    8          88\n"+
+    "      8         99        5                8      \n"+
+    " 7 8 8                                      8 8 7 \n"+
+    "   99                                        99   \n"+
+    "    98   8                              8   89    \n"+
+    "77      88                              88      77\n"+
+    "997  7 8998    7 7 7 7      7 7 7 7    8998 7  799\n"+
+    "997    898    799999997    799999997    898    799",
+  shipspawn: [{x:-130,y:0},{x:130,y:0}],
+  radar: {type:"box",width:10,height:18}
+  },
+  {name: "Hryudigas", author: "Rob0nuko", map:
+    "99   999999999999999   9999   999999999999999   99\n"+
+    "99    99999             99             99999    99\n"+
+    "  9    999                              999    9  \n"+
+    "   7                9        9                7   \n"+
+    "    5              999      999              5    \n"+
+    "9            999999999  99  999999999            9\n"+
+    "99         9999999999   99   9999999999         99\n"+
+    "999                                            999\n"+
+    "999                                            999\n"+
+    "999                                            999\n"+
+    "99                                              99\n"+
+    "99      9    99999              99999    9      99\n"+
+    "99     99       999            999       99     99\n"+
+    "99    99         99    7  7    99         99    99\n"+
+    "99   99                                    99   99\n"+
+    "99   9                  77                  9   99\n"+
+    "99   9                                      9   99\n"+
+    "99   9           99    7  7    99           9   99\n"+
+    "99               99            99               99\n"+
+    "99              999            999              99\n"+
+    "99      9      999              999      9      99\n"+
+    "99            999  9          9  999            99\n"+
+    "999     9    99   9            9   99    9     999\n"+
+    " 999    99                              99    999 \n"+
+    "  99    99                              99    99  \n"+
+    "  99    99                              99    99  \n"+
+    " 999    99                              99    999 \n"+
+    "999     9    99   9            9   99    9     999\n"+
+    "99            999  9          9  999            99\n"+
+    "99      9      999              999      9      99\n"+
+    "99              999            999              99\n"+
+    "99               99            99               99\n"+
+    "99   9           99    7  7    99           9   99\n"+
+    "99   9                                      9   99\n"+
+    "99   9                  77                  9   99\n"+
+    "99   99                                    99   99\n"+
+    "99    99         99    7  7    99         99    99\n"+
+    "99     99       999            999       99     99\n"+
+    "99      9    99999              99999    9      99\n"+
+    "99                                              99\n"+
+    "999                                            999\n"+
+    "999                                            999\n"+
+    "999                                            999\n"+
+    "99         9999999999   99   9999999999         99\n"+
+    "9            999999999  99  999999999            9\n"+
+    "    5              999      999              5    \n"+
+    "   7                9        9                7   \n"+
+    "  9    999                              999    9  \n"+
+    "99    99999             99             99999    99\n"+
+    "99   999999999999999   9999   999999999999999   99",
+  shipspawn: [{x:-210,y:0},{x:210,y:0}],
+  radar: {type:"box",width:10,height:18}
+  },
+  {name: "Passageways", author: "Rob0nuko", map:
+    "9    99   99            99            99   99    9\n"+
+    "     99   99                          99   99     \n"+
+    "    999   9    999              999    9   999    \n"+
+    "   999          999            999          999   \n"+
+    "  999            999          999            999  \n"+
+    "                  99999999999999                  \n"+
+    "           999     999999999999     999           \n"+
+    "            999                    999            \n"+
+    "9999         999                  999         9999\n"+
+    "999           999       99       999           999\n"+
+    "       9999    99999    99    99999    9999       \n"+
+    "      999999    99999   99   99999    999999      \n"+
+    "          999           99           999          \n"+
+    "           999          99          999           \n"+
+    "999         99          99          99         999\n"+
+    "9999        99          99          99        9999\n"+
+    "  999       99     9    99    9     99       999  \n"+
+    "   99       99    99    99    99    99       99   \n"+
+    "   99        9   99            99   9        99   \n"+
+    "   99   9        99            99        9   99   \n"+
+    "   99   99       99            99       99   99   \n"+
+    "    9   99       99            99       99   9    \n"+
+    "        99       99            99       99        \n"+
+    "        99       99            99       99        \n"+
+    "9       99       99     99     99       99       9\n"+
+    "9       99       99     99     99       99       9\n"+
+    "        99       99            99       99        \n"+
+    "        99       99            99       99        \n"+
+    "    9   99       99            99       99   9    \n"+
+    "   99   99       99            99       99   99   \n"+
+    "   99   9        99            99        9   99   \n"+
+    "   99        9   99            99   9        99   \n"+
+    "   99       99    99    99    99    99       99   \n"+
+    "  999       99     9    99    9     99       999  \n"+
+    "9999        99          99          99        9999\n"+
+    "999         99          99          99         999\n"+
+    "           999          99          999           \n"+
+    "          999           99           999          \n"+
+    "      999999    99999   99   99999    999999      \n"+
+    "       9999    99999    99    99999    9999       \n"+
+    "999           999       99       999           999\n"+
+    "9999         999                  999         9999\n"+
+    "            999                    999            \n"+
+    "           999     999999999999     999           \n"+
+    "                  99999999999999                  \n"+
+    "  999            999          999            999  \n"+
+    "   999          999            999          999   \n"+
+    "    999   9    999              999    9   999    \n"+
+    "     99   99                          99   99     \n"+
+    "9    99   99            99            99   99    9",
+  shipspawn: [{x:-150,y:0},{x:150,y:0}],
+  radar: {type:"box",width:10,height:18}
+  },  
 ];
 
 var colors = [
@@ -227,52 +447,20 @@ this.options = {
   soundtrack: ["crystals.mp3","argon.mp3"][~~(Math.random()*2)],
   weapons_store: false,
   friendly_colors: 2,
-  radar_zoom: 2,
+  radar_zoom: 1,
   map_size: 50,
   starting_ship: 801,
   crystal_value: 0,
-  speed_mod: 1.4,
-  max_players: 16,
+  speed_mod: 1.5,
+  max_players: 12,
   ships: ships,
   release_crystal: false,
   hues: [colors.hue,colors.hue2],
   asteroids_strength: 1e6,
   crystal_drop: 0,
   max_level: 1,
-  shield_regen_factor: 0.6
+  shield_regen_factor: 0.3
 };
-
-
-/*this.tick = function(game){
-  if (game.step % 30 === 0){
-    if (game.step > delay*60){
-      teams.count = [0,0];
-      for (let ship of game.ships){
-        if (!ship.custom.init){
-          ship.custom.init = true;
-          setteam(ship);
-          ship.custom.frags = 0;
-          ship.custom.kills = 0;
-          ship.custom.ship = stages.level_1;
-        }
-        if (ship.score != ship.custom.frags) ship.set({score:ship.custom.frags});
-        teams.count[ship.custom.team]++;
-      }
-      checkscores(game);
-      checkstatus(game);
-      updatescoreboard(game);
-    } else {
-      sendUI(game, {
-        id: "delay time",
-        position: [45.7,26,10,7],
-        visible: true,
-        components: [
-          {type: "text",position:[0,0,100,50],value:`${formatTime(delay*60 - game.step, [], 1)}`,color:"#cde"},
-        ]
-      });      
-    }
-  }
-}*/
 
 var check = function(game, isWaiting, isGameOver){
   modUtils.tick();
@@ -364,7 +552,7 @@ var waiting = function(game){
 }, main_game = function(game){
   check(game);
   if (Math.min(...teams.count) == 0) finishgame(game, 2);
-  //else if (Math.max(...teams.points) >= pointsToWin) finishgame(game, 1);
+  else if (Math.max(...teams.points) >= pointsToWin) finishgame(game, 1);
   else if (game.step % 30 === 0){
     let time = timer;
     if (game.step < time){
@@ -482,10 +670,10 @@ function checkstatus(game, team){
 function setup(ship){
   let t = ship.custom.team;
   let level = Math.trunc(ship.type/100);
-  let gems = ((ship.type**2)*20)/1.5;
+  let gems = ((level**2)*20)/1.5;
   let x = map.shipspawn[t].x,
   y = map.shipspawn[t].y,r=0;
-  ship.set({x:x,y:y,stats:88888888,invulnerable:300,shield:999,crystals:gems});
+  ship.set({x:x,y:y,stats:88888888,invulnerable:300,shield:999});
 }
 
 function setteam(ship){
