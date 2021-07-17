@@ -1,6 +1,6 @@
 var pointsToWin = 120;
 var PointsRange = 10; // ranges between checkpoints
-var delay = 90; // in seconds
+var delay = 90/10; // in seconds
 var timer = 15**100; // in minutes
 var progressBar = {
   px: 40, // width of the progress bar (global)
@@ -13,10 +13,8 @@ var progressBar = {
   distanceY: 2 // height distance multiplier (global)
 };
 //todo: add balancing; winning team 10 points ahead = they spawn with half health 
-//todo: add more colors to scorebar 
-//todo: improve scoreboard
 //todo: imrove ship spawing function (randomize)
-
+//todo: add asteroids to gumz maps 
 var modUtils = {
   setTimeout: function(f,time){
     this.jobs.push({f:f,time:game.step+time});
@@ -426,8 +424,8 @@ var colors = [
 
 var teams = {
   names: [colors[0].team,colors[0].team2],
-  points: [0,0],
-  points2: [0,0],
+  points: [109,109],
+  points2: [109,109],
   count: [0,0],
   ships: [[],[]],
   hues: [colors[0].hue,colors[0].hue2],
@@ -473,7 +471,7 @@ var check = function(game, isWaiting, isGameOver){
         ship.custom.deaths = 0;
         ship.custom.ship = stages.level_1;        
         setteam(ship);
-        //setup(ship);
+        setup(ship);
         //sendUI(ship, game.custom.radar_background);
         if (isGameOver) gameover(ship);
       }
@@ -482,7 +480,7 @@ var check = function(game, isWaiting, isGameOver){
         ship.custom.exited = true
       }
       if (!ship.custom.joined && !isWaiting && !isGameOver) {
-        //joinmessage(ship);
+        joinmessage(ship);
         ship.custom.joined = true;
       }
       ship.set({idle:!!isWaiting,collider:!(isWaiting || isGameOver)})
@@ -533,7 +531,7 @@ var waiting = function(game){
   }
   if (game.step >= delay){
     checkscores(game);
-    updatescoreboard(game);
+    updateScoreboard(game);
     sendUI(game, {id:"delay time",visible:false});
     sendUI(game, {id:"delay",visible:false});
     this.tick = main_game;
@@ -551,8 +549,8 @@ var waiting = function(game){
   }
 }, main_game = function(game){
   check(game);
-  if (Math.min(...teams.count) == 0) finishgame(game, 2);
-  else if (Math.max(...teams.points) >= pointsToWin) finishgame(game, 1);
+  //if (Math.min(...teams.count) == 0) finishgame(game, 2);
+  if (Math.max(...teams.points) >= pointsToWin) finishgame(game, 1);
   else if (game.step % 30 === 0){
     let time = timer;
     if (game.step < time){
@@ -570,13 +568,13 @@ var waiting = function(game){
   }
   if (update){
     checkscores(game);
-    updatescoreboard(game);
+    updateScoreboard(game);
     update = 0;
   }
   if (game.step % 60 === 0){
     //checkteambase(game)
     checkstatus(game);
-    updatescoreboard(game);
+    updateScoreboard(game);
   }
 }, finishgame = function(game, condition){
   // conditions: 0 (time's up), 1 (reach enough kills), 2 (all one team left)
@@ -626,9 +624,9 @@ this.tick = waiting;
 function checkscores(game){
   let filled = teams.points.map(i => i/pointsToWin);
   let index = teams.points.map(i => Math.trunc(i/PointsRange));
-  let hues = [["hsla(355, 100%, 62.55%, 0.7)","hsla(192, 97%, 74%, .7)"],["hsl(353, 100%, 55%)","hsl(233, 100%, 55%)"]];
+  let hues = [[`hsla(${Math.abs(teams.hues[0]-5)}, 100%, 62.55%, 0.7)`,`hsla(${Math.abs(teams.hues[1]-7)}, 97%, 74%, .7)`],["hsl(353, 100%, 55%)","hsl(233, 100%, 55%)"]];
   let checked = [["hsla(210, 50%, 87%, 1)","hsla(210, 50%, 87%, 1)"]]; // color for unachieved checkpoints
-  let achieved = [["hsla(355, 100%, 62.55%, 1)","hsla(192, 97%, 74%, 1)"],["hsl(353, 100%, 1)","hsl(233, 100%, 1)"]]; // checkpoints' color after the checkpoint has finished
+  let achieved = [[`hsla(${Math.abs(teams.hues[0])}, 100%, 62.55%, 1)`,`hsla(${Math.abs(teams.hues[1])}, 97%, 74%, 1)`],[`hsl(${Math.abs(teams.hues[0]*2)}, 100%, 1)`,`hsl(${Math.abs(teams.hues[1]*2)}, 100%, 1)`]]; // checkpoints' color after the checkpoint has finished
   let {px, py, dbx, dby, dx, dy, offsetY, distanceY} = progressBar;
   let rbax = (1 + dbx/2);
   let rpy = dy/dby;
@@ -688,6 +686,29 @@ function configship(ship,t){
   ship.set({hue:teams.hues[t],team:t,type:stages[`level_${teams.level[t]}`],invulnerable:300,stats:88888888,shield:999});
 }
 
+function joinmessage(ship){
+  sendUI(ship, {
+    id: "join",
+    position: [32,16,34,32],
+    visible: true,
+    components: [
+      {type: "text",position:[0,3,100,50],value:`Kill the enemy team to unlock new ships for your team!`,color:"#cde"},
+      {type: "text",position:[10,21,80,35],value:`First team to reach ${pointsToWin} kills wins`,color:"#cde"},
+    ]
+  });
+  sendUI(ship, {
+    id: "map info",
+    position: [2,88,24,22],
+    visible: true,
+    components: [
+      {type: "text",position:[0,0,100,50],value:`Map: ${map.name} by ${map.author}`,color:"#cde"},
+    ]
+  });
+  modUtils.setTimeout(function(){
+    sendUI(ship, {id:"join",visible:false});
+  },480);
+}
+
 var scoreboard = {
   id:"scoreboard",
   visible: true,
@@ -698,80 +719,58 @@ function getcolor(color){
   return `hsla(${color},100%,50%,1)`;
 }
 
-function PlayerBox(posx,posy){
-  return {type:"box",position:[posx,posy-1.8,50,7],fill:"hsla(210,24.3%,29%,0.5)",width:2};
-}
+var def_clr = "hsla(210, 50%, 87%, 1)";
 
-function Tag(indtext,param,posx,posy,hex,al,size) {
-  let obj= {type: indtext,position: [posx,posy-0.5,50-(size||0),5],color: hex,align:al};
-  switch(indtext) {
-    case "text":
-      obj.value=param;
-      break;
-    case "player":
-      obj.id=param;
-    break;
+function updateScoreboard(game){
+  scoreboard.components = [];
+  for (let i=0; i<2; i++){
+    scoreboard.components.push({type:"box",id:"la"+i,position:[0,0+i*50,100,7],fill:getcolor(teams.hues[i]),stroke:"hsla(0, 0%, 41%, 1)",width:2});
+    scoreboard.components.push({type:"text",id:"na"+i,position:[20,0+i*50,60,7],value:teams.names[i],color:"hsla(0, 0%, 0%, 1)"});
   }
-  return obj;
-}
-
-function sort(arr){
-  let array=[...arr],i=0;
-  while (i<array.length-1) {
-    if (array[i].custom.frags<array[i+1].custom.frags){
-      array[i+1]=[array[i],array[i]=array[i+1]][0];
-      if (i>0) i-=2;
-    }
-    i++;
-  }
-  return array;
-}
-
-function updatescoreboard(game){
-  if (game.step >= delay){
-    let t=[[],[]];
-    for (let ship of game.ships) t[ship.custom.team].push(ship);
-    scoreboard.components = [
-      { type:"box",position:[0,0,50,8],fill:getcolor(teams.hues[0])},
-      { type: "text",position: [0,0,50,8],color:"#e5e5e5",value: teams.names[0]},
-      { type:"box",position:[50,0,50,8],fill:getcolor(teams.hues[1])},
-      { type: "text",position: [50,0,50,8],color:"#e5e5e5",value: teams.names[1]}
-    ];
-    let sc=[sort(t[0]),sort(t[1])],line=1;
-    sc[0].slice(10);sc[1].slice(10);
-    for (let i=0;i<10;i++){
-      for (let j=0;j<2;j++){
-        if (sc[j][i]) scoreboard.components.push(
-          new Tag("text",sc[j][i].custom.frags,j*50,line*10,"#cde","right",2),
-          new Tag("player",sc[j][i].id,j*50,line*10,"#cde","left")
-        );
-        else scoreboard.components.push({},{});
-      }
-      line++;
-    }
-    outputscoreboard(game,sc);
-  }
-}
-
-function outputscoreboard(game,tm){
-  let origin = [...scoreboard.components];
-  for (let ship of game.ships){
-    let j=0,team=tm[ship.custom.team];
-    for (j=0;j<team.length;j++){
-      if (ship.id === team[j].id){
-        scoreboard.components.splice((j*2+ship.custom.team)*2+4,0,
-          new PlayerBox(ship.custom.team*50,(j+1)*10)
-        );
+  let icons = ["\u{2693}","\u{2694}","\u{1F9C0}","\u{1F52B}","\u{1F320}","\u{1F47E}","\u{1F577}","\u{1F43B}","\u{1F480}","\u{1F512}","\u{1F531}","\u{1F41F}","\u{1F340}","\u{1F5E1}"];
+  let line = 0, line2 = 0;
+  let sa = []
+  for (let i=0; i<game.ships.length; i++)
+  sa[i] = game.ships[i];
+  let sc = sa.sort((a,b) => b.custom.frags - a.custom.frags);
+  for (let i=0; i<sc.length; i++){
+    let ship = sc[i];
+    let shipicon = icons[(ship.type-700)-1];
+    if (ship.type > 790) shipicon = "\u{1F30C}";
+    let length = Math.log(ship.score) * Math.LOG10E + 1 | 0;
+    let fix = 0//length*2.4;
+    if (ship != null){
+      switch (ship.custom.team){
+        case 0:
+          if (line>=5) break;
+          scoreboard.components.push(
+            {type:"player",id:ship.id,position:[1,7+(line*8+1.5),60,7],color:def_clr,align:"left"},
+            //{type:"text",position:[65,7+(line*8+1.5),60,7],value:shipicon,color:def_clr},
+            {type:"text",position:[29-fix,7+(line*8+1.5),60,7],value:ship.score,color:def_clr,align:"right"}
+          )
+          line++;
+        break;
+        case 1:
+          if (line2>=5) break;
+          scoreboard.components.push(
+            {type:"player",id:ship.id,position:[1,57+(line2*8+1.5),60,7],color:def_clr,align:"left"},
+            //{type:"text",position:[65,57+(line2*8+1.5),60,7],value:shipicon,color:def_clr},
+            {type:"text",position:[29-fix,57+(line2*8+1.5),60,7],value:ship.score,color:def_clr,align:"right"}
+          )
+          line2++;
         break;
       }
     }
-    if (j == team.length) scoreboard.components.splice((20+ship.custom.team)*2,2,
-      new PlayerBox(ship.custom.team*50,90),
-      new Tag("text",ship.custom.frags,ship.custom.team*50,90,ship.custom.team,"right",2),
-      new Tag("player",ship.id,ship.custom.team*50,90,ship.custom.team,"left")
-    );
+  }
+  outputScoreboard(game);
+};
+
+function outputScoreboard(game){
+  for (let ship of game.ships) {
+    let o = [...scoreboard.components], t = scoreboard.components.map(x => (x.id != null)?x.id:-1).indexOf(ship.id);
+    if (t != -1) scoreboard.components.splice(t,0,{type:"box",position:scoreboard.components[t].position.map((j,i) => (i==2)?100:j),fill:"hsla(210,24.3%,29%,0.5)"});
     sendUI(ship, scoreboard);
-    scoreboard.components = [...origin];
+    scoreboard.components = [...o];
   }
 }
 
