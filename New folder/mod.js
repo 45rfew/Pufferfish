@@ -1,7 +1,8 @@
 var pointsToWin = 120;
+var pointsToFinal = 110;
 var PointsRange = 10; // ranges between checkpoints
-var delay = 90/10; // in seconds
-var timer = 15**100; // in minutes
+var delay = 90/5; // in seconds
+var timer = 15*10; // in minutes
 var progressBar = {
   px: 40, // width of the progress bar (global)
   py: 1, // height of the progress bar (global)
@@ -15,6 +16,10 @@ var progressBar = {
 //todo: add balancing; winning team 10 points ahead = they spawn with half health 
 //todo: imrove ship spawing function (randomize)
 //todo: add asteroids to gumz maps 
+//todo: ships only upgrade once they've killed someone 
+//todo: display next ships on scorebar
+//todo: final 10 kills ui 
+
 var modUtils = {
   setTimeout: function(f,time){
     this.jobs.push({f:f,time:game.step+time});
@@ -424,12 +429,12 @@ var colors = [
 
 var teams = {
   names: [colors[0].team,colors[0].team2],
-  points: [109,109],
-  points2: [109,109],
+  points: [115,119],
+  points2: [115,119],
   count: [0,0],
   ships: [[],[]],
   hues: [colors[0].hue,colors[0].hue2],
-  level: [1,1],
+  level: [11,11],
   update: [false,false]
 };
 
@@ -531,6 +536,7 @@ var waiting = function(game){
   }
   if (game.step >= delay){
     checkscores(game);
+    finalten(game);
     updateScoreboard(game);
     sendUI(game, {id:"delay time",visible:false});
     sendUI(game, {id:"delay",visible:false});
@@ -568,12 +574,14 @@ var waiting = function(game){
   }
   if (update){
     checkscores(game);
+    //finalten(game)    
     updateScoreboard(game);
     update = 0;
   }
   if (game.step % 60 === 0){
     //checkteambase(game)
     checkstatus(game);
+    //finalten(game)
     updateScoreboard(game);
   }
 }, finishgame = function(game, condition){
@@ -641,13 +649,41 @@ function checkscores(game){
       position: [(100 - apx)/2, offsetY+i*distanceY*apy, apx, apy], 
       visible: true,
       components: [
-        {type:"box",position:[0, 50*(1 - 1/dby), 100/rbax, 100/dby],fill:"hsla(170, 32%, 28%, .1)",stroke:"hsla(170, 32%, 28%, 1)",width:2},
+        {type:"box",position:[0, 50*(1 - 1/dby), 100/rbax, 100/dby],fill:"hsla(170, 32%, 28%, .1)",stroke:"#cde",width:2},
         {type:"box",position:[0, 50*(1 - 1/dby), 100/rbax*filled[i], 100/dby],fill:hues[0][i]},
         ...Array(p-1).fill(0).map((v,j) => ({type:"round",position:[100*(p*PointsRange/pointsToWin)/rbax/p*(j+1) - 50*pax, 50*(1 - rpy), 100*pax, 100*rpy],fill:((index[i]>=j+1)?achieved:checked)[0][i]})),
         {type:"round",position:[100*(2/rbax - 1), 0, 200*(1 - 1/rbax), 100],fill:((index[i]>=p)?achieved:checked)[0][i]}
       ]
     }); 
   }
+}
+
+function finalten(game){
+  let filled = teams.points.map(i => (i-pointsToFinal)/10);
+  let index = teams.points.map(i => Math.trunc(i/1));
+  let hues = [[`hsla(${Math.abs(teams.hues[0]-5)}, 100%, 62.55%, 0.7)`,`hsla(${Math.abs(teams.hues[1]-7)}, 97%, 74%, .7)`],["hsl(353, 100%, 55%)","hsl(233, 100%, 55%)"]];
+  let checked = [["hsla(210, 50%, 87%, 1)","hsla(210, 50%, 87%, 1)"]]; // color for unachieved checkpoints
+  let achieved = [["#fff","#fff"],["#fff","#fff"]]; // checkpoints' color after the checkpoint has finished
+  let {px, py, dbx, dby, dx, dy, offsetY, distanceY} = progressBar;
+  let rbax = (1 + dbx/2);
+  let rpy = dy/dby;
+  let pax = dx/rbax;
+  let apx = px * rbax;
+  let apy = py * dby;
+  let p = Math.trunc((pointsToWin-pointsToFinal)/1);
+  for (let i=0; i<2; i++){
+    sendUI(game, {
+      id: "finalten"+i,
+      position: [(100 - apx)/2+15, /*(offsetY+i*0.7)+13*/offsetY+13, apx/3, apy], 
+      visible: true,
+      components: [
+        {type:"box",position:[0, 50*(1 - 1/dby)+i*30, 100/rbax, 100/dby],fill:"hsla(170, 32%, 28%, .1)",stroke:"#cde",width:1},
+        {type:"box",position:[0, 50*(1 - 1/dby)+i*30, 100/rbax*filled[i], 100/dby],fill:hues[0][i]},
+        ...Array(9).fill(0).map((v,j) => ({type:"text",position:[100*(p*PointsRange/pointsToWin)/rbax/p*(j+1)*1.2 - 50*pax, 30, 100*pax, 100*rpy],value:"♦️",color:"#cde"})),
+        {type:"text",position:[100*(2/rbax - 1)-1+i*-98, -35, 300*(1 - 1/rbax), 200],value:"♦️",color:"#cde"}
+      ]
+    }); 
+  }  
 }
 
 function checkstatus(game, team){
