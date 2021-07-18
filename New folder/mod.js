@@ -13,12 +13,14 @@ var progressBar = {
   offsetY: 13.2, //position from the top of screen (global)
   distanceY: 2 // height distance multiplier (global)
 };
-//todo: add balancing; winning team 10 points ahead = they spawn with half health 
+//todo: add balancing; winning team 10 points ahead = they spawn with half health (maybe; need to test more)
 //todo: imrove ship spawing function (randomize)
 //todo: add asteroids to gumz maps 
-//todo: ships only upgrade once they've killed someone 
+//todo: add maps 
+//todo: ships only upgrade once they've killed someone (if current) or give 0.5 points (if pending)
 //todo: display next ships on scorebar
 //todo: final 10 kills ui 
+//todo: add icons and colors to shiptree ui
 
 var modUtils = {
   setTimeout: function(f,time){
@@ -869,6 +871,28 @@ function addRadarSpot (x, y, type, width, height, alpha, color){
 for (let i=0; i<map.shipspawn.length; i++){
   addRadarSpot(map.shipspawn[i].x,map.shipspawn[i].y,map.radar.type,map.radar.width,map.radar.height,0.3,teams.hues[i]);
   addRadarSpot(map.shipspawn[i].x,map.shipspawn[i].y,map.radar.type,map.radar.width-2,map.radar.height-2,0.2,teams.hues[i]);
+}
+
+function shiptree(ship){
+  let icon =  ["\u{2693}","\u{2694}","\u{1F9C0}","\u{1F52B}","\u{1F320}","\u{1F47E}","\u{1F577}","\u{1F43B}","\u{1F480}","\u{1F512}","\u{1F531}","\u{1F41F}","\u{1F340}","\u{1F5E1}"];
+  let color = ["hsla(0, 0%, 70%, 1)","hsla(20, 60%, 35%, 1)","hsla(53, 100%, 55%, 1)","hsla(94, 100%, 35%, 1)","hsla(187, 100%, 45%, 1)","hsla(270, 100%, 70%, 1)","hsla(0, 0%, 100%, 1)"];
+  for (let i=0; i<ships_list.length; i++){
+    for (let j=0;j<ships_list[i].length; j++){
+      sendUI(ship, {
+        id: "tree"+i+j,
+        position: [40+j*9-[0.5,14,23,32,27.5,27.5][i],15+i*12,8,10],
+        visible: true,
+        components: [
+          {type:"box",position:[0,0,100,100],fill:"hsla(0, 0%, 0%, 0)",stroke:color[i],width:10},
+          {type:"box",position:[10,10,80,80],fill:"hsla(0, 0%, 0%, 0)",stroke:"hsla(0, 0%, 0%, 1)",width:2},
+          {type:"box",position:[10,10,80,80],fill:"hsla(0, 0%, 13%, 0.7)",stroke:"hsla(0, 0%, 0%, 0)",width:2},
+          {type:"text",position:[10,5,80,40],value:ships_list[i][j],color:"#cde"},
+          {type:"text",position:[20,40,100,50],value:icon[i],color:"#cde"},
+          {type:"text",position:[7,50,50,25],value:(i+1)*100+j+1,color:"#cde"},
+        ]
+      });   
+    }  
+  }
 }
 
 this.event = function(event, game){
