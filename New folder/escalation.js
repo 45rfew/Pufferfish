@@ -10,7 +10,7 @@ var progressBar = {
   dby: 3, // ratio of (big checkpoint height diameter)/(progressbar height)
   dx: 1/35, // ratio of (small checkpoints witdth diameter)/(progressbar width)
   dy: 2, // ratio of (small checkpoints height diameter)/(progressbar height)
-  offsetY: 13.2, //position from the top of screen (global)
+  offsetY: 10.2, //position from the top of screen (global)
   distanceY: 2 // height distance multiplier (global)
 };
 //todo: add balancing; winning team 10 points ahead = they spawn with half health (maybe; need to test more)
@@ -21,7 +21,7 @@ var progressBar = {
 //todo: display next ships on scorebar
 //todo: final 10 kills ui 
 //todo: add icons and colors to shiptree ui
-
+//todo: balance ships
 var modUtils = {
   setTimeout: function(f,time){
     this.jobs.push({f:f,time:game.step+time});
@@ -43,8 +43,8 @@ var modUtils = {
   }
 };
 
-var sendUI = function(ship, UI) {
-  if (ship != null && typeof ship.setUIComponent == "function") {
+var sendUI = function(ship, UI){
+  if (ship != null && typeof ship.setUIComponent == "function"){
     if (UI.visible || UI.visible == null) ship.setUIComponent(UI);
     else ship.setUIComponent({id: UI.id, position: [0,0,0,0], visible: false});
   }
@@ -99,7 +99,8 @@ var ships_list = [
   ["Lunatic Barricade","Lunatic Quadra","Lunatic Warrior","Lunatic Fighter","Lunatic Tactical","Lunatic Interceptor","Solarium ZenionIII","Solarium Interceptor",],
   ["Lunatic Destroyer","Lunatic Cannoner","Lunatic Phantom","Lunatic Tyrant","Lunatic Predator","Lunatic Infernal","Lunatic Proto"],
   ["Lunatic Artillery","Lunatic Oblivion","Lunatic Teslator","Lunatic Comet","Lunatic Caliber","Lunatic Speedster","Lunatic Dualities"],
-], ship_codes = ships_list, remove_ships = [101,201,202,203,204,603,605];
+];
+var ship_codes = ships_list, remove_ships = [101,201,202,203,204,301,302,303,304,305,306];
 
 for (let i=0; i<ship_codes.length; i++){
   for (let j=0;j<ship_codes[i].length; j++){
@@ -161,7 +162,7 @@ function findShipCode(name){
   if (ships_list[i][j] == name) return (i+3)*100+j+1;
   return null;
 }
-console.log(stages);
+console.log(stages,ship_codes,random_ships,ships_list);
 var vocabulary = [
   {text: "Yes", icon:"\u004c", key:"Y"},
   {text: "No", icon:"\u004d", key:"N"},
@@ -348,7 +349,7 @@ var maps = [
   shipspawn: [{x:-130,y:0},{x:130,y:0}],
   radar: {type:"box",width:10,height:18}
   },
-  {name: "Hryudigas", author: "Rob0nuko", map:
+  {name: "Hryudigas", author: "rob0nuko", map:
     "99   999999999999999   9999   999999999999999   99\n"+
     "99    99999             99             99999    99\n"+
     "  9    999                              999    9  \n"+
@@ -402,7 +403,7 @@ var maps = [
   shipspawn: [{x:-210,y:0},{x:210,y:0}],
   radar: {type:"box",width:10,height:18}
   },
-  {name: "Passageways", author: "Rob0nuko", map:
+  {name: "Passageways", author: "rob0nuko", map:
     "9    99   99            99            99   99    9\n"+
     "     99   99                          99   99     \n"+
     "    999   9    999              999    9   999    \n"+
@@ -473,7 +474,8 @@ var teams = {
   ships: [[],[]],
   hues: [colors[0].hue,colors[0].hue2],
   level: [1,1],
-  update: [false,false]
+  update: [false,false],
+  current: [false,false]
 };
 
 var update = 1;
@@ -496,7 +498,7 @@ this.options = {
   max_players: 12,
   ships: ships,
   release_crystal: false,
-  hues: [colors.hue,colors.hue2],
+  hues: [colors[0].hue,colors[0].hue2],
   asteroids_strength: 1e6,
   crystal_drop: 0,
   max_level: 1,
@@ -513,6 +515,8 @@ var check = function(game, isWaiting, isGameOver){
         ship.custom.init = true;
         ship.custom.frags = 0;
         ship.custom.deaths = 0;
+        ship.custom.points = 0;
+        ship.custom.tree = false;
         ship.custom.ship = stages.level_1;        
         setteam(ship);
         setup(ship);
@@ -521,13 +525,13 @@ var check = function(game, isWaiting, isGameOver){
       }
       else if (isGameOver && !ship.custom.exited){
         modUtils.setTimeout(function(){gameover(ship)},300);
-        ship.custom.exited = true
+        ship.custom.exited = true;
       }
       if (!ship.custom.joined && !isWaiting && !isGameOver) {
         joinmessage(ship);
         ship.custom.joined = true;
       }
-      ship.set({idle:!!isWaiting,collider:!(isWaiting || isGameOver)})
+      ship.set({idle:!!isWaiting,collider:!(isWaiting || isGameOver)});
       teams.count[ship.custom.team]++;
       (ship.score != ship.custom.frags) && ship.set({score:ship.custom.frags});
     }
@@ -537,7 +541,7 @@ var check = function(game, isWaiting, isGameOver){
   while (array.length > forceAll && array[0] == 0) array.splice(0,1);
   forced = forced.reverse().slice(0,array.length).reverse();
   return array.map((i,j) => (i<10&&(j==0?forced[j]:!0))?"0"+i.toString():i).join(":");
-}
+};
 
 var endgametext = ["Unknown", "Unknown"], endgamestatus = {};
 var gameover = function (ship){
@@ -728,14 +732,39 @@ function finalten(game){
 function checkstatus(game, team){
   let upgraded = [[],[]];
   let checkpoints = Array.from(Array(12).fill({1:0}).map(a => a*13).keys()).map((a,b) => (b+1)*10);
-  //for (let j=0; j<2; j++) for (let i=0; i<12; i++) upgraded[j].push({[(i+1)*10]:0});
   for (let i=0; i<2; i++){
     if (teams.points2[i] % 10 === 0 && teams.points2[i] > 1){
       teams.points2[i] += .05
       teams.level[i]++;
       for (let ship of game.ships)
-        if (ship.team == i) 
-        ship.set({type:stages[`level_${teams.level[i]}`],invulnerable:60,stats:88888888,shield:999});
+        if (ship.team == i){
+          sendUI(ship, {
+            id: "up",
+            position: [32,16,34,32],
+            visible: true,
+            components: [
+              {type: "text",position:[0,3,100,50],value:"Team level up",color:"#cde"},
+            ]
+          }); 
+          modUtils.setTimeout(function(){
+            sendUI(ship, {id:"up",visible:false});
+          },180);
+          if (ship.custom.points >= 1){
+          sendUI(ship, {
+            id: "get",
+            position: [32,36,34,32],
+            visible: true,
+            components: [
+              {type: "text",position:[0,3,100,50],value:"Team level up",color:"#cde"},
+            ]
+          }); 
+          modUtils.setTimeout(function(){
+            sendUI(ship, {id:"get",visible:false});
+            ship.set({type:stages[`level_${teams.level[i]}`],invulnerable:20,stats:88888888});
+            ship.custom.ship = stages[`level_${teams.level[i]}`];
+          },180);            
+        }
+      }      
     }
   }
 }
@@ -779,6 +808,24 @@ function joinmessage(ship){
       {type: "text",position:[0,0,100,50],value:`Map: ${map.name} by ${map.author}`,color:"#cde"},
     ]
   });
+  sendUI(ship, {
+    id: "tip",
+    position: [63,90,16,15],
+    visible: true,
+    components: [
+      {type: "text",position:[0,0,100,50],value:`Press [V] to view ship tree`,color:"#cde"},
+    ]
+  });  
+  sendUI(ship, {
+    id: "tree",
+    position: [0,100,0,0],
+    visible: true,
+    clickable: true,
+    shortcut: "V",
+    components: [
+      {type:"box",position:[0,0,100,100],fill:"rgba(68, 85, 102, 0)",stroke:"#cde",width:5},
+    ]
+  });     
   modUtils.setTimeout(function(){
     sendUI(ship, {id:"join",visible:false});
   },480);
@@ -873,27 +920,56 @@ for (let i=0; i<map.shipspawn.length; i++){
   addRadarSpot(map.shipspawn[i].x,map.shipspawn[i].y,map.radar.type,map.radar.width-2,map.radar.height-2,0.2,teams.hues[i]);
 }
 
-function shiptree(ship){
-  let icon =  ["\u{2693}","\u{2694}","\u{1F9C0}","\u{1F52B}","\u{1F320}","\u{1F47E}","\u{1F577}","\u{1F43B}","\u{1F480}","\u{1F512}","\u{1F531}","\u{1F41F}","\u{1F340}","\u{1F5E1}"];
-  let color = ["hsla(0, 0%, 70%, 1)","hsla(20, 60%, 35%, 1)","hsla(53, 100%, 55%, 1)","hsla(94, 100%, 35%, 1)","hsla(187, 100%, 45%, 1)","hsla(270, 100%, 70%, 1)","hsla(0, 0%, 100%, 1)"];
-  for (let i=0; i<ships_list.length; i++){
-    for (let j=0;j<ships_list[i].length; j++){
+var shiptree = {
+  names:  [["Lunatic"],["Lunatic Eon","Lunatic Atom","Solarium Zenion","Solarium Tank"],["Lunatic Taurus","Lunatic Dragoon","Lunatic Defender","Lunatic Hunter","Solarium ZenionII","Solarium Onxy"],["Lunatic Barricade","Lunatic Quadra","Lunatic Warrior","Lunatic Fighter","Lunatic Tactical","Lunatic Interceptor","Solarium ZenionIII","Solarium Interceptor",],["Lunatic Destroyer","Lunatic Cannoner","Lunatic Phantom","Lunatic Tyrant","Lunatic Predator","Lunatic Infernal","Lunatic Proto"],["Lunatic Artillery","Lunatic Oblivion","Lunatic Teslator","Lunatic Comet","Lunatic Caliber","Lunatic Speedster","Lunatic Dualities"]],  
+  icons: ["\u{2693}","\u{2694}","\u{1F9C0}","\u{1F52B}","\u{1F320}","\u{1F47E}","\u{1F577}","\u{1F43B}","\u{1F480}","\u{1F512}","\u{1F531}","\u{1F41F}","\u{1F340}","\u{1F5E1}"],
+  color: ["hsla(0, 0%, 70%, 1)","hsla(20, 60%, 35%, 1)","hsla(53, 100%, 55%, 1)","hsla(94, 100%, 35%, 1)","hsla(187, 100%, 45%, 1)","hsla(270, 100%, 70%, 1)","hsla(0, 0%, 100%, 1)"],
+  components: ["join"],
+  tree: function(ship){
+    if (!ship.custom.tree){
+      ship.custom.tree = true;
+      for (let i=0; i<this.names.length; i++){
+        for (let j=0;j<this.names[i].length; j++){
+          sendUI(ship, {
+            id: "tree"+i+j,
+            position: [40+j*9-[0.5,14,23,32,27.5,27.5][i],20+i*12,8,10],
+            visible: true,
+            components: [
+              {type:"box",position:[0,0,100,100],fill:"hsla(0, 0%, 0%, 0)",stroke:this.color[i],width:10},
+              {type:"box",position:[10,10,80,80],fill:"hsla(0, 0%, 0%, 0)",stroke:"hsla(0, 0%, 0%, 1)",width:2},
+              {type:"box",position:[10,10,80,80],fill:"hsla(0, 0%, 13%, 0.7)",stroke:"hsla(0, 0%, 0%, 0)",width:2},
+              {type:"text",position:[10,5,80,40],value:this.names[i][j],color:"#cde"},
+              {type:"text",position:[20,40,100,50],value:this.icons[i],color:"#cde"},
+              {type:"text",position:[7,50,50,25],value:(i+1)*100+j+1,color:"#cde"},
+            ]
+          });   
+          this.components.push("tree"+i+j);
+        }  
+      }   
       sendUI(ship, {
-        id: "tree"+i+j,
-        position: [40+j*9-[0.5,14,23,32,27.5,27.5][i],15+i*12,8,10],
+        id: "tip",
+        position: [63,90,16,15],
         visible: true,
         components: [
-          {type:"box",position:[0,0,100,100],fill:"hsla(0, 0%, 0%, 0)",stroke:color[i],width:10},
-          {type:"box",position:[10,10,80,80],fill:"hsla(0, 0%, 0%, 0)",stroke:"hsla(0, 0%, 0%, 1)",width:2},
-          {type:"box",position:[10,10,80,80],fill:"hsla(0, 0%, 13%, 0.7)",stroke:"hsla(0, 0%, 0%, 0)",width:2},
-          {type:"text",position:[10,5,80,40],value:ships_list[i][j],color:"#cde"},
-          {type:"text",position:[20,40,100,50],value:icon[i],color:"#cde"},
-          {type:"text",position:[7,50,50,25],value:(i+1)*100+j+1,color:"#cde"},
+          {type: "text",position:[0,0,100,50],value:`Press [V] to close ship tree`,color:"#cde"},
         ]
-      });   
-    }  
+      });       
+    }
+  },
+  remove: function(ship){
+    for (let i=0; i<this.components.length; i++)
+    sendUI(ship,{id:this.components[i],visible:false});         
+    sendUI(ship, {
+      id: "tip",
+      position: [63,90,16,15],
+      visible: true,
+      components: [
+        {type: "text",position:[0,0,100,50],value:`Press [V] to view ship tree`,color:"#cde"},
+      ]
+    });      
+    ship.custom.tree = false;
   }
-}
+};
 
 this.event = function(event, game){
   let ship = event.ship;
@@ -919,10 +995,11 @@ this.event = function(event, game){
       update = 1;
       break;
     case "ui_component_clicked":
-      if (ship.custom.buttons){
         let component = event.id;
         switch (component){
-          case "open": ship.custom.opened = true; break;
+          case "tree":
+            ship.custom.tree?shiptree.remove(ship):shiptree.tree(ship);
+          break;
           case "heal": ship.set({healing:!ship.healing}); break;
           case "close": ship.custom.opened = false; break;
           default:
@@ -936,7 +1013,6 @@ this.event = function(event, game){
             }
           break;
         }
-      }
     break;
   }
 };
