@@ -469,8 +469,8 @@ var colors = [
 
 var teams = {
   names: [colors[0].team,colors[0].team2],
-  points: startingpoints,
-  points2: startingpoints,
+  points: [9,9],
+  points2: [9,9],
   count: [0,0],
   ships: [[],[]],
   hues: [colors[0].hue,colors[0].hue2],
@@ -478,7 +478,7 @@ var teams = {
   update: [false,false],
   current: [stages.level_1,stages.level_1]
 };
-console.log(teams)
+
 var update = 1;
 if (!game.custom.map) game.custom.map = maps[Math.trunc(Math.random()*maps.length)];
 var map = game.custom.map;
@@ -736,9 +736,10 @@ function checkstatus(game, team){
   let checkpoints = Array.from(Array(12).fill({1:0}).map(a => a*13).keys()).map((a,b) => (b+1)*10);
   for (let i=0; i<2; i++){
     if (teams.points2[i] % 10 === 0 && teams.points2[i] > 1){
-      teams.points2[i] += .05
+      teams.points2[i] += 0.05
       teams.level[i]++;
       teams.current[i] = stages[`level_${teams.level[i]}`];
+      console.log(teams)
       for (let ship of game.ships)
         if (ship.team == i){
           sendUI(ship, {
@@ -758,7 +759,7 @@ function checkstatus(game, team){
             position: [32,36,34,32],
             visible: true,
             components: [
-              {type: "text",position:[0,3,100,50],value:"Team level up",color:"#cde"},
+              {type: "text",position:[0,3,100,50],value:"Press [U] to get ship",color:"#cde"},
             ]
           }); 
           modUtils.setTimeout(function(){
@@ -991,21 +992,27 @@ this.event = function(event, game){
       ship.custom.deaths++;
       update = 1;
       ship.custom.hasbeenkilled = true;
-      console.log(killer.type,teams.current[killer.team],ship.custom.ship)
       if (killer.type == teams.current[killer.team]){
         killer.custom.points++;
       } else {
         killer.custom.points+=0.5;
       }
       //killer.type == teams.current[killer.custom.team]?killer.custom.points+=0.5:killer.custom.points++;
-      console.log(killer.custom.points)
-
-     if (killer.custom.ship != stages[`level_${killer.custom.stage+1}`] && killer.custom.stage < teams.level[killer.team] && killer.custom.points > 1){
-        killer.custom.points--; 
-        killer.custom.stage++; 
-        killer.custom.ship = stages[`level_${killer.custom.stage}`];
-        killer.set({type:stages[`level_${killer.custom.stage}`]});
-      }
+      modUtils.setTimeout(function(){
+        if (killer.custom.ship != stages[`level_${killer.custom.stage+1}`]){
+          console.log("FSDFSDFSDFDSf")
+          console.log(killer.custom.stage,teams.level[killer.custom.team]);
+          console.log(killer.custom)
+          if (killer.custom.stage < teams.level[killer.team]){
+            if (killer.custom.points >= 1){
+              killer.custom.points--; 
+              killer.custom.stage++; 
+              killer.custom.ship = stages[`level_${killer.custom.stage}`];
+              killer.set({type:stages[`level_${killer.custom.stage}`]});
+            }
+          }
+        }  
+      },20);
       checkstatus(game);
       break;
     case "ship_spawned":
