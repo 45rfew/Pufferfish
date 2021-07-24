@@ -1,9 +1,8 @@
-var pointsToWin = 120;
-var pointsToFinal = 110;
-var PointsRange = 10; // ranges between checkpoints
+var pointsToWin = 7*12;
+var pointsToFinal = 7*11;
+var PointsRange = 7; // ranges between checkpoints
 var delay = 90/5; // in seconds
 var timer = 15*10; // in minutes
-var startingpoints = [9,9];
 var progressBar = {
   px: 40, // width of the progress bar (global)
   py: 1, // height of the progress bar (global)
@@ -469,8 +468,8 @@ var colors = [
 
 var teams = {
   names: [colors[0].team,colors[0].team2],
-  points: [9,9],
-  points2: [9,9],
+  points: [5,5],
+  points2: [5,5],
   count: [0,0],
   ships: [[],[]],
   hues: [colors[0].hue,colors[0].hue2],
@@ -756,7 +755,7 @@ function checkstatus(game, team){
           if (ship.custom.points >= 1){
           sendUI(ship, {
             id: "get",
-            position: [32,36,34,32],
+            position: [32,46,20,20],
             visible: true,
             components: [
               {type: "text",position:[0,3,100,50],value:"Press [U] to get ship",color:"#cde"},
@@ -764,8 +763,8 @@ function checkstatus(game, team){
           }); 
           modUtils.setTimeout(function(){
             sendUI(ship, {id:"get",visible:false});
-            ship.set({type:stages[`level_${teams.level[i]}`],invulnerable:20,stats:88888888});
-            ship.custom.ship = stages[`level_${teams.level[i]}`];
+            ship.set({type:ship.custom.ship,invulnerable:20,stats:88888888});
+            ship.custom.ship = stages[`level_${teams.level[ship.custom.stages]}`];
           },180);            
         }
       }      
@@ -1000,9 +999,6 @@ this.event = function(event, game){
       //killer.type == teams.current[killer.custom.team]?killer.custom.points+=0.5:killer.custom.points++;
       modUtils.setTimeout(function(){
         if (killer.custom.ship != stages[`level_${killer.custom.stage+1}`]){
-          console.log("FSDFSDFSDFDSf")
-          console.log(killer.custom.stage,teams.level[killer.custom.team]);
-          console.log(killer.custom)
           if (killer.custom.stage < teams.level[killer.team]){
             if (killer.custom.points >= 1){
               killer.custom.points--; 
@@ -1025,7 +1021,10 @@ this.event = function(event, game){
           case "tree":
             ship.custom.tree?shiptree.remove(ship):shiptree.tree(ship);
           break;
-          case "heal": ship.set({healing:!ship.healing}); break;
+          case "get": 
+            sendUI(ship,{id:"get",visible:false});         
+            ship.custom.ship = stages[`level_${teams.level[ship.custom.stages]}`];
+            ship.set({type:ship.custom.ship,stats:88888888}); break;
           case "close": ship.custom.opened = false; break;
           default:
             if (component.startsWith("ship_selection_") && ship.custom.opened){
