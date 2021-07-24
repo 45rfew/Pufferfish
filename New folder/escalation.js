@@ -3,6 +3,7 @@ var pointsToFinal = 110;
 var PointsRange = 10; // ranges between checkpoints
 var delay = 90/5; // in seconds
 var timer = 15*10; // in minutes
+var startingpoints = [9,9];
 var progressBar = {
   px: 40, // width of the progress bar (global)
   py: 1, // height of the progress bar (global)
@@ -468,16 +469,16 @@ var colors = [
 
 var teams = {
   names: [colors[0].team,colors[0].team2],
-  points: [0,0],
-  points2: [0,0],
+  points: startingpoints,
+  points2: startingpoints,
   count: [0,0],
   ships: [[],[]],
   hues: [colors[0].hue,colors[0].hue2],
   level: [1,1],
   update: [false,false],
-  current: [false,false]
+  current: [stages.level_1,stages.level_1]
 };
-
+console.log(teams)
 var update = 1;
 if (!game.custom.map) game.custom.map = maps[Math.trunc(Math.random()*maps.length)];
 var map = game.custom.map;
@@ -517,7 +518,8 @@ var check = function(game, isWaiting, isGameOver){
         ship.custom.deaths = 0;
         ship.custom.points = 0;
         ship.custom.tree = false;
-        ship.custom.ship = stages.level_1;        
+        ship.custom.ship = stages.level_1;   
+        ship.custom.stage = 1;
         setteam(ship);
         setup(ship);
         //sendUI(ship, game.custom.radar_background);
@@ -736,6 +738,7 @@ function checkstatus(game, team){
     if (teams.points2[i] % 10 === 0 && teams.points2[i] > 1){
       teams.points2[i] += .05
       teams.level[i]++;
+      teams.current[i] = stages[`level_${teams.level[i]}`];
       for (let ship of game.ships)
         if (ship.team == i){
           sendUI(ship, {
@@ -988,6 +991,21 @@ this.event = function(event, game){
       ship.custom.deaths++;
       update = 1;
       ship.custom.hasbeenkilled = true;
+      console.log(killer.type,teams.current[killer.team],ship.custom.ship)
+      if (killer.type == teams.current[killer.team]){
+        killer.custom.points++;
+      } else {
+        killer.custom.points+=0.5;
+      }
+      //killer.type == teams.current[killer.custom.team]?killer.custom.points+=0.5:killer.custom.points++;
+      console.log(killer.custom.points)
+
+     if (killer.custom.ship != stages[`level_${killer.custom.stage+1}`] && killer.custom.stage < teams.level[killer.team] && killer.custom.points > 1){
+        killer.custom.points--; 
+        killer.custom.stage++; 
+        killer.custom.ship = stages[`level_${killer.custom.stage}`];
+        killer.set({type:stages[`level_${killer.custom.stage}`]});
+      }
       checkstatus(game);
       break;
     case "ship_spawned":
