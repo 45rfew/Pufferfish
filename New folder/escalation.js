@@ -1,7 +1,7 @@
 var pointsToWin = 7*12;
 var pointsToFinal = 7*11;
 var PointsRange = 7; // ranges between checkpoints
-var delay = 90/5; // in seconds
+var delay = 90/7; // in seconds
 var timer = 15*10; // in minutes
 var progressBar = {
   px: 40, // width of the progress bar (global)
@@ -142,11 +142,11 @@ function randomPath(shipTree, tierGap){
   return clone;
 }
 
-var startingship = ~~(Math.random()*2);
+var startingship = Math.floor(Math.random()*2);
 var stages = {
   level_1: [603,605][startingship],
   level_2: [603,605][Math.abs(startingship-1)],
-  level_3: ship_codes[4][~~(Math.random()*ship_codes[4].length)],
+  level_3: ship_codes[4][Math.floor(Math.random()*ship_codes[4].length)],
   level_12: 101
 };
 
@@ -346,8 +346,13 @@ var maps = [
     "997  7 8998    7 7 7 7      7 7 7 7    8998 7  799\n"+
     "997    898    799999997    799999997    898    799",
   shipspawn: [{x:-130,y:0},{x:130,y:0}],
-  radar: {type:"box",width:10,height:18}
+  radar: {type:"box",width:10,height:18},
+  traffic: function(game){
+    for (let i=0; i<2; i++) game.addAsteroid({x:[-20,15][i],y:[170,-130][i],vx:0,vy:0,size:50});
   },
+  cars: function(game){
+    game.asteroids.forEach((asteroid,i) => isWrongSpeed(asteroid,asteroid.custom.vx,0) && asteroid.set({vx:asteroid.custom.vx,vy:0}));
+  }},      
   {name: "Hryudigas", author: "rob0nuko", map:
     "99   999999999999999   9999   999999999999999   99\n"+
     "99    99999             99             99999    99\n"+
@@ -454,9 +459,215 @@ var maps = [
     "9     9999999999                  9999999999     9\n"+
     "99   999  99999999999        99999999999  999   99",
   shipspawn: [{x:-210,y:0},{x:210,y:0}],
+  radar: {type:"box",width:10,height:18},
+  traffic: function(game){
+    for (let i=0; i<8; i++){
+    let rad = 210;
+    let t = function(x){return Math.sqrt(rad**2 - x**2)}
+    let v = 0.5; 
+    game.addOrbitingAsteroid({
+      size: 50,
+      velocity: v,
+      starting_x: i*100,
+      graph: t,
+      interval: 15,
+      orbiter: function(asteroid){
+        let x = asteroid.x;
+        let y = asteroid.y;
+        let gy = this.graph(x);
+        let o = {custom: !gy}
+        if (!gy){
+          let sign = -Math.sign(v/this.velocity);
+          x = Math.sign(x) * rad;
+          this.set({velocity:sign*v,graph:function(tx){return sign*t(tx)}});
+          asteroid.set({x:x,vy:sign*Math.abs(this.velocity)/Math.SQRT2,vx:-Math.sign(x)*Math.abs(this.velocity)/Math.SQRT2});
+        }
+        if (!o.custom) o.x = x;
+        return o;
+      }
+    })
+    }
+  },
+  cars: function(game){
+   // game.asteroids.forEach((asteroid,i) => isWrongSpeed(asteroid,asteroid.custom.vx,0) && asteroid.set({vx:asteroid.custom.vx,vy:0}));
+  }},    
+  {name: "Sequence", author: "EDEN", map:
+    "99999999999999999999999999999999999999999999999999\n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "          999  999   999  999   999  999          \n"+
+    "          9      9   9      9   9      9          \n"+
+    "          9      9   9      9   9      9          \n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "          9      9   9      9   9      9          \n"+
+    "          9      9   9      9   9      9          \n"+
+    "          999  999   999  999   999  999          \n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "9         999  999              999  999         9\n"+
+    "9         9      9      99      9      9         9\n"+
+    " 99       9      9     9  9     9      9       99 \n"+
+    " 99                    9  9                    99 \n"+
+    "9                       99                       9\n"+
+    "9         9      9              9      9         9\n"+
+    "          9      9              9      9          \n"+
+    "          999  999      99      999  999          \n"+
+    "9                       99                       9\n"+
+    "99                    99  99                    99\n"+
+    "99                    99  99                    99\n"+
+    "9                       99                       9\n"+
+    "          999  999      99      999  999          \n"+
+    "          9      9              9      9          \n"+
+    "9         9      9              9      9         9\n"+
+    "9                       99                       9\n"+
+    " 99                    9  9                    99 \n"+
+    " 99       9      9     9  9     9      9       99 \n"+
+    "9         9      9      99      9      9         9\n"+
+    "9         999  999              999  999         9\n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "          999  999   999  999   999  999          \n"+
+    "          9      9   9      9   9      9          \n"+
+    "          9      9   9      9   9      9          \n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "          9      9   9      9   9      9          \n"+
+    "          9      9   9      9   9      9          \n"+
+    "          999  999   999  999   999  999          \n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "99999999999999999999999999999999999999999999999999",
+  shipspawn: [{x:-210,y:0},{x:210,y:0}],
+  radar: {type:"box",width:10,height:18}
+  },  
+  {name: "Colosseum", author: "rob0nuko", map:
+    "    999999999999999999      999999999999999999    \n"+
+    " 8  999999                              999999  8 \n"+
+    "     99                                    99     \n"+
+    "                                                  \n"+
+    "98          999999              999999          89\n"+
+    "999    99             99  99             99    999\n"+
+    "999   99               9999               99   999\n"+
+    "99   99                 99                 99   99\n"+
+    "99   9        9999              9999        9   99\n"+
+    "99        99                          99        99\n"+
+    "9        99                            99        9\n"+
+    "9        9                              9        9\n"+
+    "9   9              999      999              9   9\n"+
+    "9   9            999          999            9   9\n"+
+    "9   9   9       99              99       9   9   9\n"+
+    "9   9   9               99               9   9   9\n"+
+    "9   9   9     9                    9     9   9   9\n"+
+    "9   9   9    99                    99    9   9   9\n"+
+    "9            9                      9            9\n"+
+    "9           99                      99           9\n"+
+    "9           9                        9           9\n"+
+    "9           9          7  7          9           9\n"+
+    "     9                                      9     \n"+
+    "     99              7 7  7 7              99     \n"+
+    "      99       9                  9       99      \n"+
+    "      99       9                  9       99      \n"+
+    "     99              7 7  7 7              99     \n"+
+    "     9                                      9     \n"+
+    "9           9          7  7          9           9\n"+
+    "9           9                        9           9\n"+
+    "9           99                      99           9\n"+
+    "9            9                      9            9\n"+
+    "9   9   9    99                    99    9   9   9\n"+
+    "9   9   9     9                    9     9   9   9\n"+
+    "9   9   9               99               9   9   9\n"+
+    "9   9   9       99              99       9   9   9\n"+
+    "9   9            999          999            9   9\n"+
+    "9   9              999      999              9   9\n"+
+    "9        9                              9        9\n"+
+    "9        99                            99        9\n"+
+    "99        99                          99        99\n"+
+    "99   9        9999              9999        9   99\n"+
+    "99   99                 99                 99   99\n"+
+    "999   99               9999               99   999\n"+
+    "999    99             99  99             99    999\n"+
+    "98          999999              999999          89\n"+
+    "                                                  \n"+
+    "     99                                    99     \n"+
+    " 8  999999                              999999  8 \n"+
+    "    999999999999999999      999999999999999999    ", 
+  shipspawn: [{x:-210,y:0},{x:210,y:0}],
   radar: {type:"box",width:10,height:18}
   },
+  {name: "Antares Belt", author: "Gumz", map:
+    "55599999997557999999999999999999999959959999999955\n"+
+    "59999999999999999999999999999999999959959999999999\n"+
+    "99999999999999999997     7999999999975579999999999\n"+
+    "99999999999999997           7999999999999999999999\n"+
+    "9999999999999997             799999999999999999975\n"+
+    "57999999999975      5   5      57999999999975     \n"+
+    "    579977         5799975         579975         \n"+
+    " 4                  7   7                       4 \n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "                 88                               \n"+
+    "88 8     8     79997      8 8       8         88  \n"+
+    "99997           88        999      898  4   799999\n"+
+    "  88                                8        8  88\n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "     88           999         8 88  88         8 8\n"+
+    "    79997   4     8 8        7999999997   5    999\n"+
+    "      88                      88  88 8            \n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "                  8                               \n"+
+    "  8      5       898           999                \n"+
+    " 898              8      8     8 8        88      \n"+
+    "  8                                     79997   4 \n"+
+    "                                         88       \n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "                         7   7                 4  \n"+
+    " 4       579975         5899985         579975    \n"+
+    "     57999999999975      5   5      57999999999975\n"+
+    "579999999999999999997             7999999999999999\n"+
+    "9999999999999999999997           79999999999999999\n"+
+    "9999999999755799999999997     79999999999999999999\n"+
+    "99999999995995999999999999999999999999999999999995\n"+
+    "55999999995995999999999999999999999975579999999555",
+  shipspawn: [{x:-210,y:0},{x:210,y:0}],
+  radar: {type:"box",width:10,height:18},
+  traffic: function(game){
+    let sizes = [[30,10,20,10,20],[20,10,30,10,20],[20,10,20,10,30],[30,10,20,10,20]];
+    let x = [[-215,-150,-65,35,150],[-220,-150,-70,35,160],[-210,-155,-70,35,165],[-190,-100,-20,65,175]]
+    let y = [150,50,-50,-140];
+    for (let i=0; i<sizes.length; i++)
+    for (let j=0; j<sizes[i].length; j++)
+    game.addAsteroid({x:x[i][j],y:y[i]+(Math.floor(Math.random()*2)==1?Math.floor(Math.random()*12)*-1:Math.floor(Math.random()*10)),vx:i%2==0?0.5:-0.5,vy:0,size:sizes[i][j]});
+  },
+  cars: function(game){
+    game.asteroids.forEach((asteroid,i) => isWrongSpeed(asteroid,asteroid.custom.vx,0) && asteroid.set({vx:asteroid.custom.vx,vy:0}));
+  }},     
 ];
+
+function isWrongSpeed(car,vx,vy){
+  return car.vx != vx || car.vy != vy;
+}
 
 var colors = [
   {team:"Red",hue:0,team2:"Blue",hue2:240},
@@ -486,7 +697,7 @@ timer = timer*60*60+delay;
 this.options = {
   vocabulary: vocabulary,
   custom_map: map.map,
-  soundtrack: ["crystals.mp3","argon.mp3"][~~(Math.random()*2)],
+  soundtrack: ["crystals.mp3","argon.mp3"][Math.floor(Math.random()*2)],
   weapons_store: false,
   friendly_colors: 2,
   radar_zoom: 1,
@@ -507,7 +718,7 @@ this.options = {
 
 var check = function(game, isWaiting, isGameOver){
   modUtils.tick();
-  if (game.step % 30 === 0){
+  if (game.step % 15 === 0){
     teams.count = [0,0];
     for (let ship of game.ships){
       if (!ship.custom.init){
@@ -535,6 +746,7 @@ var check = function(game, isWaiting, isGameOver){
       teams.count[ship.custom.team]++;
       (ship.score != ship.custom.frags) && ship.set({score:ship.custom.frags});
     }
+    typeof (map||{}).cars == "function" && map.cars(game);
   }
 }, FormatTime = function(tick, forced, forceAll){
   var array = Array(3).fill(0).map((i,j) => Math.floor((tick%(60**(j+2)))/(60**(j+1)))).reverse();
@@ -583,6 +795,16 @@ var waiting = function(game){
     updateScoreboard(game);
     sendUI(game, {id:"delay time",visible:false});
     sendUI(game, {id:"delay",visible:false});
+    if (!game.custom.init){
+      game.custom.init = true; 
+      typeof (map||{}).traffic == "function" && map.traffic(game);
+      for (let asteroid of game.asteroids){
+        if (!asteroid.custom.init){
+          asteroid.custom.init = true;
+          asteroid.custom.vx = asteroid.vx; 
+        }
+      }      
+    }
     this.tick = main_game;
   }
   else {
@@ -1042,3 +1264,90 @@ this.event = function(event, game){
     break;
   }
 };
+
+;(function(){
+  var d = function (f) {
+     var h = 0.001;
+     return function(x) { return (f(x + h) - f(x - h)) / (2 * h) }
+  }
+  var placeholder = new Asteroid(game);
+  var OrbitingAsteroid  = class {
+    constructor (game, options) {
+      options = options || {}
+      this.set = function (options) {
+        if (options.graph != null) this.graph = (typeof options.graph == "function")?options.graph:(function(x){return 0});
+        if (options.interval != null) this.interval = Math.trunc(Math.max(1, options.interval)) || 1;
+        if (options.velocity != null) this.velocity = Number(options.velocity) || 1;
+        if (options.orbiter != null) this.orbiter = options.orbiter;
+        if (options.asteroid instanceof Asteroid) this.asteroid = options.asteroid;
+        if (options.persistent != null) this.persistent = !!options.persistent;
+      }
+      this.set({
+        velocity: options.velocity || 0,
+        graph: options.graph || 0,
+        interval: options.interval || 0,
+        orbiter: options.orbiter,
+        asteroid: options.asteroid || placeholder,
+        persistent: options.persistent || false
+      });
+      let u = this.asteroid == placeholder || !(this.asteroid instanceof Asteroid);
+      this.x = isNaN(options.starting_x)?(u?0:this.asteroid.x):Number(options.starting_x);
+      this.size = isNaN(options.size)?(u?30:this.asteroid.size):Math.max(options.size, 1);
+      this.custom = {};
+      this.last_updated = game.step;
+      this.orbit = function () {
+        let x;
+        if (typeof this.orbiter == "function") {
+          let t = this.orbiter(this.asteroid) || {};
+          if (t.custom) return t;
+          x = t.x
+        }
+        else x = this.x;
+        let r = this.velocity;
+        let angle = Math.atan(d(this.graph)(x)) || 0;
+        return {y: this.graph(x) || this.asteroid.y || 0, vx: r * Math.cos(angle), vy: r * Math.sin(angle)}
+      }
+      this.isActive = function(game) {
+        return this.asteroid.id != -1 && !this.asteroid.killed
+      }
+      this.tick = function(game) {
+        if (this.isActive() && game.step % this.interval === 0) {
+          this.size = this.asteroid.size;
+          this.x = this.asteroid.x;
+          this.last_updated = game.step;
+          this.asteroid.set(this.orbit())
+        }
+      }
+      this.asteroid = u?new Asteroid(game, {x: this.x, size: this.size}):this.asteroid;
+      let opts = this.orbit();
+      opts.size = this.size;
+      opts.x = this.x;
+      if (u) this.asteroid = game.addAsteroid(opts);
+      else this.isActive() && this.asteroid.set(opts)
+    }
+  }
+  if (!Array.isArray(game.orbitingAsteroids)) game.orbitingAsteroids = [];
+  game.addOrbitingAsteroid = function (options) {
+    let result = new OrbitingAsteroid(this, options);
+    return game.orbitingAsteroids.push(result), result
+  }
+  var tickOrbitingAsteroids = function (game) {
+    game.orbitingAsteroids = game.orbitingAsteroids.filter(orbitingAsteroid => (orbitingAsteroid.tick(game), orbitingAsteroid.persistent || !orbitingAsteroid.asteroid.killed))
+  }
+  var game_clone = Object.assign({}, this);
+  var checkClone = function() {
+    for (let key of Object.keys(this)) delete this[key];
+    Object.assign(this, game_clone);
+
+    this.tick = function () {
+      try { tickOrbitingAsteroids.apply(this, arguments) } catch(e){}
+      let u = typeof game_clone.tick == "function" && game_clone.tick.apply(game_clone, arguments);
+      try { checkClone.call(this) } catch(e){}
+      return u
+    }
+  }
+  checkClone.call(this)
+}).call(this);
+
+
+
