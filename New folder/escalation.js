@@ -17,7 +17,6 @@ var progressBar = {
 //todo: imrove ship spawing function (randomize)
 //todo: add asteroids to gumz maps 
 //todo: add maps 
-//todo: ships only upgrade once they've killed someone (if current) or give 0.5 points (if pending)
 //todo: display next ships on scorebar
 //todo: final 10 kills ui 
 //todo: add icons and colors to shiptree ui
@@ -162,7 +161,7 @@ function findShipCode(name){
   if (ships_list[i][j] == name) return (i+3)*100+j+1;
   return null;
 }
-console.log(stages,ship_codes,random_ships,ships_list);
+
 var vocabulary = [
   {text: "Yes", icon:"\u004c", key:"Y"},
   {text: "No", icon:"\u004d", key:"N"},
@@ -403,60 +402,60 @@ var maps = [
   shipspawn: [{x:-210,y:0},{x:210,y:0}],
   radar: {type:"box",width:10,height:18}
   },
-  {name: "Passageways", author: "rob0nuko", map:
-    "9    99   99            99            99   99    9\n"+
-    "     99   99                          99   99     \n"+
-    "    999   9    999              999    9   999    \n"+
-    "   999          999            999          999   \n"+
-    "  999            999          999            999  \n"+
-    "                  99999999999999                  \n"+
-    "           999     999999999999     999           \n"+
-    "            999                    999            \n"+
-    "9999         999                  999         9999\n"+
-    "999           999       99       999           999\n"+
-    "       9999    99999    99    99999    9999       \n"+
-    "      999999    99999   99   99999    999999      \n"+
-    "          999           99           999          \n"+
-    "           999          99          999           \n"+
-    "999         99          99          99         999\n"+
-    "9999        99          99          99        9999\n"+
-    "  999       99     9    99    9     99       999  \n"+
-    "   99       99    99    99    99    99       99   \n"+
-    "   99        9   99            99   9        99   \n"+
-    "   99   9        99            99        9   99   \n"+
-    "   99   99       99            99       99   99   \n"+
-    "    9   99       99            99       99   9    \n"+
-    "        99       99            99       99        \n"+
-    "        99       99            99       99        \n"+
-    "9       99       99     99     99       99       9\n"+
-    "9       99       99     99     99       99       9\n"+
-    "        99       99            99       99        \n"+
-    "        99       99            99       99        \n"+
-    "    9   99       99            99       99   9    \n"+
-    "   99   99       99            99       99   99   \n"+
-    "   99   9        99            99        9   99   \n"+
-    "   99        9   99            99   9        99   \n"+
-    "   99       99    99    99    99    99       99   \n"+
-    "  999       99     9    99    9     99       999  \n"+
-    "9999        99          99          99        9999\n"+
-    "999         99          99          99         999\n"+
-    "           999          99          999           \n"+
-    "          999           99           999          \n"+
-    "      999999    99999   99   99999    999999      \n"+
-    "       9999    99999    99    99999    9999       \n"+
-    "999           999       99       999           999\n"+
-    "9999         999                  999         9999\n"+
-    "            999                    999            \n"+
-    "           999     999999999999     999           \n"+
-    "                  99999999999999                  \n"+
-    "  999            999          999            999  \n"+
-    "   999          999            999          999   \n"+
-    "    999   9    999              999    9   999    \n"+
-    "     99   99                          99   99     \n"+
-    "9    99   99            99            99   99    9",
-  shipspawn: [{x:-150,y:0},{x:150,y:0}],
+  {name: "Turbine", author: "rob0nuko", map:
+    "99   999  99999999999        99999999999  999   99\n"+
+    "9     9999999999                  9999999999     9\n"+
+    "      99999999                      99999999      \n"+
+    "       9999                            9999       \n"+
+    "       99                                99       \n"+
+    "9       9                                9       9\n"+
+    "999                                            999\n"+
+    "99999              9999    9999              99999\n"+
+    " 99999           99999      99999           99999 \n"+
+    " 999           9999            9999           999 \n"+
+    "9999          99                  99          9999\n"+
+    "999           9                    9           999\n"+
+    "999                     9                      999\n"+
+    "99                     999                      99\n"+
+    "99        99           999            99        99\n"+
+    "99       99             99      99     99       99\n"+
+    "9        99    999      99     999     99        9\n"+
+    "9       99     9999     99     999      99       9\n"+
+    "9       99      9999    99    999       99       9\n"+
+    "9      99         999    9   999         99      9\n"+
+    "9      99          999       99          99      9\n"+
+    "       99                    9           99       \n"+
+    "       9                                  9       \n"+
+    "                        99         999            \n"+
+    "             999999    9999    9999999            \n"+
+    "            99999999   9999   9999999             \n"+
+    "            999         99                        \n"+
+    "       9                                  9       \n"+
+    "       99           9        9           99       \n"+
+    "9      99          99        99          99      9\n"+
+    "9      99         999   9    999         99      9\n"+
+    "9       99       999    99    9999      99       9\n"+
+    "9       99      999     99     9999     99       9\n"+
+    "9        99     999     99      999    99        9\n"+
+    "99       99     99      99             99       99\n"+
+    "99        99            999           99        99\n"+
+    "99                      999                     99\n"+
+    "999                      99                    999\n"+
+    "999           9                    9           999\n"+
+    "9999          99                  99          9999\n"+
+    " 999           9999            9999           999 \n"+
+    " 99999           99999      99999           99999 \n"+
+    "99999              9999    9999              99999\n"+
+    "999                                            999\n"+
+    "9       9                                9       9\n"+
+    "       99                                99       \n"+
+    "       9999                            9999       \n"+
+    "      99999999                      99999999      \n"+
+    "9     9999999999                  9999999999     9\n"+
+    "99   999  99999999999        99999999999  999   99",
+  shipspawn: [{x:-210,y:0},{x:210,y:0}],
   radar: {type:"box",width:10,height:18}
-  },  
+  },
 ];
 
 var colors = [
@@ -479,7 +478,7 @@ var teams = {
 };
 
 var update = 1;
-if (!game.custom.map) game.custom.map = maps[Math.trunc(Math.random()*maps.length)];
+if (!game.custom.map) game.custom.map = maps[4];
 var map = game.custom.map;
 delay = delay*60;
 timer = timer*60*60+delay;
@@ -703,7 +702,7 @@ function checkscores(game){
 }
 
 function finalten(game){
-  let filled = teams.points.map(i => (i-pointsToFinal)/10);
+  let filled = teams.points.map(i => (i-pointsToFinal)/PointsRange);
   let index = teams.points.map(i => Math.trunc(i/1));
   let hues = [[`hsla(${Math.abs(teams.hues[0]-5)}, 100%, 62.55%, 0.7)`,`hsla(${Math.abs(teams.hues[1]-7)}, 97%, 74%, .7)`],["hsl(353, 100%, 55%)","hsl(233, 100%, 55%)"]];
   let checked = [["hsla(210, 50%, 87%, 1)","hsla(210, 50%, 87%, 1)"]]; // color for unachieved checkpoints
@@ -732,13 +731,12 @@ function finalten(game){
 
 function checkstatus(game, team){
   let upgraded = [[],[]];
-  let checkpoints = Array.from(Array(12).fill({1:0}).map(a => a*13).keys()).map((a,b) => (b+1)*10);
+  let checkpoints = Array.from(Array(12).fill({1:0}).map(a => a*13).keys()).map((a,b) => (b+1)*7);
   for (let i=0; i<2; i++){
-    if (teams.points2[i] % 10 === 0 && teams.points2[i] > 1){
+    if (teams.points2[i] % PointsRange === 0 && teams.points2[i] > 1){
       teams.points2[i] += 0.05
       teams.level[i]++;
       teams.current[i] = stages[`level_${teams.level[i]}`];
-      console.log(teams)
       for (let ship of game.ships)
         if (ship.team == i){
           sendUI(ship, {
@@ -753,19 +751,25 @@ function checkstatus(game, team){
             sendUI(ship, {id:"up",visible:false});
           },180);
           if (ship.custom.points >= 1){
-          sendUI(ship, {
-            id: "get",
-            position: [32,46,20,20],
-            visible: true,
-            components: [
-              {type: "text",position:[0,3,100,50],value:"Press [U] to get ship",color:"#cde"},
-            ]
-          }); 
-          modUtils.setTimeout(function(){
-            sendUI(ship, {id:"get",visible:false});
-            ship.set({type:ship.custom.ship,invulnerable:20,stats:88888888});
-            ship.custom.ship = stages[`level_${teams.level[ship.custom.stages]}`];
-          },180);            
+            if (!ship.custom.seventh){
+            sendUI(game, {
+              id: "get",
+              position: [40,80,15,10],
+              visible: true,
+              shortcut: "U",
+              clickable: true,
+              components: [
+                {type: "text",position:[0,0,100,50],value:"Press [U] to get ship",color:"#cde"},
+              ]
+            });
+            modUtils.setTimeout(function(){
+              sendUI(ship, {id:"get",visible:false});
+              ship.custom.points--; 
+              ship.custom.stage++; 
+              ship.custom.ship = stages[`level_${ship.custom.stage}`];
+              ship.set({type:stages[`level_${ship.custom.stage}`],stats:88888888});
+            },60*4);            
+          }
         }
       }      
     }
@@ -981,6 +985,7 @@ this.event = function(event, game){
       let killer = event.killer;
       if (killer != null){
         ship.set({collider:true});
+        killer.set({collider:true});
         teams.points[killer.custom.team]++;
         teams.points2[killer.custom.team]++;
         teams.points2[killer.custom.team] = Math.trunc(teams.points2[killer.custom.team]);
@@ -991,12 +996,9 @@ this.event = function(event, game){
       ship.custom.deaths++;
       update = 1;
       ship.custom.hasbeenkilled = true;
-      if (killer.type == teams.current[killer.team]){
-        killer.custom.points++;
-      } else {
-        killer.custom.points+=0.5;
-      }
-      //killer.type == teams.current[killer.custom.team]?killer.custom.points+=0.5:killer.custom.points++;
+      teams.points[killer.custom.team]%PointsRange==0?killer.custom.seventh=true:killer.custom.seventh=false;
+      killer.type == teams.current[killer.custom.team]?killer.custom.points+=0.5:killer.custom.points++;
+      console.log(killer.custom)
       modUtils.setTimeout(function(){
         if (killer.custom.ship != stages[`level_${killer.custom.stage+1}`]){
           if (killer.custom.stage < teams.level[killer.team]){
@@ -1004,7 +1006,7 @@ this.event = function(event, game){
               killer.custom.points--; 
               killer.custom.stage++; 
               killer.custom.ship = stages[`level_${killer.custom.stage}`];
-              killer.set({type:stages[`level_${killer.custom.stage}`]});
+              killer.set({type:stages[`level_${killer.custom.stage}`],stats:88888888});
             }
           }
         }  
@@ -1022,7 +1024,7 @@ this.event = function(event, game){
             ship.custom.tree?shiptree.remove(ship):shiptree.tree(ship);
           break;
           case "get": 
-            sendUI(ship,{id:"get",visible:false});         
+            //sendUI(ship,{id:"get",visible:false});         
             ship.custom.ship = stages[`level_${teams.level[ship.custom.stages]}`];
             ship.set({type:ship.custom.ship,stats:88888888}); break;
           case "close": ship.custom.opened = false; break;
