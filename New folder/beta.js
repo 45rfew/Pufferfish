@@ -15,12 +15,10 @@ var progressBar = {
 };
 //todo: add balancing; winning team 10 points ahead = they spawn with half health (maybe; need to test more)
 //todo: imrove ship spawing function (randomize)
-//todo: add asteroids to gumz maps 
 //todo: add maps 
 //todo: display next ships on scorebar
 //todo: final 10 kills ui 
 //todo: add icons and colors to shiptree ui
-//todo: balance ships
 var modUtils = {
   setTimeout: function(f,time){
     this.jobs.push({f:f,time:game.step+time});
@@ -90,6 +88,21 @@ a.Lunatic_speedster_606 = '{"name":"Lunatic Speedster","level":6,"model":6,"size
 a.Lunatic_Dualities_607 = '{"name":"Lunatic Dualities","level":6,"model":7,"size":1.65,"specs":{"shield":{"capacity":[305,345],"reload":[10,13]},"generator":{"capacity":[55,60],"reload":[90,125]},"ship":{"mass":355,"speed":[95,125],"rotation":[60,78],"acceleration":[90,110]}},"bodies":{"main":{"section_segments":9,"offset":{"x":0,"y":0,"z":-5},"position":{"x":[0,0,0,0,0,0,0,0,0],"y":[-58,-58,-60,-10,0,30,70,100,90],"z":[0,0,0,0,0,0,0,0,0]},"width":[0,8,10,16,15,15,18,10,10],"height":[0,6,8,10,10,15,15,10,0],"texture":[18,12.9,1,12,11,2,4,17],"propeller":true},"cockpit":{"section_segments":8,"offset":{"x":0,"y":-20,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0],"y":[-38,-35,-23,-10,0,30,40],"z":[0,2,3,3,3,3,3]},"width":[0,4,5,6,7,8,0],"height":[0,2,5,5,5,7,0],"texture":[4,9,9,3,10.24,12],"propeller":false},"reactor":{"section_segments":12,"offset":{"x":0,"y":10,"z":-62},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0,0],"y":[-20,-20,0,3,-1,4,3,6,6,6],"z":[0,0,0,0,0,0,0,0,0,0,0,0]},"width":[0,20,20,18,16,16,13,12,8,0],"height":[0,20,20,18,16,16,13,12,8,0],"propeller":false,"texture":[4,12,11,8,4,17,3,3,17],"vertical":true,"angle":0},"Reactor_piece":{"section_segments":[40,45,50,130,135,140,220,225,230,310,315,320],"offset":{"x":0,"y":40,"z":6},"position":{"x":[0,0,0,0,0,0,0],"y":[0,0,0,0,0,10,10],"z":[0,0,0,0,0,0,0]},"width":[0,5,5,5,5,5,0],"height":[0,15,15,15,15,15,0],"texture":[18,6,11,10,11,18],"propeller":false,"vertical":false},"Reactor_piece2":{"section_segments":[40,45,50,130,135,140,220,225,230,310,315,320],"offset":{"x":12.2,"y":62,"z":6},"position":{"x":[0,0,0,0,0,0,0],"y":[0,0,0,0,0,10,10],"z":[0,0,0,0,0,0,0]},"width":[0,5,5,5,5,5,0],"height":[0,15,15,15,15,15,0],"texture":[18,6,11,10,11,18],"propeller":false,"vertical":false,"angle":90},"Reactor_piece3":{"section_segments":[40,45,50,130,135,140,220,225,230,310,315,320],"offset":{"x":0,"y":74.5,"z":6},"position":{"x":[0,0,0,0,0,0,0],"y":[0,0,0,0,0,10,10],"z":[0,0,0,0,0,0,0]},"width":[0,5,5,5,5,5,0],"height":[0,15,15,15,15,15,0],"texture":[18,6,11,10,11,18],"propeller":false,"vertical":false},"Reactor_piece4":{"section_segments":18,"offset":{"x":0,"y":5,"z":-62},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0,0],"y":[-1,-1,-1,-1,-1,2,2,2,2,-1],"z":[0,0,0,0,0,0,0,0,0,0,0,0]},"width":[23,5,25,25,25,25,25,25,23,23],"height":[23,25,25,25,25,25,25,25,23,23],"propeller":false,"texture":[11,12,11,8,18,18,3,17,18],"vertical":true,"angle":0},"Decoration":{"section_segments":8,"offset":{"x":4.3,"y":10,"z":2},"position":{"x":[0,0,0,0,0,5,-5],"y":[0,0,0,0,0,40,10],"z":[-3,-3,-3,-3,-3,0]},"width":[0,5,5,5,5,5,0],"height":[0,8,8,8,8,8,0],"texture":[18,6,11,10,63,18],"propeller":false,"vertical":false},"Not_a_Decoration":{"section_segments":8,"offset":{"x":15,"y":30,"z":-4},"position":{"x":[-3,-3,-3,-2,-3,-3,-3,0,0,5,-5],"y":[-73,-75,-70,-40,-10,-10,-3,4,10,40,40],"z":[-3,-3,-3,-3,-3,-3,-3,-3,-3,0]},"width":[0,3,4,4,4,5,5,5,5,5,0],"height":[0,5,6,6,6,8,8,8,8,8,0],"texture":[13,4,63,18,18,63,11,12,63,18],"propeller":false,"vertical":false},"tubes":{"section_segments":8,"offset":{"x":45,"y":-120,"z":-8},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[0,0,23,27,62,62,97,102,163],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[0,2,2,2,2,2,2,2,2],"height":[0,2,2,2,2,2,2,2,2],"texture":[13,13,17,13,17,4,13]},"tubes2":{"section_segments":8,"offset":{"x":55,"y":-120,"z":-8},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[0,0,23,27,62,62,97,102,163],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[0,2,2,2,2,2,2,2,2],"height":[0,2,2,2,2,2,2,2,2],"texture":[13,13,17,13,17,4,13]},"tubes3":{"section_segments":8,"offset":{"x":68,"y":10,"z":5},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[0,0,13,17,42,42,67,82,88],"z":[-1,-4,0,0,0,0,0,-3,-6,-6]},"width":[0,2,2,2,2,2,2,2,2],"height":[0,2,2,2,2,2,2,2,2],"texture":[12,12,12,11,12,3,11,12]},"ring":{"section_segments":8,"offset":{"x":68,"y":5,"z":-4},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[0,0,-6,-4,-4,4,4,6,0,0],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[5,5,5,7,7,7,7,5,5,5],"height":[5,5,5,7,7,7,7,5,5,5],"texture":[17],"propeller":false},"ring2":{"section_segments":8,"offset":{"x":68,"y":15,"z":-4},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[0,0,-6,-4,-4,4,4,6,0,0],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[5,5,5,7,7,7,7,5,5,5],"height":[5,5,5,7,7,7,7,5,5,5],"texture":[17],"propeller":false},"ring3":{"section_segments":8,"offset":{"x":68,"y":25,"z":-4},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[0,0,-6,-4,-4,4,4,6,0,0],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[5,5,5,7,7,7,7,5,5,5],"height":[5,5,5,7,7,7,7,5,5,5],"texture":[17],"propeller":false},"ring4":{"section_segments":8,"offset":{"x":68,"y":35,"z":-4},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[0,0,-6,-4,-4,4,4,6,0,0],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[5,5,5,7,7,7,7,5,5,5],"height":[5,5,5,7,7,7,7,5,5,5],"texture":[17],"propeller":false},"ring5":{"section_segments":8,"offset":{"x":68,"y":45,"z":-4},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[0,0,-6,-4,-4,4,4,6,0,0],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[5,5,5,7,7,7,7,5,5,5],"height":[5,5,5,7,7,7,7,5,5,5],"texture":[17],"propeller":false},"cannons":{"section_segments":12,"offset":{"x":68,"y":40,"z":-2},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0,0,0,0],"y":[-65,-68,-55,-55,-45,-45,-20,0,20,30,30,50,60,60],"z":[0,0,0,0,0,0,0,0,0,0,0,0,-1,-1]},"width":[0,4,5,4,4,5,6,6,6,6,7,7,6,0],"height":[0,4,5,4,4,5,6,6,6,6,7,7,4,0],"angle":0,"laser":{"damage":[32,50],"rate":2,"type":1,"speed":[180,200],"number":1,"angle":0,"error":0,"recoil":130},"propeller":false,"texture":[12,4,4,13,17,10.24,13,1,3,17,4,11]},"top_propulsor":{"section_segments":10,"offset":{"x":40,"y":65,"z":5},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0,0,0],"y":[-10,-10,-15,-15,0,10,20,25,30,40,50,70,65],"z":[0,0,0,0,0,0,0,0,0,0,0,0,0]},"width":[0,4,10,11,13,13,13,13,13,13,8,8,0],"height":[0,4,10,11,13,13,13,13,13,13,8,8,0],"texture":[18,4,17,63,13,13,18,63,4,10,11,17],"propeller":true},"Propulsor_piece":{"section_segments":[40,45,50,130,135,140,220,225,230,310,315,320],"offset":{"x":40,"y":110,"z":5},"position":{"x":[0,0,0,0,0,0,0],"y":[0,0,0,0,0,10,10],"z":[0,0,0,0,0,0,0]},"width":[0,5,5,5,5,5,0],"height":[0,10,10,11,15,11,0],"texture":[18,6,11,10,18,18],"propeller":false,"vertical":false},"Propulsor_piece2":{"section_segments":[40,45,50,130,135,140,220,225,230,310,315,320],"offset":{"x":40,"y":50,"z":5},"position":{"x":[0,0,0,0,0,0,0],"y":[0,0,0,0,0,10,10],"z":[0,0,0,0,0,0,0]},"width":[0,3,3,3,3,3,0],"height":[0,12,12,12,12,12,0],"texture":[18,6,11,10,18,18],"propeller":false,"vertical":false},"Propulsor_piece3":{"section_segments":[40,45,50,130,135,140,220,225,230,310,315,320],"offset":{"x":40,"y":50.1,"z":5},"position":{"x":[0,0,0,0,0,0,0],"y":[0,0,0,0,0,10,10],"z":[0,0,0,0,0,0,0]},"width":[0,12,12,12,12,12,0],"height":[0,3,3,3,3,3,0],"texture":[18,6,11,10,18,18],"propeller":false,"vertical":false},"wing":{"section_segments":[40,45,50,130,135,140,220,225,230,310,315,320],"offset":{"x":70,"y":-20,"z":-9},"position":{"x":[8,8,8,8,14,0,0,0],"y":[-5,-5,-5,-5,10,10,10,10],"z":[1,1,1,1,1,1,1,1]},"width":[0,35,43,120,125,25,0],"height":[0,2,2,2,2,2,0],"texture":[17,18,12,63,12,17],"angle":-90,"propeller":false},"part_wing":{"section_segments":[40,45,50,130,135,140,220,225,230,310,315,320],"offset":{"x":72,"y":-20,"z":-9},"position":{"x":[8,8,8,8,14,0,0,0],"y":[-4,-4,-4,-4,10,10,10,10],"z":[1,1,1,1,1,1,1,1]},"width":[0,35,43,120,125,25,0],"height":[0,1.5,1.5,1.5,1.5,1.5,0],"texture":[17,18,12,4,12,17],"angle":-90,"propeller":false},"part_wing2":{"section_segments":[40,45,50,130,135,140,220,225,230,310,315,320],"offset":{"x":70.5,"y":-55,"z":-8.6},"position":{"x":[0,0,0,0,0,0,0,0],"y":[-4,-4,-4,-4,10,10,10,10],"z":[1,1,1,1,1,1,1,1]},"width":[0,35,43,45,45,40,0],"height":[0,1.5,1.5,1.5,1.5,1.5,0],"texture":[17,18,12,13,12,17],"angle":-90,"propeller":false},"wing2":{"section_segments":[40,45,50,130,135,140,220,225,230,310,315,320],"offset":{"x":70,"y":30,"z":-9},"position":{"x":[8,8,8,8,14,0,0,20,30,20,20],"y":[-7,-7,-7,-7,11,11,11,40,40,60],"z":[1,1,1,1,1,1,1,1,1,1,1]},"width":[0,35,43,80,85,25,20,20,45,45],"height":[0,5,5,5,5,5,4,4,5,5],"texture":[18,18,12,4,12,17,13,18,18],"angle":-90,"propeller":false},"wing3":{"section_segments":[40,45,50,130,135,140,220,225,230,310,315,320],"offset":{"x":50,"y":-105,"z":-9},"position":{"x":[20,20,20,20,-10,-10,-10,-10],"y":[-9,-9,-9,-9,27,27,27,27],"z":[1,1,1,1,1,1,1,1]},"width":[0,6,8,10,15,5,0],"height":[0,3,3,3,3,3,0],"texture":[17,18,12,4,12,17],"angle":90,"propeller":false}},"wings":{"top_join":{"offset":{"x":12,"y":68,"z":-3},"length":[28],"width":[40,20],"angle":[10],"position":[0,30,30,30],"texture":[11],"doubleside":1,"bump":{"position":10,"size":20}}},"typespec":{"name":"Lunatic_Dualities","level":6,"model":7,"code":607,"specs":{"shield":{"capacity":[305,345],"reload":[10,13]},"generator":{"capacity":[55,60],"reload":[90,125]},"ship":{"mass":355,"speed":[95,125],"rotation":[60,78],"acceleration":[90,110]}},"shape":[1.984,2.006,4.582,4.559,4.413,4.344,3.986,3.439,3.1,2.862,2.697,2.623,2.561,2.561,2.623,2.732,2.899,3.138,3.486,3.986,4.146,4.102,4.724,4.684,3.316,3.306,3.316,4.684,4.724,4.102,4.146,3.986,3.486,3.138,2.899,2.732,2.623,2.561,2.561,2.623,2.697,2.862,3.1,3.439,3.986,4.344,4.413,4.559,4.582,2.006],"lasers":[{"x":2.244,"y":-0.924,"z":-0.066,"angle":0,"damage":[32,50],"rate":2,"type":1,"speed":[180,200],"number":1,"spread":0,"error":0,"recoil":130},{"x":-2.244,"y":-0.924,"z":-0.066,"angle":0,"damage":[32,50],"rate":2,"type":1,"speed":[180,200],"number":1,"spread":0,"error":0,"recoil":130}],"radius":4.724}}';
 var ships = [];
 for (let ship in a) ships.push(a[ship]);
+for (var i=0; i<ships.length; i++){
+  let ship = JSON.parse(ships[i]);
+  ship.specs.ship.rotation = ship.specs.ship.rotation.map(a => Math.floor(a *= 1.3));
+  ship.specs.ship.acceleration = ship.specs.ship.acceleration.map(a => Math.floor(a *= 1.3));
+  ship.specs.generator.capacity = ship.specs.generator.capacity.map(a => a *= Math.floor([1,1.8,1.6,1.4,1.2,1][parseInt(ship.level)-1]));
+  ship.specs.generator.reload = ship.specs.generator.reload.map(a => a *= Math.floor([1,1.8,1.6,1.4,1.2,1][parseInt(ship.level)-1]));
+  ship.typespec.specs.ship.rotation = ship.typespec.specs.ship.rotation.map(a => Math.floor(a *= 1.3));
+  ship.typespec.specs.ship.acceleration = ship.typespec.specs.ship.acceleration.map(a => Math.floor(a *= 1.3));
+  ship.typespec.specs.generator.capacity = ship.typespec.specs.generator.capacity.map(a => a *= Math.floor([1,1.8,1.6,1.4,1.2,1][parseInt(ship.level)-1]));
+  ship.typespec.specs.generator.reload = ship.typespec.specs.generator.reload.map(a => a *= Math.floor([1,1.8,1.6,1.4,1.2,1][parseInt(ship.level)-1]));
+  for (let j=0; j<ship.typespec.lasers.length; j++){
+    ship.typespec.lasers[j].rate *= [1,1.4,1.3,1.2,1,1][parseInt(ship.level)-1];
+  } 
+  ships[i] = JSON.stringify(ship);
+}
 
 var ships_list = [
   ["Lunatic"],
@@ -150,11 +163,11 @@ var stages = {
   level_12: 101
 };
 
-let random_ships = randomPath(ship_codes,1).concat().filter(a => a != stages.level_3);
+let random_ships = randomPath(ship_codes,2).concat().filter(a => a != stages.level_3);
 for (let i=4; i<12; i++){
   stages[`level_${i}`] = random_ships[i]; 
 }
-
+console.warn(stages);
 function findShipCode(name){
   for (let i=0;i<ships_list.length;i++)
   for (let j=0;j<ships_list[i].length;j++)
@@ -240,7 +253,7 @@ var maps = [
   shipspawn: [{x:-210,y:0},{x:210,y:0}],
   radar: {type:"box",width:10,height:18}
   },
-  {name: "Torment", author: "Gumz", map:
+  {name: "Torment", author: "GumZ", map:
     "    8999999999999999999    9999999999999999998    \n"+
     "    8999999999999778  9    9  8779999999999998    \n"+
     "     799999999778                877999999997     \n"+
@@ -294,7 +307,7 @@ var maps = [
   shipspawn: [{x:-100,y:0},{x:100,y:0}],
   radar: {type:"box",width:10,height:18}
   },
-  {name: "VY Asylum", author: "Gumz", map:
+  {name: "VY Asylum", author: "GumZ", map:
     "997    898    799999997    799999997    898    799\n"+
     "997  7 8998    7 7 7 7      7 7 7 7    8998 7  799\n"+
     "77      88                              88      77\n"+
@@ -461,7 +474,7 @@ var maps = [
   shipspawn: [{x:-210,y:0},{x:210,y:0}],
   radar: {type:"box",width:10,height:18},
   traffic: function(game){
-    for (let i=0; i<8; i++){
+    /*for (let i=0; i<8; i++){
     let rad = 210;
     let t = function(x){return Math.sqrt(rad**2 - x**2)}
     let v = 0.5; 
@@ -486,7 +499,7 @@ var maps = [
         return o;
       }
     })
-    }
+    }*/
   },
   cars: function(game){
    // game.asteroids.forEach((asteroid,i) => isWrongSpeed(asteroid,asteroid.custom.vx,0) && asteroid.set({vx:asteroid.custom.vx,vy:0}));
@@ -599,7 +612,7 @@ var maps = [
   shipspawn: [{x:-210,y:0},{x:210,y:0}],
   radar: {type:"box",width:10,height:18}
   },
-  {name: "Antares Belt", author: "Gumz", map:
+  {name: "Antares Belt", author: "GumZ", map:
     "55599999997557999999999999999999999959959999999955\n"+
     "59999999999999999999999999999999999959959999999999\n"+
     "99999999999999999997     7999999999975579999999999\n"+
@@ -653,7 +666,7 @@ var maps = [
   shipspawn: [{x:-210,y:0},{x:210,y:0}],
   radar: {type:"box",width:10,height:18},
   traffic: function(game){
-    let sizes = [[30,10,20,10,20],[20,10,30,10,20],[20,10,20,10,30],[30,10,20,10,20]];
+    let sizes = [[30,10,20,10,20],[20,10,30,10,20],[20,10,20,10,30],[30,10,20,10,20]].map(a => a.map(b => b += 10));
     let x = [[-215,-150,-65,35,150],[-220,-150,-70,35,160],[-210,-155,-70,35,165],[-190,-100,-20,65,175]]
     let y = [150,50,-50,-140];
     for (let i=0; i<sizes.length; i++)
@@ -689,7 +702,7 @@ var teams = {
 };
 
 var update = 1;
-if (!game.custom.map) game.custom.map = maps[4];
+if (!game.custom.map) game.custom.map = maps[Math.trunc(Math.random()*maps.length)];
 var map = game.custom.map;
 delay = delay*60;
 timer = timer*60*60+delay;
@@ -705,7 +718,7 @@ this.options = {
   starting_ship: 801,
   crystal_value: 0,
   speed_mod: 1.5,
-  max_players: 12,
+  max_players: 14,
   ships: ships,
   release_crystal: false,
   hues: [colors[0].hue,colors[0].hue2],
@@ -727,10 +740,11 @@ var check = function(game, isWaiting, isGameOver){
         ship.custom.deaths = 0;
         ship.custom.points = 0;
         ship.custom.tree = false;
-        ship.custom.ship = stages.level_1;   
-        ship.custom.stage = 1;
+        ship.custom.pending = false; 
         setteam(ship);
         setup(ship);
+        ship.custom.ship = stages[`level_${teams.level[ship.custom.team]}`];   
+        ship.custom.stage = teams.level[ship.custom.team];      
         //sendUI(ship, game.custom.radar_background);
         if (isGameOver) gameover(ship);
       }
@@ -961,6 +975,7 @@ function checkstatus(game, team){
       teams.current[i] = stages[`level_${teams.level[i]}`];
       for (let ship of game.ships)
         if (ship.team == i){
+          ship.custom.pending = true;
           sendUI(ship, {
             id: "up",
             position: [32,16,34,32],
@@ -974,7 +989,8 @@ function checkstatus(game, team){
           },180);
           if (ship.custom.points >= 1){
             if (!ship.custom.seventh){
-            sendUI(game, {
+            countdown(ship,4,1,[44,85,7,7]);
+            sendUI(ship, {
               id: "get",
               position: [40,80,15,10],
               visible: true,
@@ -990,12 +1006,32 @@ function checkstatus(game, team){
               ship.custom.stage++; 
               ship.custom.ship = stages[`level_${ship.custom.stage}`];
               ship.set({type:stages[`level_${ship.custom.stage}`],stats:88888888});
+              ship.custom.pending = false;
             },60*4);            
           }
         }
       }      
     }
   }
+}
+
+function countdown(ship, time, id, pos){
+  let t = time * 60 + game.step; 
+  for (let i=0; i<time; i++){
+    modUtils.setTimeout(function(){
+      sendUI(ship, {
+        id: "countdown"+id,
+        position: pos,
+        visible: true,
+        components: [
+          {type: "text",position:[0,0,100,50],value:FormatTime(t - game.step, [false, false, false], 0),color:"#cde"},
+        ]
+      });           
+    },i*60);  
+  }
+  modUtils.setTimeout(function(){
+    sendUI(ship, {id:"countdown"+id,visible:false});    
+  },time*60);  
 }
 
 function setup(ship){
@@ -1220,19 +1256,20 @@ this.event = function(event, game){
       ship.custom.hasbeenkilled = true;
       teams.points[killer.custom.team]%PointsRange==0?killer.custom.seventh=true:killer.custom.seventh=false;
       killer.type == teams.current[killer.custom.team]?killer.custom.points+=0.5:killer.custom.points++;
-      console.log(killer.custom)
-      modUtils.setTimeout(function(){
-        if (killer.custom.ship != stages[`level_${killer.custom.stage+1}`]){
-          if (killer.custom.stage < teams.level[killer.team]){
-            if (killer.custom.points >= 1){
-              killer.custom.points--; 
-              killer.custom.stage++; 
-              killer.custom.ship = stages[`level_${killer.custom.stage}`];
-              killer.set({type:stages[`level_${killer.custom.stage}`],stats:88888888});
+      if (!killer.custom.pending){
+        modUtils.setTimeout(function(){
+          if (killer.custom.ship != stages[`level_${killer.custom.stage+1}`]){
+            if (killer.custom.stage < teams.level[killer.team]){
+              if (killer.custom.points >= 1){
+                killer.custom.points--; 
+                killer.custom.stage++; 
+                killer.custom.ship = stages[`level_${killer.custom.stage}`];
+                killer.set({type:stages[`level_${killer.custom.stage}`],stats:88888888});
+              }
             }
-          }
-        }  
-      },20);
+          }  
+        },20);
+      }
       checkstatus(game);
       break;
     case "ship_spawned":
@@ -1246,7 +1283,7 @@ this.event = function(event, game){
             ship.custom.tree?shiptree.remove(ship):shiptree.tree(ship);
           break;
           case "get": 
-            //sendUI(ship,{id:"get",visible:false});         
+            sendUI(ship,{id:"get",visible:false});         
             ship.custom.ship = stages[`level_${teams.level[ship.custom.stages]}`];
             ship.set({type:ship.custom.ship,stats:88888888}); break;
           case "close": ship.custom.opened = false; break;
