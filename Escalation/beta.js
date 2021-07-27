@@ -729,6 +729,24 @@ this.options = {
   reset_tree: true
 };
 
+
+let ranges = [-this.options.map_size*5,this.options.map_size*5]
+let ranges2 = [-this.options.map_size/2, this.options.map_size/2]
+let g = []
+let ss = map.map.split("\n")
+console.log(ss)
+let aa = []
+for (let i=0; i<ss.length; i++){
+  for (let j=0; j<ss[i].length; j++){
+    if (parseInt(ss[i][j]) > 8){
+      aa.push(ss[i][j])
+      console.log(i,j)
+    }
+  }
+}
+
+console.log(aa)
+
 var check = function(game, isWaiting, isGameOver){
   modUtils.tick();
   if (game.step % 15 === 0){
@@ -1385,6 +1403,3 @@ this.event = function(event, game){
   }
   checkClone.call(this)
 }).call(this);
-
-
-
