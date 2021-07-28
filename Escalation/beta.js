@@ -13,7 +13,6 @@ var progressBar = {
   offsetY: 10.2, //position from the top of screen (global)
   distanceY: 2 // height distance multiplier (global)
 };
-//todo: add balancing; winning team 10 points ahead = they spawn with half health (maybe; need to test more)
 //todo: imrove ship spawing function (randomize)
 //todo: add maps 
 //todo: display next ships on scorebar
@@ -729,24 +728,6 @@ this.options = {
   reset_tree: true
 };
 
-
-let ranges = [-this.options.map_size*5,this.options.map_size*5]
-let ranges2 = [-this.options.map_size/2, this.options.map_size/2]
-let g = []
-let ss = map.map.split("\n")
-console.log(ss)
-let aa = []
-for (let i=0; i<ss.length; i++){
-  for (let j=0; j<ss[i].length; j++){
-    if (parseInt(ss[i][j]) > 8){
-      aa.push(ss[i][j])
-      console.log(i,j)
-    }
-  }
-}
-
-console.log(aa)
-
 var check = function(game, isWaiting, isGameOver){
   modUtils.tick();
   if (game.step % 15 === 0){
@@ -925,7 +906,6 @@ var waiting = function(game){
 };
 
 this.tick = waiting;
-
 function checkscores(game){
   let filled = teams.points.map(i => i/pointsToWin);
   let index = teams.points.map(i => Math.trunc(i/PointsRange));
@@ -1052,13 +1032,41 @@ function countdown(ship, time, id, pos){
   },time*60);  
 }
 
+let asteroidXY = [];
+let currentmap = map.map.split("\n");
+let range = [];
+for (let i=-this.options.map_size*5; i<this.options.map_size*5; i+=1) range.push(i);
+range.filter((a,b) => range.indexOf(a) != b);
+for (let i=0; i<currentmap.length; i++){
+  for (let j=0; j<currentmap[i].length; j++){
+    if (parseInt(currentmap[i][j]) > 7){
+      asteroidXY.push([range[i],range[j]]);
+    }
+  }
+}
+
+function dist2points(x, y, z, t){
+  return Math.sqrt((z-x)**2+(t-y)**2);
+}
+
+function r(min, max){
+  return Math.floor(Math.random()*(max-min)+min);
+}
+
 function setup(ship){
   let t = ship.custom.team;
   let level = Math.trunc(ship.type/100);
   let gems = ((level**2)*20)/1.5;
-  let x = map.shipspawn[t].x,
-  y = map.shipspawn[t].y,r=0;
-  ship.set({x:x,y:y,stats:88888888,invulnerable:300,shield:999});
+  let s = 50;
+  let random = [ship.team==0?r(50,200)*-1:r(50,200),r(50,200)];
+  for (let i=0; i<asteroidXY.length; i++){
+    //while (dist2points(random[0], random[1], asteroidXY[i][0], asteroidXY[i][1]) <= 20){
+    while (random[0] == asteroidXY[i][0] && random[1] == asteroidXY[i][1]){
+      random = [ship.team==0?r(50,200)*-1:r(50,200),r(50,200)];
+      console.log("Blocked");
+    }
+  }
+  ship.set({x:random[0],y:Math.floor(Math.random()*2)==0?random[1]:random[1]*-1,stats:88888888,invulnerable:300,shield:999});
 }
 
 function setteam(ship){
@@ -1304,16 +1312,6 @@ this.event = function(event, game){
             sendUI(ship,{id:"get",visible:false});         
             ship.custom.ship = stages[`level_${teams.level[ship.custom.stages]}`];
             ship.set({type:ship.custom.ship,stats:88888888}); break;
-          case "close": ship.custom.opened = false; break;
-          default:
-            if (component.startsWith("ship_selection_") && ship.custom.opened){
-              let ship_code = findShipCode(ship.custom.rand[parseInt(component.replace(/^ship_selection_/,"")) || 0]);
-              if (ship_code){
-                if (ship.type != ship_code) ship.set({type:ship_code,stats:88888888,shield:999,collider:true});
-              }
-              ship.custom.opened = false;
-              ship.custom.buttons = false;
-            }
           break;
         }
     break;
