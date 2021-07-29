@@ -690,8 +690,8 @@ var colors = [
 
 var teams = {
   names: [colors[0].team,colors[0].team2],
-  points: [5,5],
-  points2: [5,5],
+  points: [0,0],
+  points2: [0,0],
   count: [0,0],
   ships: [[],[]],
   hues: [colors[0].hue,colors[0].hue2],
@@ -740,6 +740,7 @@ var check = function(game, isWaiting, isGameOver){
         ship.custom.points = 0;
         ship.custom.tree = false;
         ship.custom.pending = false; 
+        ship.custom.timer = true;
         setteam(ship);
         setup(ship);
         ship.custom.ship = stages[`level_${teams.level[ship.custom.team]}`];   
@@ -967,19 +968,21 @@ function checkstatus(game, team){
   let upgraded = [[],[]];
   let checkpoints = Array.from(Array(12).fill({1:0}).map(a => a*13).keys()).map((a,b) => (b+1)*7);
   for (let i=0; i<2; i++){
-    if (teams.points2[i] % PointsRange === 0 && teams.points2[i] > 1){
+    if (teams.points2[i] % PointsRange === 0 && teams.points2[i] > 1 && teams.points2[i] != pointsToFinal){
       teams.points2[i] += 0.05
       teams.level[i]++;
       teams.current[i] = stages[`level_${teams.level[i]}`];
       for (let ship of game.ships)
         if (ship.team == i){
           ship.custom.pending = true;
+          let text;
+          teams.points[i] == pointsToFinal?text="Team final level":text="Team level up";
           sendUI(ship, {
             id: "up",
             position: [32,16,34,32],
             visible: true,
             components: [
-              {type: "text",position:[0,3,100,50],value:"Team level up",color:"#cde"},
+              {type: "text",position:[0,3,100,50],value:text,color:"#cde"},
             ]
           }); 
           modUtils.setTimeout(function(){
@@ -987,6 +990,7 @@ function checkstatus(game, team){
           },180);
           if (ship.custom.points >= 1){
             if (!ship.custom.seventh){
+            ship.custom.timer = true;
             countdown(ship,4,1,[44,85,7,7]);
             sendUI(ship, {
               id: "get",
@@ -1004,11 +1008,14 @@ function checkstatus(game, team){
               ship.custom.stage++; 
               ship.custom.ship = stages[`level_${ship.custom.stage}`];
               ship.set({type:stages[`level_${ship.custom.stage}`],stats:88888888});
-              ship.custom.pending = false;
             },60*4);            
+            
           }
         }
-      }      
+        modUtils.setTimeout(function(){
+          ship.custom.pending = false;
+        },60*4);
+      }   
     }
   }
 }
@@ -1020,7 +1027,7 @@ function countdown(ship, time, id, pos){
       sendUI(ship, {
         id: "countdown"+id,
         position: pos,
-        visible: true,
+        visible: ship.custom.timer,
         components: [
           {type: "text",position:[0,0,100,50],value:FormatTime(t - game.step, [false, false, false], 0),color:"#cde"},
         ]
@@ -1058,11 +1065,11 @@ function setup(ship){
   let level = Math.trunc(ship.type/100);
   let gems = ((level**2)*20)/1.5;
   let s = 50;
-  let random = [ship.team==0?r(50,200)*-1:r(50,200),r(50,200)];
+  let random = [ship.team==0?r(50,200)*-1:r(50,200),r(0,150)];
   for (let i=0; i<asteroidXY.length; i++){
-    //while (dist2points(random[0], random[1], asteroidXY[i][0], asteroidXY[i][1]) <= 20){
-    while (random[0] == asteroidXY[i][0] && random[1] == asteroidXY[i][1]){
-      random = [ship.team==0?r(50,200)*-1:r(50,200),r(50,200)];
+    while (dist2points(random[0], random[1], asteroidXY[i][0], asteroidXY[i][1]) <= 20){
+    //while (random[0] == asteroidXY[i][0] && random[1] == asteroidXY[i][1]){
+      random = [ship.team==0?r(50,200)*-1:r(50,200),r(0,150)];
       console.log("Blocked");
     }
   }
@@ -1310,6 +1317,7 @@ this.event = function(event, game){
           break;
           case "get": 
             sendUI(ship,{id:"get",visible:false});         
+            ship.custom.timer = false;
             ship.custom.ship = stages[`level_${teams.level[ship.custom.stages]}`];
             ship.set({type:ship.custom.ship,stats:88888888}); break;
           break;
