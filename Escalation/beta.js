@@ -13,11 +13,10 @@ var progressBar = {
   offsetY: 10.2, //position from the top of screen (global)
   distanceY: 2 // height distance multiplier (global)
 };
-//todo: imrove ship spawing function (randomize)
-//todo: add maps 
+//todo: add maps (2 more) 
 //todo: display next ships on scorebar
 //todo: final 10 kills ui 
-//todo: add icons and colors to shiptree ui
+//todo: add other t1s: face and torp
 var modUtils = {
   setTimeout: function(f,time){
     this.jobs.push({f:f,time:game.step+time});
@@ -1219,9 +1218,27 @@ for (let i=0; i<map.shipspawn.length; i++){
 }
 
 var shiptree = {
-  names:  [["Lunatic"],["Lunatic Eon","Lunatic Atom","Solarium Zenion","Solarium Tank"],["Lunatic Taurus","Lunatic Dragoon","Lunatic Defender","Lunatic Hunter","Solarium ZenionII","Solarium Onxy"],["Lunatic Barricade","Lunatic Quadra","Lunatic Warrior","Lunatic Fighter","Lunatic Tactical","Lunatic Interceptor","Solarium ZenionIII","Solarium Interceptor",],["Lunatic Destroyer","Lunatic Cannoner","Lunatic Phantom","Lunatic Tyrant","Lunatic Predator","Lunatic Infernal","Lunatic Proto"],["Lunatic Artillery","Lunatic Oblivion","Lunatic Teslator","Lunatic Comet","Lunatic Caliber","Lunatic Speedster","Lunatic Dualities"]],  
-  icons: ["\u{2693}","\u{2694}","\u{1F9C0}","\u{1F52B}","\u{1F320}","\u{1F47E}","\u{1F577}","\u{1F43B}","\u{1F480}","\u{1F512}","\u{1F531}","\u{1F41F}","\u{1F340}","\u{1F5E1}"],
-  color: ["hsla(0, 0%, 70%, 1)","hsla(20, 60%, 35%, 1)","hsla(53, 100%, 55%, 1)","hsla(94, 100%, 35%, 1)","hsla(187, 100%, 45%, 1)","hsla(270, 100%, 70%, 1)","hsla(0, 0%, 100%, 1)"],
+  names: [
+    ["Lunatic Ant"],
+    ["Lunatic Eon","Lunatic Atom","Solarium Zenion","Solarium Tank"],
+    ["Lunatic Taurus","Lunatic Dragoon","Lunatic Defender","Lunatic Hunter","Solarium ZenionII","Solarium Onyx"],
+    ["Lunatic Barricade","Lunatic Quadra","Lunatic Warrior","Lunatic Fighter","Lunatic Tactical","Lunatic Interceptor","Solarium ZenionIII","Solarium Interceptor"],
+    ["Lunatic Destroyer","Lunatic Cannoner","Lunatic Phantom","Lunatic Tyrant","Lunatic Predator","Lunatic Infernal","Lunatic Proto"],
+    ["Lunatic Artillery","Lunatic Oblivion","Lunatic Teslator","Lunatic Comet","Lunatic Caliber","Lunatic Speedster","Lunatic Dualities"]
+  ],  
+  icons: [
+    ["\u{1F41C}"],["\u{1F300}","\u{269B}","\u{1F41F}","\u{1F980}"],["\u{1F410}","\u{1F409}","\u{1F6D1}","\u{1F3F9}","\u{1F421}","\u{1F6A7}"],
+    ["\u{1F56F}","\u{1F340}","\u{1F531}","\u{2694}","\u{2696}","\u{1F99F}","\u{1F420}","\u{1F52A}"],["\u{1F4A5}","\u{1F4A3}","\u{1F47B}","\u{1F996}","\u{1F40A}","\u{1F525}","\u{2623}"],
+    ["\u{1F6E0}","\u{26D3}","\u{1F52B}","\u{1F320}","\u{1F5E1}","\u{2728}","\u{262F}"]
+  ],
+  color: [
+    ["#ca5010"],
+    ["#307bf2","#6a0dad","#00bcf2","#f7630c"],
+    ["#964B00","#00FF00","#FF0000","#FFA500","#8d562f","#f9df0d"],
+    ["#e87f30","#00cc19","#ffe532","#C0C0C0","#ffd700","#ef6950","#ff9e31","#dbac8b"],
+    ["#f02711","#696969","#ffffff","#ba9269","#75a62f","#f7620d","#f9df0d"],
+    ["#e6a209","#c0c0c0","#1b9e09","#0976cc","#595959","#f296bf","#cdecde"]
+  ],
   components: ["join"],
   tree: function(ship){
     if (!ship.custom.tree){
@@ -1409,3 +1426,4 @@ this.event = function(event, game){
   }
   checkClone.call(this)
 }).call(this);
+
