@@ -4,11 +4,11 @@ var PointsRange = 7; // ranges between checkpoints
 var delay = 90/10; // in seconds
 var timer = 15*10; // in minutes
 var progressBar = {
-  px: 40, // width of the progress bar (global)
+  px: 50, // width of the progress bar (global)
   py: 1, // height of the progress bar (global)
-  dbx: 1/23, // ratio of (big checkpoint witdth diameter)/(progressbar width)
+  dbx: 1/28, // ratio of (big checkpoint witdth diameter)/(progressbar width)
   dby: 3, // ratio of (big checkpoint height diameter)/(progressbar height)
-  dx: 1/35, // ratio of (small checkpoints witdth diameter)/(progressbar width)
+  dx: 1/43, // ratio of (small checkpoints witdth diameter)/(progressbar width)
   dy: 2, // ratio of (small checkpoints height diameter)/(progressbar height)
   offsetY: 10.2, //position from the top of screen (global)
   distanceY: 2 // height distance multiplier (global)
@@ -101,6 +101,78 @@ for (var i=0; i<ships.length; i++){
   } 
   ships[i] = JSON.stringify(ship);
 }
+
+var shiptree = {
+  names: [
+    ["Lunatic Ant"],
+    ["Lunatic Eon","Lunatic Atom","Solarium Zenion","Solarium Tank"],
+    ["Lunatic Taurus","Lunatic Dragoon","Lunatic Defender","Lunatic Hunter","Solarium ZenionII","Solarium Onyx"],
+    ["Lunatic Barricade","Lunatic Quadra","Lunatic Warrior","Lunatic Fighter","Lunatic Tactical","Lunatic Mosquito","Solarium ZenionIII","Solarium Interceptor"],
+    ["Lunatic Destroyer","Lunatic Cannoner","Lunatic Phantom","Lunatic Tyrant","Lunatic Predator","Lunatic Infernal","Lunatic Proto"],
+    ["Lunatic Artillery","Lunatic Oblivion","Lunatic Teslator","Lunatic Comet","Lunatic Caliber","Lunatic Speedster","Lunatic Dualities"]
+  ],  
+  icons: [
+    ["\u{1F41C}"],
+    ["\u{1F300}","\u{269B}","\u{1F41F}","\u{1F980}"],
+    ["\u{1F410}","\u{1F409}","\u{1F6D1}","\u{1F3F9}","\u{1F421}","\u{1F6A7}"],
+    ["\u{1F56F}","\u{1F340}","\u{1F531}","\u{2694}","\u{2696}","\u{1F99F}","\u{1F420}","\u{1F52A}"],
+    ["\u{1F4A5}","\u{1F4A3}","\u{1F47B}","\u{1F996}","\u{1F40A}","\u{1F525}","\u{2623}"],
+    ["\u{1F6E0}","\u{26D3}","\u{1F52B}","\u{1F320}","\u{1F5E1}","\u{2728}","\u{262F}"]
+  ],
+  color: [
+    ["#ca5010"],
+    ["#307bf2","#6a0dad","#00bcf2","#f7630c"],
+    ["#964B00","#00FF00","#FF0000","#FFA500","#8d562f","#f9df0d"],
+    ["#e87f30","#00cc19","#ffe532","#C0C0C0","#ffd700","#ef6950","#ff9e31","#dbac8b"],
+    ["#f02711","#696969","#ffffff","#ba9269","#75a62f","#f7620d","#f9df0d"],
+    ["#e6a209","#c0c0c0","#1b9e09","#0976cc","#595959","#f296bf","#cdecde"]
+  ],
+  components: ["join"],
+  tree: function(ship){
+    if (!ship.custom.tree){
+      ship.custom.tree = true;
+      for (let i=0; i<this.names.length; i++){
+        for (let j=0;j<this.names[i].length; j++){
+          sendUI(ship, {
+            id: "tree"+i+j,
+            position: [40+j*9-[0.5,14,23,32,27.5,27.5][i],20+i*12,8,10],
+            visible: true,
+            components: [
+              {type:"box",position:[0,0,100,100],fill:"hsla(0, 0%, 0%, 0)",stroke:this.color[i][j],width:10},
+              {type:"box",position:[10,10,80,80],fill:"hsla(0, 0%, 0%, 0)",stroke:"hsla(0, 0%, 0%, 1)",width:2},
+              {type:"box",position:[10,10,80,80],fill:"hsla(0, 0%, 13%, 0.7)",stroke:"hsla(0, 0%, 0%, 0)",width:2},
+              {type:"text",position:[10,5,80,40],value:this.names[i][j],color:"#cde"},
+              {type:"text",position:[20,40,100,50],value:this.icons[i][j],color:this.color[i][j]||"#cde"},
+              {type:"text",position:[7,50,50,25],value:(i+1)*100+j+1,color:"#cde"},
+            ]
+          });   
+          this.components.push("tree"+i+j);
+        }  
+      }   
+      sendUI(ship, {
+        id: "tip",
+        position: [63,90,16,15],
+        visible: true,
+        components: [
+          {type: "text",position:[0,0,100,50],value:`Press [V] to close ship tree`,color:"#cde"},
+        ]
+      });       
+    }
+  },
+  remove: function(ship){
+    for (let i=0; i<this.components.length; i++)
+    sendUI(ship,{id:this.components[i],visible:false});         
+    sendUI(ship, {
+      id: "tip",
+      position: [63,90,16,15],
+      visible: true,
+      components: [
+        {type: "text",position:[0,0,100,50],value:`Press [V] to view ship tree`,color:"#cde"},
+      ]
+    });      
+    ship.custom.tree = false;
+  }
+};
 
 var ships_list = [
   ["Lunatic Ant"],
@@ -740,8 +812,8 @@ var check = function(game, isWaiting, isGameOver){
         ship.custom.tree = false;
         ship.custom.pending = false; 
         ship.custom.timer = true;
-        ship.custom.stage = teams.level[ship.custom.team];
-        ship.custom.ship = stages[`level_${teams.level[ship.custom.team]}`];      
+        ship.custom.stage = teams.level[ship.custom.team]||1;
+        ship.custom.ship = stages[`level_${teams.level[ship.custom.team]}`]||stages.level_1;      
         setteam(ship);
         setup(ship);
         //sendUI(ship, game.custom.radar_background);
@@ -803,7 +875,7 @@ var waiting = function(game){
     });
   }
   if (game.step >= delay){
-    checkscores(game);
+    scorebar.checkscores(game);
     //finalten(game);
     updateScoreboard(game);
     sendUI(game, {id:"delay time",visible:false});
@@ -851,13 +923,14 @@ var waiting = function(game){
     } else finishgame(game, 0);
   }
   if (update){
-    checkscores(game);
+    scorebar.checkscores(game);
     //finalten(game)    
     updateScoreboard(game);
     update = 0;
   }
   if (game.step % 60 === 0){
     //checkteambase(game)
+    scorebar.checkscores(game);
     checkstatus(game);
     //finalten(game)
     updateScoreboard(game);
@@ -906,34 +979,89 @@ var waiting = function(game){
 };
 
 this.tick = waiting;
-function checkscores(game){
-  let filled = teams.points.map(i => i/pointsToWin);
-  let index = teams.points.map(i => Math.trunc(i/PointsRange));
-  let hues = [[`hsla(${Math.abs(teams.hues[0]-5)}, 100%, 62.55%, 0.7)`,`hsla(${Math.abs(teams.hues[1]-7)}, 97%, 74%, .7)`],["hsl(353, 100%, 55%)","hsl(233, 100%, 55%)"]];
-  let checked = [["hsla(210, 50%, 87%, 1)","hsla(210, 50%, 87%, 1)"]]; // color for unachieved checkpoints
-  let achieved = [[`hsla(${Math.abs(teams.hues[0])}, 100%, 62.55%, 1)`,`hsla(${Math.abs(teams.hues[1])}, 97%, 74%, 1)`],[`hsl(${Math.abs(teams.hues[0]*2)}, 100%, 1)`,`hsl(${Math.abs(teams.hues[1]*2)}, 100%, 1)`]]; // checkpoints' color after the checkpoint has finished
-  let {px, py, dbx, dby, dx, dy, offsetY, distanceY} = progressBar;
-  let rbax = (1 + dbx/2);
-  let rpy = dy/dby;
-  let pax = dx/rbax;
-  let apx = px * rbax;
-  let apy = py * dby;
-  let p = Math.trunc(pointsToWin/PointsRange);
-  // let ty = 100 - rby;
-  for (let i=0; i<2; i++){
-    sendUI(game, {
-      id: "progressBar"+i,
-      position: [(100 - apx)/2, offsetY+i*distanceY*apy, apx, apy], 
-      visible: true,
-      components: [
-        {type:"box",position:[0, 50*(1 - 1/dby), 100/rbax, 100/dby],fill:"hsla(170, 32%, 28%, .1)",stroke:"#cde",width:2},
-        {type:"box",position:[0, 50*(1 - 1/dby), 100/rbax*filled[i], 100/dby],fill:hues[0][i]},
-        ...Array(p-1).fill(0).map((v,j) => ({type:"round",position:[100*(p*PointsRange/pointsToWin)/rbax/p*(j+1) - 50*pax, 50*(1 - rpy), 100*pax, 100*rpy],fill:((index[i]>=j+1)?achieved:checked)[0][i]})),
-        {type:"round",position:[100*(2/rbax - 1), 0, 200*(1 - 1/rbax), 100],fill:((index[i]>=p)?achieved:checked)[0][i]}
-      ]
-    }); 
+var scorebar = {
+  checkscores: function(game){
+    let filled = teams.points.map(i => i/pointsToFinal);
+    let index = teams.points.map(i => Math.trunc(i/PointsRange));
+    let hues = [[`hsla(${Math.abs(teams.hues[0]-5)}, 100%, 62.55%, 0.7)`,`hsla(${Math.abs(teams.hues[1]-7)}, 97%, 74%, .7)`],["hsl(353, 100%, 55%)","hsl(233, 100%, 55%)"]];
+    let checked = [["hsla(210, 50%, 87%, 1)","hsla(210, 50%, 87%, 1)"]]; // color for unachieved checkpoints
+    let achieved = [[`hsla(${Math.abs(teams.hues[0])}, 100%, 62.55%, 1)`,`hsla(${Math.abs(teams.hues[1])}, 97%, 74%, 1)`],[`hsl(${Math.abs(teams.hues[0]*2)}, 100%, 1)`,`hsl(${Math.abs(teams.hues[1]*2)}, 100%, 1)`]]; // checkpoints' color after the checkpoint has finished
+    let {px, py, dbx, dby, dx, dy, offsetY, distanceY} = progressBar;
+    let rbax = (1 + dbx/2);
+    let rpy = dy/dby;
+    let pax = dx/rbax;
+    let apx = px * rbax;
+    let apy = py * dby;
+    let p = Math.trunc(pointsToFinal/PointsRange);
+    // let ty = 100 - rby;
+    for (let i=0; i<2; i++){
+      sendUI(game, {
+        id: "progressBar"+i,
+        position: [(100 - apx)/2, offsetY+i*distanceY*apy, apx, apy], 
+        visible: true,
+        components: [
+          {type:"box",position:[0, 50*(1 - 1/dby), 100/rbax, 100/dby],fill:"hsla(170, 32%, 28%, .1)",stroke:"#cde",width:2},
+          {type:"box",position:[0, 50*(1 - 1/dby), 100/rbax*filled[i], 100/dby],fill:hues[0][i]},
+          ...Array(p-1).fill(0).map((v,j) => ({type:"round",position:[100*(p*PointsRange/pointsToFinal)/rbax/p*(j+1) - 50*pax, 50*(1 - rpy), 100*pax, 100*rpy],fill:((index[i]>=j+1)?achieved:checked)[0][i]})),
+          {type:"round",position:[100*(2/rbax - 1), 0, 200*(1 - 1/rbax), 100],fill:((index[i]>=p)?achieved:checked)[0][i]}
+        ]
+      }); 
+    }
+    for (let ship of game.ships) this.icons(ship);
+  },
+  icons: function(ship){
+    let offsetX = Array.from(Array(Math.trunc(pointsToFinal/PointsRange)).fill(1)).map((a,b) => ((b+1)*4.54-4.54)+24.7);
+    let hues = [`hsla(${Math.abs(teams.hues[0]-5)}, 100%, 62.55%, .3)`,`hsla(${Math.abs(teams.hues[1]-7)}, 97%, 74%, .3)`];
+    let icon = shiptree.icons[Math.trunc(ship.type/100)-1][(ship.type%10)-1];
+    let color = shiptree.color[Math.trunc(ship.type/100)-1][(ship.type%10)-1];
+    console.log(ship.custom)
+    let icons = {
+      //you, team, enemy team, next, 
+      x: [
+        offsetX[ship.custom.stage-1],
+        offsetX[teams.level[ship.custom.team]-1],
+        offsetX[teams.level[Math.abs(ship.custom.team-1)]-1],
+        offsetX[teams.level[ship.custom.team]]
+      ],
+      icon: [
+        shiptree.icons[Math.trunc(ship.type/100)-1][(ship.type%10)-1],
+        shiptree.icons[Math.trunc(stages[`level_${teams.level[ship.custom.team]}`]/100)-1][(stages[`level_${teams.level[ship.custom.team]}`]%10)-1],
+        shiptree.icons[Math.trunc(stages[`level_${teams.level[Math.abs(ship.custom.team-1)]}`]/100)-1][(stages[`level_${teams.level[Math.abs(ship.custom.team-1)]}`]%10)-1],
+        shiptree.icons[Math.trunc(stages[`level_${teams.level[ship.custom.team]+1}`]/100)-1][(stages[`level_${teams.level[ship.custom.team]+1}`]%10)-1],
+      ],
+      hue: [
+        `hsla(${Math.abs(Math.max(...teams.hues)-Math.min(...teams.hues))}, 100%, 70%, .3)`,
+        `hsla(${Math.abs(teams.hues[0]-5)}, 100%, 62.55%, .3)`,
+        `hsla(${Math.abs(teams.hues[1]-7)}, 97%, 74%, .3)`,
+        `hsla(${teams.hues[0]}, 97%, 74%, .01)`,
+      ],
+      a: a
+    }
+    console.log(icons)
+    for (let i=0; i<3; i++){
+      sendUI(ship, {
+        id: "iconsBarIndicator"+i,
+        position: [icons.x[i]+1.9,23.9,1,1], 
+        visible: true,
+        components: [
+          {type:"round",position:[0,0,50,100],fill:"#fff",stroke:"#fff"},
+        ]
+      });        
+    }
+    for (let i=0; i<4; i++){
+      sendUI(ship, {
+        id: "iconsBar"+i,
+        position: [icons.x[i],19,4.2,4.2*1.5], 
+        visible: true,
+        components: [
+          {type:"box",position:[0,0,100,100],fill:icons.hue[i],stroke:"#cde",width:2},
+          {type:"text",position:[10,5,75,65],value:icons.icon[i],color:color},
+        ]
+      });     
+    }
   }
 }
+
 
 function finalten(game){
   let filled = teams.points.map(i => (i-pointsToFinal)/PointsRange);
@@ -1128,75 +1256,6 @@ function joinmessage(ship){
   },480);
 }
 
-var shiptree = {
-  names: [
-    ["Lunatic Ant"],
-    ["Lunatic Eon","Lunatic Atom","Solarium Zenion","Solarium Tank"],
-    ["Lunatic Taurus","Lunatic Dragoon","Lunatic Defender","Lunatic Hunter","Solarium ZenionII","Solarium Onyx"],
-    ["Lunatic Barricade","Lunatic Quadra","Lunatic Warrior","Lunatic Fighter","Lunatic Tactical","Lunatic Mosquito","Solarium ZenionIII","Solarium Interceptor"],
-    ["Lunatic Destroyer","Lunatic Cannoner","Lunatic Phantom","Lunatic Tyrant","Lunatic Predator","Lunatic Infernal","Lunatic Proto"],
-    ["Lunatic Artillery","Lunatic Oblivion","Lunatic Teslator","Lunatic Comet","Lunatic Caliber","Lunatic Speedster","Lunatic Dualities"]
-  ],  
-  icons: [
-    ["\u{1F41C}"],["\u{1F300}","\u{269B}","\u{1F41F}","\u{1F980}"],["\u{1F410}","\u{1F409}","\u{1F6D1}","\u{1F3F9}","\u{1F421}","\u{1F6A7}"],
-    ["\u{1F56F}","\u{1F340}","\u{1F531}","\u{2694}","\u{2696}","\u{1F99F}","\u{1F420}","\u{1F52A}"],["\u{1F4A5}","\u{1F4A3}","\u{1F47B}","\u{1F996}","\u{1F40A}","\u{1F525}","\u{2623}"],
-    ["\u{1F6E0}","\u{26D3}","\u{1F52B}","\u{1F320}","\u{1F5E1}","\u{2728}","\u{262F}"]
-  ],
-  color: [
-    ["#ca5010"],
-    ["#307bf2","#6a0dad","#00bcf2","#f7630c"],
-    ["#964B00","#00FF00","#FF0000","#FFA500","#8d562f","#f9df0d"],
-    ["#e87f30","#00cc19","#ffe532","#C0C0C0","#ffd700","#ef6950","#ff9e31","#dbac8b"],
-    ["#f02711","#696969","#ffffff","#ba9269","#75a62f","#f7620d","#f9df0d"],
-    ["#e6a209","#c0c0c0","#1b9e09","#0976cc","#595959","#f296bf","#cdecde"]
-  ],
-  components: ["join"],
-  tree: function(ship){
-    if (!ship.custom.tree){
-      ship.custom.tree = true;
-      for (let i=0; i<this.names.length; i++){
-        for (let j=0;j<this.names[i].length; j++){
-          sendUI(ship, {
-            id: "tree"+i+j,
-            position: [40+j*9-[0.5,14,23,32,27.5,27.5][i],20+i*12,8,10],
-            visible: true,
-            components: [
-              {type:"box",position:[0,0,100,100],fill:"hsla(0, 0%, 0%, 0)",stroke:this.color[i][j],width:10},
-              {type:"box",position:[10,10,80,80],fill:"hsla(0, 0%, 0%, 0)",stroke:"hsla(0, 0%, 0%, 1)",width:2},
-              {type:"box",position:[10,10,80,80],fill:"hsla(0, 0%, 13%, 0.7)",stroke:"hsla(0, 0%, 0%, 0)",width:2},
-              {type:"text",position:[10,5,80,40],value:this.names[i][j],color:"#cde"},
-              {type:"text",position:[20,40,100,50],value:this.icons[i][j],color:this.color[i][j]||"#cde"},
-              {type:"text",position:[7,50,50,25],value:(i+1)*100+j+1,color:"#cde"},
-            ]
-          });   
-          this.components.push("tree"+i+j);
-        }  
-      }   
-      sendUI(ship, {
-        id: "tip",
-        position: [63,90,16,15],
-        visible: true,
-        components: [
-          {type: "text",position:[0,0,100,50],value:`Press [V] to close ship tree`,color:"#cde"},
-        ]
-      });       
-    }
-  },
-  remove: function(ship){
-    for (let i=0; i<this.components.length; i++)
-    sendUI(ship,{id:this.components[i],visible:false});         
-    sendUI(ship, {
-      id: "tip",
-      position: [63,90,16,15],
-      visible: true,
-      components: [
-        {type: "text",position:[0,0,100,50],value:`Press [V] to view ship tree`,color:"#cde"},
-      ]
-    });      
-    ship.custom.tree = false;
-  }
-};
-
 var scoreboard = {
   id:"scoreboard",
   visible: true,
@@ -1223,7 +1282,7 @@ function updateScoreboard(game){
   for (let i=0; i<sc.length; i++){
     let ship = sc[i];
     let shipicon = icons[Math.trunc(ship.type/100)-1][(ship.type%10)-1];
-    let color = colors[Math.trunc(ship.type/100)-1][(ship.type%10)-1]
+    let color = colors[Math.trunc(ship.type/100)-1][(ship.type%10)-1];
     if (ship.type > 790) shipicon = "\u{1F30C}";
     let length = Math.log(ship.score) * Math.LOG10E + 1 | 0;
     let fix = 0;
