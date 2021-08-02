@@ -1183,8 +1183,92 @@ function dist2points(x, y, z, t){
   return Math.sqrt((z-x)**2+(t-y)**2);
 }
 
-function r(min, max){
-  return Math.floor(Math.random()*(max-min)+min);
+var random = function(num){
+  return Math.floor(Math.random() * num)
+}
+
+var randomItem = function(arr, ship){
+  /**
+   * random an item from the array
+   * @param {Array} an array to random the item from
+   * @returns {any} the random item
+  */
+  let team = ship.team;
+  arr.sort((a,b) => a.x - b.x);
+  let p = n = [], i; 
+  for (i=0; i<arr.length; i++) if (arr[i].x > 0) break;
+  n = arr.slice(i); p = arr.slice(0,i);
+  let t = team?n:p;
+  let r = random(t.length);
+  while (!checkspawn(t[r])) r = random(t.length);
+  return t[r];
+}
+
+function checkspawn(arr){
+  let max = 150, min = 50
+  return (Math.abs(arr.x) <= max && Math.abs(arr.x) >= min && Math.abs(arr.y) <= max && Math.abs(arr.y) >= min) 
+}
+
+var parseArray = function(map, placeholder){
+  map = [...map];
+  let len = game.options.map_size, l = parseFloat(((map.length-len)/2).toFixed(1));
+  if (l >= 0){
+    l = Math.ceil(l);
+    return map.slice(l,l+len)
+  }
+  else {
+    placeholder = JSON.parse(JSON.stringify(placeholder));
+    l = Math.abs(l);
+    [...Array(Math.floor(l))].map(i=>map.unshift(placeholder));
+    [...Array(Math.ceil(l))].map(i=>map.push(placeholder));
+    return map
+  }
+}
+
+var parseMap = function(map, toMapString){
+  /**
+   * parse the raw map to a parsed map, can't be used before the game has started
+   * @param {string} a raw map to parse
+   * @param {boolean} whether to parse it back to String type to use with `game.setCustomMap` or not
+   * @returns {Array|string} the parsed map
+  */
+  if (game.options.map_size){
+    let parsedMap = parseArray(map.split("\n").map(i=>parseArray(i.split("").map(j=>parseInt(j)||0),0)),Array(game.options.map_size).fill(0));
+    if (toMapString) parsedMap = parsedMap.map(i=>i.map(i=>i||" ").join("")).join("\n");
+    return parsedMap
+  }
+  throw new Error("`map_size` is not defined... yet")
+}
+
+var getAvailableSpawns = function(parsed_map){
+  /**
+   * get available spawn points from a parsed map
+   * @param {Array} parsed map from parseMap(raw_map, false)
+   * @returns {Array} list of available spawnpoints in the map
+  */
+  let len = game.options.map_size;
+  return parsed_map.map((line,y) => line.map((point,x)=> !point?{x: (x*2-len+1)*5,y: (len-y*2-1)*5}:0)).flat().filter(i=>i);
+}
+
+var getRandomSpawn = function(available_spawns, ship){
+  /**
+   * get a random spawn from available spawns
+   * @param {Array} list of available spawns from getAvailableSpawns(parsed_map)
+   * @returns {Object} spawn position with the format {x: <Number>, y: <Number>}
+  */
+  return randomItem(available_spawns, ship)
+}
+
+this.tick = function (game){
+  // check the console
+  if (game.step%30===0){
+  let available_spawns = getAvailableSpawns(parseMap(game.options.custom_map||""));
+  //console.log("Available spawns array:",available_spawns);
+  console.log("Random spawn:", getRandomSpawn(available_spawns,game.ships[0]));
+  // try this:
+  game.ships[0].set({type: 101, ...getRandomSpawn(available_spawns,game.ships[0])})
+  }
+  //this.tick = null;
 }
 
 function setup(ship){
