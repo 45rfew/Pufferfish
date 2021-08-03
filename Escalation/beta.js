@@ -237,7 +237,7 @@ let random_ships = randomPath(ship_codes,2).concat().filter(a => a != stages.lev
 for (let i=4; i<12; i++){
   stages[`level_${i}`] = random_ships[i]; 
 }
-console.warn(stages);
+console.log(stages);
 function findShipCode(name){
   for (let i=0;i<ships_list.length;i++)
   for (let j=0;j<ships_list[i].length;j++)
@@ -815,7 +815,7 @@ var check = function(game, isWaiting, isGameOver){
         ship.custom.stage = teams.level[ship.custom.team]||1;
         ship.custom.ship = stages[`level_${teams.level[ship.custom.team]}`]||stages.level_1;      
         setteam(ship);
-        setup(ship);
+        random_spawns.setup(ship);
         //sendUI(ship, game.custom.radar_background);
         if (isGameOver) gameover(ship);
       }
@@ -1007,37 +1007,40 @@ var scorebar = {
         ]
       }); 
     }
-    for (let ship of game.ships) this.icons(ship);
+    for (let ship of game.ships) if (ship != null) this.icons(ship);
   },
   icons: function(ship){
     let offsetX = Array.from(Array(Math.trunc(pointsToFinal/PointsRange)).fill(1)).map((a,b) => ((b+1)*4.54-4.54)+24.7);
     let hues = [`hsla(${Math.abs(teams.hues[0]-5)}, 100%, 62.55%, .3)`,`hsla(${Math.abs(teams.hues[1]-7)}, 97%, 74%, .3)`];
     let icon = shiptree.icons[Math.trunc(ship.type/100)-1][(ship.type%10)-1];
     let color = shiptree.color[Math.trunc(ship.type/100)-1][(ship.type%10)-1];
-    console.log(ship.custom)
+    //console.log(ship.custom)
     let icons = {
       //you, team, enemy team, next, 
       x: [
-        offsetX[ship.custom.stage-1],
+        //offsetX[ship.custom.stage-1],
         offsetX[teams.level[ship.custom.team]-1],
         offsetX[teams.level[Math.abs(ship.custom.team-1)]-1],
         offsetX[teams.level[ship.custom.team]]
       ],
       icon: [
-        shiptree.icons[Math.trunc(ship.type/100)-1][(ship.type%10)-1],
+        //shiptree.icons[Math.trunc(ship.type/100)-1][(ship.type%10)-1],
         shiptree.icons[Math.trunc(stages[`level_${teams.level[ship.custom.team]}`]/100)-1][(stages[`level_${teams.level[ship.custom.team]}`]%10)-1],
         shiptree.icons[Math.trunc(stages[`level_${teams.level[Math.abs(ship.custom.team-1)]}`]/100)-1][(stages[`level_${teams.level[Math.abs(ship.custom.team-1)]}`]%10)-1],
         shiptree.icons[Math.trunc(stages[`level_${teams.level[ship.custom.team]+1}`]/100)-1][(stages[`level_${teams.level[ship.custom.team]+1}`]%10)-1],
       ],
       hue: [
-        `hsla(${Math.abs(Math.max(...teams.hues)-Math.min(...teams.hues))}, 100%, 70%, .3)`,
+        //`hsla(${Math.abs(Math.max(...teams.hues)-Math.min(...teams.hues))}, 100%, 70%, .3)`,
         `hsla(${Math.abs(teams.hues[0]-5)}, 100%, 62.55%, .3)`,
         `hsla(${Math.abs(teams.hues[1]-7)}, 97%, 74%, .3)`,
         `hsla(${teams.hues[0]}, 97%, 74%, .01)`,
       ],
-      a: a
     }
-    console.log(icons)
+    findDuplicates(icons.x)
+    //console.log(icons)
+    let d = {
+      a:0, b:0, c:0
+    }
     for (let i=0; i<3; i++){
       sendUI(ship, {
         id: "iconsBarIndicator"+i,
@@ -1048,7 +1051,7 @@ var scorebar = {
         ]
       });        
     }
-    for (let i=0; i<4; i++){
+    for (let i=0; i<3; i++){
       sendUI(ship, {
         id: "iconsBar"+i,
         position: [icons.x[i],19,4.2,4.2*1.5], 
@@ -1062,6 +1065,19 @@ var scorebar = {
   }
 }
 
+const findDuplicates = (arr) => {
+  let sorted_arr = arr.slice().sort(); // You can define the comparing function here. 
+  // JS by default uses a crappy string compare.
+  // (we use slice to clone the array so the
+  // original array won't be modified)
+  let results = [];
+  for (let i = 0; i < sorted_arr.length - 1; i++) {
+    if (sorted_arr[i + 1] == sorted_arr[i]) {
+      results.push(sorted_arr[i]);
+    }
+  }
+  return results;
+}
 
 function finalten(game){
   let filled = teams.points.map(i => (i-pointsToFinal)/PointsRange);
@@ -1147,145 +1163,80 @@ function checkstatus(game, team){
   }
 }
 
-function countdown(ship, time, id, pos){
-  let t = time * 60 + game.step; 
-  for (let i=0; i<time; i++){
-    modUtils.setTimeout(function(){
-      sendUI(ship, {
-        id: "countdown"+id,
-        position: pos,
-        visible: ship.custom.timer,
-        components: [
-          {type: "text",position:[0,0,100,50],value:FormatTime(t - game.step, [false, false, false], 0),color:"#cde"},
-        ]
-      });           
-    },i*60);  
-  }
-  modUtils.setTimeout(function(){
-    sendUI(ship, {id:"countdown"+id,visible:false});    
-  },time*60);  
-}
-
-let asteroidXY = [];
-let currentmap = map.map.split("\n");
-let range = [];
-for (let i=-this.options.map_size*5; i<this.options.map_size*5; i+=1) range.push(i);
-range.filter((a,b) => range.indexOf(a) != b);
-for (let i=0; i<currentmap.length; i++){
-  for (let j=0; j<currentmap[i].length; j++){
-    if (parseInt(currentmap[i][j]) > 7){
-      asteroidXY.push([range[i],range[j]]);
+var random_spawns = {
+  fill: function(game){
+    let asteroidXY = [];
+    let currentmap = map.map.split("\n");
+    let range = [];
+    for (let i=-this.options.map_size*5; i<this.options.map_size*5; i+=1) range.push(i);
+    range.filter((a,b) => range.indexOf(a) != b);
+    for (let i=0; i<currentmap.length; i++){
+      for (let j=0; j<currentmap[i].length; j++){
+        if (parseInt(currentmap[i][j]) > 7){
+          asteroidXY.push([range[i],range[j]]);
+        }
+      }
+    }    
+  },
+  dist2points: function(x, y, z, t){
+    return Math.sqrt((z-x)**2+(t-y)**2);
+  },
+  random: function(num){
+    return Math.floor(Math.random() * num)
+  },
+  randomItem: function(arr, ship){
+    let team = ship.custom.team;
+    arr.sort((a,b) => a.x - b.x);
+    let p = n = [], i; 
+    for (i=0; i<arr.length; i++) if (arr[i].x > 0) break;
+    n = arr.slice(i); p = arr.slice(0,i);
+    let t = team?n:p;
+    let r = this.random(t.length);
+    while (!this.checkspawn(t[r])) r = this.random(t.length);
+    return t[r];
+  },
+  checkspawn: function(arr){
+    let max = 150, min = 50
+    return (Math.abs(arr.x) <= max && Math.abs(arr.x) >= min && Math.abs(arr.y) <= max && Math.abs(arr.y) >= min) 
+  },
+  parseArray: function(map, placeholder){
+    map = [...map];
+    let len = game.options.map_size, l = parseFloat(((map.length-len)/2).toFixed(1));
+    if (l >= 0){
+      l = Math.ceil(l);
+      return map.slice(l,l+len)
     }
-  }
-}
-
-function dist2points(x, y, z, t){
-  return Math.sqrt((z-x)**2+(t-y)**2);
-}
-
-var random = function(num){
-  return Math.floor(Math.random() * num)
-}
-
-var randomItem = function(arr, ship){
-  /**
-   * random an item from the array
-   * @param {Array} an array to random the item from
-   * @returns {any} the random item
-  */
-  let team = ship.team;
-  arr.sort((a,b) => a.x - b.x);
-  let p = n = [], i; 
-  for (i=0; i<arr.length; i++) if (arr[i].x > 0) break;
-  n = arr.slice(i); p = arr.slice(0,i);
-  let t = team?n:p;
-  let r = random(t.length);
-  while (!checkspawn(t[r])) r = random(t.length);
-  return t[r];
-}
-
-function checkspawn(arr){
-  let max = 150, min = 50
-  return (Math.abs(arr.x) <= max && Math.abs(arr.x) >= min && Math.abs(arr.y) <= max && Math.abs(arr.y) >= min) 
-}
-
-var parseArray = function(map, placeholder){
-  map = [...map];
-  let len = game.options.map_size, l = parseFloat(((map.length-len)/2).toFixed(1));
-  if (l >= 0){
-    l = Math.ceil(l);
-    return map.slice(l,l+len)
-  }
-  else {
-    placeholder = JSON.parse(JSON.stringify(placeholder));
-    l = Math.abs(l);
-    [...Array(Math.floor(l))].map(i=>map.unshift(placeholder));
-    [...Array(Math.ceil(l))].map(i=>map.push(placeholder));
-    return map
-  }
-}
-
-var parseMap = function(map, toMapString){
-  /**
-   * parse the raw map to a parsed map, can't be used before the game has started
-   * @param {string} a raw map to parse
-   * @param {boolean} whether to parse it back to String type to use with `game.setCustomMap` or not
-   * @returns {Array|string} the parsed map
-  */
-  if (game.options.map_size){
-    let parsedMap = parseArray(map.split("\n").map(i=>parseArray(i.split("").map(j=>parseInt(j)||0),0)),Array(game.options.map_size).fill(0));
-    if (toMapString) parsedMap = parsedMap.map(i=>i.map(i=>i||" ").join("")).join("\n");
-    return parsedMap
-  }
-  throw new Error("`map_size` is not defined... yet")
-}
-
-var getAvailableSpawns = function(parsed_map){
-  /**
-   * get available spawn points from a parsed map
-   * @param {Array} parsed map from parseMap(raw_map, false)
-   * @returns {Array} list of available spawnpoints in the map
-  */
-  let len = game.options.map_size;
-  return parsed_map.map((line,y) => line.map((point,x)=> !point?{x: (x*2-len+1)*5,y: (len-y*2-1)*5}:0)).flat().filter(i=>i);
-}
-
-var getRandomSpawn = function(available_spawns, ship){
-  /**
-   * get a random spawn from available spawns
-   * @param {Array} list of available spawns from getAvailableSpawns(parsed_map)
-   * @returns {Object} spawn position with the format {x: <Number>, y: <Number>}
-  */
-  return randomItem(available_spawns, ship)
-}
-
-this.tick = function (game){
-  // check the console
-  if (game.step%30===0){
-  let available_spawns = getAvailableSpawns(parseMap(game.options.custom_map||""));
-  //console.log("Available spawns array:",available_spawns);
-  console.log("Random spawn:", getRandomSpawn(available_spawns,game.ships[0]));
-  // try this:
-  game.ships[0].set({type: 101, ...getRandomSpawn(available_spawns,game.ships[0])})
-  }
-  //this.tick = null;
-}
-
-function setup(ship){
-  let t = ship.custom.team;
-  let level = Math.trunc(ship.type/100);
-  let gems = ((level**2)*20)/1.5;
-  let s = 50;
-  let random = [t==0?r(50,200)*-1:r(50,200),r(0,150)];
-  for (let i=0; i<asteroidXY.length; i++){
-    while (dist2points(random[0], random[1], asteroidXY[i][0], asteroidXY[i][1]) <= 20){
-    //while (random[0] == asteroidXY[i][0] && random[1] == asteroidXY[i][1]){
-      random = [t==0?r(50,200)*-1:r(50,200),r(0,150)];
-      console.log("Blocked");
+    else {
+      placeholder = JSON.parse(JSON.stringify(placeholder));
+      l = Math.abs(l);
+      [...Array(Math.floor(l))].map(i=>map.unshift(placeholder));
+      [...Array(Math.ceil(l))].map(i=>map.push(placeholder));
+      return map
     }
+  },
+  parseMap: function(map, toMapString){
+    if (game.options.map_size){
+      let parsedMap = this.parseArray(map.split("\n").map(i=>this.parseArray(i.split("").map(j=>parseInt(j)||0),0)),Array(game.options.map_size).fill(0));
+      if (toMapString) parsedMap = parsedMap.map(i=>i.map(i=>i||" ").join("")).join("\n");
+      return parsedMap
+    }
+    throw new Error("`map_size` is not defined... yet")
+  },
+  getAvailableSpawns: function(parsed_map){
+    let len = game.options.map_size;
+    return parsed_map.map((line,y) => line.map((point,x)=> !point?{x: (x*2-len+1)*5,y: (len-y*2-1)*5}:0)).flat().filter(i=>i);
+  },
+  getRandomSpawn: function(available_spawns, ship){
+    return this.randomItem(available_spawns, ship)
+  },
+  setup: function(ship){
+    let t = ship.custom.team;
+    let level = Math.trunc(ship.type/100);
+    let gems = ((level**2)*20)/1.5;
+    let available_spawns = this.getAvailableSpawns(this.parseMap(game.options.custom_map||""));
+    ship.set({...this.getRandomSpawn(available_spawns,ship),stats:88888888,invulnerable:300,shield:9999});
   }
-  ship.set({x:random[0],y:Math.floor(Math.random()*2)==0?random[1]:random[1]*-1,stats:88888888,invulnerable:300,shield:9999});
-}
+};
 
 function setteam(ship){
   let t;
@@ -1338,6 +1289,25 @@ function joinmessage(ship){
   modUtils.setTimeout(function(){
     sendUI(ship, {id:"join",visible:false});
   },480);
+}
+
+function countdown(ship, time, id, pos){
+  let t = time * 60 + game.step; 
+  for (let i=0; i<time; i++){
+    modUtils.setTimeout(function(){
+      sendUI(ship, {
+        id: "countdown"+id,
+        position: pos,
+        visible: ship.custom.timer,
+        components: [
+          {type: "text",position:[0,0,100,50],value:FormatTime(t - game.step, [false, false, false], 0),color:"#cde"},
+        ]
+      });           
+    },i*60);  
+  }
+  modUtils.setTimeout(function(){
+    sendUI(ship, {id:"countdown"+id,visible:false});    
+  },time*60);  
 }
 
 var scoreboard = {
@@ -1466,7 +1436,7 @@ this.event = function(event, game){
       checkstatus(game);
       break;
     case "ship_spawned":
-      if (ship.custom.team != null) setup(ship);
+      if (ship.custom.team != null) random_spawns.setup(ship);
       update = 1;
       break;
     case "ui_component_clicked":
