@@ -13,7 +13,7 @@ var progressBar = {
   offsetY: 10.2, //position from the top of screen (global)
   distanceY: 2 // height distance multiplier (global)
 };
-//todo: fix random spawning
+//todo: fix joining late bug
 //todo: add maps (2 more) 
 //todo: display next ships on scorebar
 //todo: final 10 kills ui 
@@ -1014,48 +1014,56 @@ var scorebar = {
     let hues = [`hsla(${Math.abs(teams.hues[0]-5)}, 100%, 62.55%, .3)`,`hsla(${Math.abs(teams.hues[1]-7)}, 97%, 74%, .3)`];
     let icon = shiptree.icons[Math.trunc(ship.type/100)-1][(ship.type%10)-1];
     let color = shiptree.color[Math.trunc(ship.type/100)-1][(ship.type%10)-1];
-    //console.log(ship.custom)
     let icons = {
-      //you, team, enemy team, next, 
+      //you, enemy team, team, next, 
       x: [
         //offsetX[ship.custom.stage-1],
-        offsetX[teams.level[ship.custom.team]-1],
+        offsetX[teams.level[ship.custom.team]],
         offsetX[teams.level[Math.abs(ship.custom.team-1)]-1],
-        offsetX[teams.level[ship.custom.team]]
+        offsetX[teams.level[ship.custom.team]-1]
+      ],
+      x2: [
+        offsetX[ship.custom.stage-1],
+        offsetX[teams.level[ship.custom.team]-1],
+        offsetX[teams.level[Math.abs(ship.custom.team-1)]-1]      
       ],
       icon: [
         //shiptree.icons[Math.trunc(ship.type/100)-1][(ship.type%10)-1],
-        shiptree.icons[Math.trunc(stages[`level_${teams.level[ship.custom.team]}`]/100)-1][(stages[`level_${teams.level[ship.custom.team]}`]%10)-1],
-        shiptree.icons[Math.trunc(stages[`level_${teams.level[Math.abs(ship.custom.team-1)]}`]/100)-1][(stages[`level_${teams.level[Math.abs(ship.custom.team-1)]}`]%10)-1],
         shiptree.icons[Math.trunc(stages[`level_${teams.level[ship.custom.team]+1}`]/100)-1][(stages[`level_${teams.level[ship.custom.team]+1}`]%10)-1],
+        shiptree.icons[Math.trunc(stages[`level_${teams.level[Math.abs(ship.custom.team-1)]}`]/100)-1][(stages[`level_${teams.level[Math.abs(ship.custom.team-1)]}`]%10)-1],
+        shiptree.icons[Math.trunc(stages[`level_${teams.level[ship.custom.team]}`]/100)-1][(stages[`level_${teams.level[ship.custom.team]}`]%10)-1]
       ],
       hue: [
         //`hsla(${Math.abs(Math.max(...teams.hues)-Math.min(...teams.hues))}, 100%, 70%, .3)`,
-        `hsla(${Math.abs(teams.hues[0]-5)}, 100%, 62.55%, .3)`,
-        `hsla(${Math.abs(teams.hues[1]-7)}, 97%, 74%, .3)`,
         `hsla(${teams.hues[0]}, 97%, 74%, .01)`,
+        `hsla(${Math.abs(teams.hues[1]-7)}, 97%, 74%, .3)`,
+        `hsla(${Math.abs(teams.hues[0]-5)}, 100%, 62.55%, .3)`
       ],
+      hue2: [
+        `hsl(0, 0%, 35%)`,
+        `hsla(${teams.hues[0]}, 100%, 75%, 1)`,
+        `hsla(${teams.hues[1]}, 100%, 75%, 1)`      
+      ]
     }
-    findDuplicates(icons.x)
-    //console.log(icons)
-    let d = {
-      a:0, b:0, c:0
-    }
+
+    if (icons.x2[0] == icons.x2[1]) icons.x2[0]--;
+    if (icons.x2[2] == icons.x2[1]) icons.x2[2]++;
     for (let i=0; i<3; i++){
       sendUI(ship, {
         id: "iconsBarIndicator"+i,
-        position: [icons.x[i]+1.9,23.9,1,1], 
+        position: [icons.x2[i]+1.9,23.9,1,1], 
         visible: true,
         components: [
-          {type:"round",position:[0,0,50,100],fill:"#fff",stroke:"#fff"},
+          {type:"round",position:[0,0,50,100],fill:icons.hue2[i],stroke:"#cde"},
         ]
       });        
     }
+    let g = [];
     for (let i=0; i<3; i++){
       sendUI(ship, {
         id: "iconsBar"+i,
         position: [icons.x[i],19,4.2,4.2*1.5], 
-        visible: true,
+        visible: icons.x[i+1]==icons.x[i]?false:true,
         components: [
           {type:"box",position:[0,0,100,100],fill:icons.hue[i],stroke:"#cde",width:2},
           {type:"text",position:[10,5,75,65],value:icons.icon[i],color:color},
@@ -1063,20 +1071,6 @@ var scorebar = {
       });     
     }
   }
-}
-
-const findDuplicates = (arr) => {
-  let sorted_arr = arr.slice().sort(); // You can define the comparing function here. 
-  // JS by default uses a crappy string compare.
-  // (we use slice to clone the array so the
-  // original array won't be modified)
-  let results = [];
-  for (let i = 0; i < sorted_arr.length - 1; i++) {
-    if (sorted_arr[i + 1] == sorted_arr[i]) {
-      results.push(sorted_arr[i]);
-    }
-  }
-  return results;
 }
 
 function finalten(game){
@@ -1257,7 +1251,7 @@ function joinmessage(ship){
     visible: true,
     components: [
       {type: "text",position:[0,3,100,50],value:`Kill the enemy team to unlock new ships for your team!`,color:"#cde"},
-      {type: "text",position:[10,21,80,35],value:`First team to reach ${pointsToWin} kills wins`,color:"#cde"},
+      {type: "text",position:[10,21,80,35],value:`First team to complete the final stage wins!`,color:"#cde"},
     ]
   });
   sendUI(ship, {
