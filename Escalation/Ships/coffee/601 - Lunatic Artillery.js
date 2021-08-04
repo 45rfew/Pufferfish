@@ -2,18 +2,18 @@ return model =
   name: 'Lunatic Artillery'
   level: 6
   model: 1
-  size: 2.45
+  size: 1.7
   specs:
     shield:
-      capacity: [1375,1575]
+      capacity: [600,600]
       reload: [9,15]
     generator:
       capacity: [260,320]
-      reload: [85,160]
+      reload: [85,120]
     ship:
-      mass: 850
-      speed: [35,45]
-      rotation: [10,15]
+      mass: 500
+      speed: [67,67]
+      rotation: [20,30]
       acceleration: [90,120]
   bodies:
     main:
