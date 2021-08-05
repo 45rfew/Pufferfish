@@ -1,7 +1,7 @@
 var pointsToWin = 7*12;
 var pointsToFinal = 7*11;
 var PointsRange = 7; // ranges between checkpoints
-var delay = 90/10; // in seconds
+var delay = 90/5; // in seconds
 var timer = 15*10; // in minutes
 var progressBar = {
   px: 50, // width of the progress bar (global)
@@ -182,7 +182,7 @@ var ships_list = [
   ["Lunatic Destroyer","Lunatic Cannoner","Lunatic Phantom","Lunatic Tyrant","Lunatic Predator","Lunatic Infernal","Lunatic Proto"],
   ["Lunatic Artillery","Lunatic Oblivion","Lunatic Teslator","Lunatic Comet","Lunatic Caliber","Lunatic Speedster","Lunatic Dualities"],
 ];
-var ship_codes = ships_list, remove_ships = [101,201,202,203,204,301,302,303,304,305,306];
+var ship_codes = ships_list, remove_ships = [101,201,202,203,204,301,302,303,304,305,306,603,606];
 
 for (let i=0; i<ship_codes.length; i++){
   for (let j=0;j<ship_codes[i].length; j++){
@@ -761,12 +761,12 @@ var colors = [
 
 var teams = {
   names: [colors[0].team,colors[0].team2],
-  points: [2,2],
-  points2: [2,2],
+  points: [0,0],
+  points2: [0,0],
   count: [0,0],
   ships: [[],[]],
   hues: [colors[0].hue,colors[0].hue2],
-  level: [7,7],
+  level: [1,1],
   update: [false,false],
   current: [stages.level_1,stages.level_1]
 };
