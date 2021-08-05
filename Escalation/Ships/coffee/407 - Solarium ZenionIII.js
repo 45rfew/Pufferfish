@@ -2,7 +2,7 @@ return model =
   name: 'Solarium ZenionIII'
   level: 4
   model: 7
-  size: 1.5
+  size: 1.25
   specs:
     shield:
       capacity: [228,255]
