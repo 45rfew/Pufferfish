@@ -2,7 +2,7 @@ return model =
   name: 'Lunatic Predator'
   level: 5
   model: 5
-  size: 2
+  size: 1.7
   next: [604,605]
   specs:
     shield:
@@ -14,7 +14,7 @@ return model =
     ship:
       mass: 400
       speed: [50,75]
-      rotation: [35,50]
+      rotation: [35,60]
       acceleration: [60,90]
   bodies:
     main:
@@ -289,7 +289,7 @@ return model =
       height: [0,20,20,25,25,15,15,15,30,30,30,30,20,0]
       angle: 0
       laser:
-        damage: [60,88]
+        damage: [60,80]
         rate: 1
         type: 1
         speed: [200,220]
