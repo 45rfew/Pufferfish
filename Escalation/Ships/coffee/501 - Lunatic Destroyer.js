@@ -2,19 +2,19 @@ return model =
   name: 'Lunatic Destroyer'
   level: 5
   model: 1
-  size: 2.8
+  size: 2.1
   specs:
     shield:
-      capacity: [795,925]
+      capacity: [500,600]
       reload: [7,9]
     generator:
       capacity: [450,590]
       reload: [95,120]
     ship:
-      mass: 600
-      speed: [35,48]
-      rotation: [10,25]
-      acceleration: [50,60]
+      mass: 400
+      speed: [67,67]
+      rotation: [20,35]
+      acceleration: [60,70]
   bodies:
     main:
       section_segments: 6
