@@ -1,5 +1,5 @@
 return model =
-  name: 'Lunatic'
+  name: 'Lunatic Ant'
   level: 1
   model: 1
   size: 1.15
@@ -9,10 +9,10 @@ return model =
       reload: [3,5]
     generator:
       capacity: [50,80]
-      reload: [35,45]
+      reload: [15,30]
     ship:
       mass: 120
-      speed: [110,135]
+      speed: [110,125]
       rotation: [90,95]
       acceleration: [90,110]
   bodies:
@@ -158,7 +158,7 @@ return model =
         damage: [5,9]
         rate: 4
         type: 1
-        speed: [140,170]
+        speed: [140,160]
         number: 1
         angle: 0
         error: 0
