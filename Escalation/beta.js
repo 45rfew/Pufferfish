@@ -1008,7 +1008,7 @@ var scorebar = {
         ]
       }); 
     }
-    for (let ship of game.ships) if (ship != null) this.icons(ship);
+    for (let ship of game.ships) if (ship != null && ship.custom.team != null) this.icons(ship);
   },
   icons: function(ship){
     let offsetX = Array.from(Array(Math.trunc(pointsToFinal/PointsRange)).fill(1)).map((a,b) => ((b+1)*4.54-4.54)+24.7);
@@ -1019,7 +1019,7 @@ var scorebar = {
         offsetX[teams.level[Math.abs(ship.custom.team-1)]-1],
         offsetX[teams.level[ship.custom.team]-1]        
       ],[
-        shiptree.icons[Math.trunc(stages[`level_${teams.level[ship.custom.team]+1}`]/100)-1][(stages[`level_${teams.level[ship.custom.team]+1}`]%10)-1],
+        shiptree.icons[Math.trunc(stages[`level_${teams.level[ship.custom.team||0]+1}`]/100)-1][(stages[`level_${teams.level[ship.custom.team||0]+1}`]%10)-1],
         shiptree.icons[Math.trunc(stages[`level_${teams.level[Math.abs(ship.custom.team-1)]}`]/100)-1][(stages[`level_${teams.level[Math.abs(ship.custom.team-1)]}`]%10)-1],
         shiptree.icons[Math.trunc(stages[`level_${teams.level[ship.custom.team]}`]/100)-1][(stages[`level_${teams.level[ship.custom.team]}`]%10)-1]
       ],[
@@ -1115,7 +1115,7 @@ function checkstatus(game, team){
           teams.points[i] == pointsToFinal?text="Team final level":text="Team level up";
           sendUI(ship, {
             id: "up",
-            position: [32,16,34,32],
+            position: [32,18,34,32],
             visible: true,
             components: [
               {type: "text",position:[0,3,100,50],value:text,color:"#cde"},
@@ -1125,6 +1125,7 @@ function checkstatus(game, team){
           if (ship.custom.points >= 1){
             if (!ship.custom.seventh){
             ship.custom.timer = true;
+            ship.custom.get = false;
             countdown(ship,4,1,[44,85,7,7]);
             sendUI(ship, {
               id: "get",
@@ -1138,10 +1139,12 @@ function checkstatus(game, team){
             });
             modUtils.setTimeout(function(){
               sendUI(ship, {id:"get",visible:false});
-              ship.custom.points--; 
-              ship.custom.stage++; 
-              ship.custom.ship = stages[`level_${ship.custom.stage}`];
-              ship.set({type:stages[`level_${ship.custom.stage}`],stats:88888888});
+              if (!ship.custom.get){
+                ship.custom.points--; 
+                ship.custom.stage++; 
+                ship.custom.ship = stages[`level_${ship.custom.stage}`];
+                ship.set({type:stages[`level_${ship.custom.stage}`],stats:88888888});
+              }
             },60*4);            
           }
         }
@@ -1434,10 +1437,13 @@ this.event = function(event, game){
             ship.custom.tree?shiptree.remove(ship):shiptree.tree(ship);
           break;
           case "get": 
+            ship.custom.get = true;
             sendUI(ship,{id:"get",visible:false});         
             ship.custom.timer = false;
-            ship.custom.ship = stages[`level_${teams.level[ship.custom.stages]}`];
-            ship.set({type:ship.custom.ship,stats:88888888}); break;
+            ship.custom.points--; 
+            ship.custom.stage++; 
+            ship.custom.ship = stages[`level_${ship.custom.stage}`];
+            ship.set({type:stages[`level_${ship.custom.stage}`],stats:88888888});
           break;
         }
     break;
