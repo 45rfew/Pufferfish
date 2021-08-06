@@ -13,7 +13,6 @@ var progressBar = {
   offsetY: 10.2, //position from the top of screen (global)
   distanceY: 2 // height distance multiplier (global)
 };
-//todo: fix joining late bug
 //todo: add maps (2 more) 
 //todo: final 10 kills ui 
 var modUtils = {
@@ -812,10 +811,12 @@ var check = function(game, isWaiting, isGameOver){
         ship.custom.tree = false;
         ship.custom.pending = false; 
         ship.custom.timer = true;
-        ship.custom.stage = teams.level[ship.custom.team]||1;
-        ship.custom.ship = stages[`level_${teams.level[ship.custom.team]}`]||stages.level_1;      
+        ship.custom.stage = 1;
+        ship.custom.ship = stages.level_1;
         setteam(ship);
         random_spawns.setup(ship);
+        ship.custom.stage = teams.level[ship.custom.team]||1;
+        ship.custom.ship = stages[`level_${teams.level[ship.custom.team]}`]||stages.level_1; 
         //sendUI(ship, game.custom.radar_background);
         if (isGameOver) gameover(ship);
       }
@@ -929,6 +930,7 @@ var waiting = function(game){
     update = 0;
   }
   if (game.step % 60 === 0){
+    scorebar.checkscores(game);
     //checkteambase(game)
     checkstatus(game);
     //finalten(game)
@@ -1021,9 +1023,9 @@ var scorebar = {
         shiptree.icons[Math.trunc(stages[`level_${teams.level[Math.abs(ship.custom.team-1)]}`]/100)-1][(stages[`level_${teams.level[Math.abs(ship.custom.team-1)]}`]%10)-1],
         shiptree.icons[Math.trunc(stages[`level_${teams.level[ship.custom.team]}`]/100)-1][(stages[`level_${teams.level[ship.custom.team]}`]%10)-1]
       ],[
-        `hsla(${teams.hues[0]}, 97%, 74%, .01)`,
-        `hsla(${Math.abs(teams.hues[ship.custom.team-1]-7)}, 97%, 74%, .3)`,
-        `hsla(${Math.abs(teams.hues[ship.custom.team]-5)}, 100%, 62.55%, .3)`
+        `hsla(30%, 97%, 74%, .01)`,
+        `hsla(${teams.hues[Math.abs(ship.custom.team-1)]}, 97%, 74%, .3)`,
+        `hsla(${Math.abs(teams.hues[ship.custom.team])}, 100%, 62.55%, .3)`
       ]],
       indicators: [[
         offsetX[ship.custom.stage-1],
@@ -1044,7 +1046,7 @@ var scorebar = {
     } else {
       for (let i=0; i<current.length; i++){
         if (icons.symbols[i].length >= 4)
-        icons.symbols[i].shift();
+        icons.symbols[i].unshift();
       }       
     }
     let colors = shiptree.color[Math.trunc(ship.type/100)-1][(ship.type%10)-1];
@@ -1398,7 +1400,7 @@ this.event = function(event, game){
         teams.points2[killer.custom.team] = Math.trunc(teams.points2[killer.custom.team]);
         killer.custom.frags++;
       } else {
-        //teams.points[Math.abs(ship.team-1)]++;
+        teams.points[Math.abs(ship.team-1)]++;
       }
       ship.custom.deaths++;
       update = 1;
