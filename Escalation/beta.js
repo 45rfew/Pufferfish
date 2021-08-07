@@ -1094,7 +1094,6 @@ function finalten(game){
         //...Array(p-1).fill(0).map((v,j) => ({type:"text",position:[100*(p*PointsRange/pointsToWin)/rbax/p*(j+1)*1.2 - 50*pax, 30, 100*pax, 100*rpy],value:"♦️",color:"#cde"})),
         ...Array(p-1).fill(0).map((v,j) => ({type:"round",position:[100*(p*PointsRange/pointsToWin)/rbax/p*(j+1)*1.7 - 50*pax+1, 50, 150*pax, 50*rpy],fill:"#cde"})),
         ...Array(2).fill(0).map((v,j) => ({type:"round",position:[j*99-3, 30, 300*pax, 100*rpy],fill:"#cde"})),
-        {type:"text",position:[-40,0,250,250],value:icon,color:colors},
       ]
     }); 
   }  
