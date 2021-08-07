@@ -430,10 +430,10 @@ var maps = [
   shipspawn: [{x:-130,y:0},{x:130,y:0}],
   radar: {type:"box",width:10,height:18},
   traffic: function(game){
-    for (let i=0; i<2; i++) game.addAsteroid({x:[-20,15][i],y:[170,-130][i],vx:0,vy:0,size:50});
+    for (let i=0; i<2; i++) game.addAsteroid({x:[-20,15][i],y:[170,-130][i],vx:Math.floor(Math.random()*2)==1?(Math.random()*0.6)*-1:Math.random()*0.6,vy:Math.floor(Math.random()*2)==1?(Math.random()*0.6)*-1:Math.random()*0.6,size:50});
   },
   cars: function(game){
-    game.asteroids.forEach((asteroid,i) => isWrongSpeed(asteroid,asteroid.custom.vx,0) && asteroid.set({vx:asteroid.custom.vx,vy:0}));
+    //game.asteroids.forEach((asteroid,i) => isWrongSpeed(asteroid,asteroid.custom.vx,0) && asteroid.set({vx:asteroid.custom.vx,vy:0}));
   }},      
   {name: "Hryudigas", author: "rob0nuko", map:
     "99   999999999999999   9999   999999999999999   99\n"+
@@ -760,8 +760,8 @@ var colors = [
 
 var teams = {
   names: [colors[0].team,colors[0].team2],
-  points: [0,0],
-  points2: [0,0],
+  points: [80,0],
+  points2: [80,0],
   count: [0,0],
   ships: [[],[]],
   hues: [colors[0].hue,colors[0].hue2],
@@ -933,7 +933,7 @@ var waiting = function(game){
     scorebar.checkscores(game);
     //checkteambase(game)
     checkstatus(game);
-    //finalten(game)
+    finalten(game)
     updateScoreboard(game);
   }
 }, finishgame = function(game, condition){
@@ -1023,7 +1023,7 @@ var scorebar = {
         shiptree.icons[Math.trunc(stages[`level_${teams.level[Math.abs(ship.custom.team-1)]}`]/100)-1][(stages[`level_${teams.level[Math.abs(ship.custom.team-1)]}`]%10)-1],
         shiptree.icons[Math.trunc(stages[`level_${teams.level[ship.custom.team]}`]/100)-1][(stages[`level_${teams.level[ship.custom.team]}`]%10)-1]
       ],[
-        `hsla(30%, 97%, 74%, .01)`,
+        `hsla(0, 100%, 100%, .1)`,
         `hsla(${teams.hues[Math.abs(ship.custom.team-1)]}, 97%, 74%, .3)`,
         `hsla(${Math.abs(teams.hues[ship.custom.team])}, 100%, 62.55%, .3)`
       ]],
@@ -1076,25 +1076,25 @@ function finalten(game){
   let filled = teams.points.map(i => (i-pointsToFinal)/PointsRange);
   let index = teams.points.map(i => Math.trunc(i/1));
   let hues = [[`hsla(${Math.abs(teams.hues[0]-5)}, 100%, 62.55%, 0.7)`,`hsla(${Math.abs(teams.hues[1]-7)}, 97%, 74%, .7)`],["hsl(353, 100%, 55%)","hsl(233, 100%, 55%)"]];
-  let checked = [["hsla(210, 50%, 87%, 1)","hsla(210, 50%, 87%, 1)"]]; // color for unachieved checkpoints
-  let achieved = [["#fff","#fff"],["#fff","#fff"]]; // checkpoints' color after the checkpoint has finished
   let {px, py, dbx, dby, dx, dy, offsetY, distanceY} = progressBar;
   let rbax = (1 + dbx/2);
   let rpy = dy/dby;
   let pax = dx/rbax;
   let apx = px * rbax;
-  let apy = py * dby;
   let p = Math.trunc((pointsToWin-pointsToFinal)/1);
+  let icon = shiptree.icons[Math.trunc(stages[`level_12`]/100)-1][(stages[`level_12`]%10)-1];
   for (let i=0; i<2; i++){
     sendUI(game, {
       id: "finalten"+i,
-      position: [(100 - apx)/2+15, /*(offsetY+i*0.7)+13*/offsetY+13, apx/3, apy], 
+      position: [43,27,apx/4,3], 
       visible: true,
       components: [
-        {type:"box",position:[0, 50*(1 - 1/dby)+i*30, 100/rbax, 100/dby],fill:"hsla(170, 32%, 28%, .1)",stroke:"#cde",width:1},
-        {type:"box",position:[0, 50*(1 - 1/dby)+i*30, 100/rbax*filled[i], 100/dby],fill:hues[0][i]},
-        ...Array(9).fill(0).map((v,j) => ({type:"text",position:[100*(p*PointsRange/pointsToWin)/rbax/p*(j+1)*1.2 - 50*pax, 30, 100*pax, 100*rpy],value:"♦️",color:"#cde"})),
-        {type:"text",position:[100*(2/rbax - 1)-1+i*-98, -35, 300*(1 - 1/rbax), 200],value:"♦️",color:"#cde"}
+        {type:"box",position:[1, 50*(1 - 1/dby)+i*30, 100/rbax, 100/dby],fill:"hsla(170, 32%, 28%, .1)",stroke:"#cde",width:1},
+        {type:"box",position:[1, 50*(1 - 1/dby)+i*30, 100/rbax*filled[i], 100/dby],fill:hues[0][i]},
+        //...Array(p-1).fill(0).map((v,j) => ({type:"text",position:[100*(p*PointsRange/pointsToWin)/rbax/p*(j+1)*1.2 - 50*pax, 30, 100*pax, 100*rpy],value:"♦️",color:"#cde"})),
+        ...Array(p-1).fill(0).map((v,j) => ({type:"round",position:[100*(p*PointsRange/pointsToWin)/rbax/p*(j+1)*1.7 - 50*pax+1, 50, 150*pax, 50*rpy],fill:"#cde"})),
+        ...Array(2).fill(0).map((v,j) => ({type:"round",position:[j*99-3, 30, 300*pax, 100*rpy],fill:"#cde"})),
+        {type:"text",position:[-40,0,250,250],value:icon,color:colors},
       ]
     }); 
   }  
@@ -1173,7 +1173,7 @@ var random_spawns = {
     return Math.sqrt((z-x)**2+(t-y)**2);
   },
   random: function(num){
-    return Math.floor(Math.random() * num)
+    return Math.floor(Math.random() * num);
   },
   randomItem: function(arr, ship){
     let team = ship.custom.team;
@@ -1187,29 +1187,29 @@ var random_spawns = {
     return t[r];
   },
   checkspawn: function(arr){
-    let max = 150, min = 50
-    return (Math.abs(arr.x) <= max && Math.abs(arr.x) >= min && Math.abs(arr.y) <= max && Math.abs(arr.y) >= min) 
+    let max = 150, min = 50;
+    return (Math.abs(arr.x) <= max && Math.abs(arr.x) >= min && Math.abs(arr.y) <= max && Math.abs(arr.y) >= min);
   },
   parseArray: function(map, placeholder){
     map = [...map];
     let len = game.options.map_size, l = parseFloat(((map.length-len)/2).toFixed(1));
     if (l >= 0){
       l = Math.ceil(l);
-      return map.slice(l,l+len)
+      return map.slice(l,l+len);
     }
     else {
       placeholder = JSON.parse(JSON.stringify(placeholder));
       l = Math.abs(l);
       [...Array(Math.floor(l))].map(i=>map.unshift(placeholder));
       [...Array(Math.ceil(l))].map(i=>map.push(placeholder));
-      return map
+      return map;
     }
   },
   parseMap: function(map, toMapString){
     if (game.options.map_size){
       let parsedMap = this.parseArray(map.split("\n").map(i=>this.parseArray(i.split("").map(j=>parseInt(j)||0),0)),Array(game.options.map_size).fill(0));
       if (toMapString) parsedMap = parsedMap.map(i=>i.map(i=>i||" ").join("")).join("\n");
-      return parsedMap
+      return parsedMap;
     }
     throw new Error("`map_size` is not defined... yet")
   },
@@ -1218,7 +1218,7 @@ var random_spawns = {
     return parsed_map.map((line,y) => line.map((point,x)=> !point?{x: (x*2-len+1)*5,y: (len-y*2-1)*5}:0)).flat().filter(i=>i);
   },
   getRandomSpawn: function(available_spawns, ship){
-    return this.randomItem(available_spawns, ship)
+    return this.randomItem(available_spawns, ship);
   },
   setup: function(ship){
     let t = ship.custom.team;
@@ -1449,88 +1449,3 @@ this.event = function(event, game){
     break;
   }
 };
-
-;(function(){
-  var d = function (f) {
-     var h = 0.001;
-     return function(x) { return (f(x + h) - f(x - h)) / (2 * h) }
-  }
-  var placeholder = new Asteroid(game);
-  var OrbitingAsteroid  = class {
-    constructor (game, options) {
-      options = options || {}
-      this.set = function (options) {
-        if (options.graph != null) this.graph = (typeof options.graph == "function")?options.graph:(function(x){return 0});
-        if (options.interval != null) this.interval = Math.trunc(Math.max(1, options.interval)) || 1;
-        if (options.velocity != null) this.velocity = Number(options.velocity) || 1;
-        if (options.orbiter != null) this.orbiter = options.orbiter;
-        if (options.asteroid instanceof Asteroid) this.asteroid = options.asteroid;
-        if (options.persistent != null) this.persistent = !!options.persistent;
-      }
-      this.set({
-        velocity: options.velocity || 0,
-        graph: options.graph || 0,
-        interval: options.interval || 0,
-        orbiter: options.orbiter,
-        asteroid: options.asteroid || placeholder,
-        persistent: options.persistent || false
-      });
-      let u = this.asteroid == placeholder || !(this.asteroid instanceof Asteroid);
-      this.x = isNaN(options.starting_x)?(u?0:this.asteroid.x):Number(options.starting_x);
-      this.size = isNaN(options.size)?(u?30:this.asteroid.size):Math.max(options.size, 1);
-      this.custom = {};
-      this.last_updated = game.step;
-      this.orbit = function () {
-        let x;
-        if (typeof this.orbiter == "function") {
-          let t = this.orbiter(this.asteroid) || {};
-          if (t.custom) return t;
-          x = t.x
-        }
-        else x = this.x;
-        let r = this.velocity;
-        let angle = Math.atan(d(this.graph)(x)) || 0;
-        return {y: this.graph(x) || this.asteroid.y || 0, vx: r * Math.cos(angle), vy: r * Math.sin(angle)}
-      }
-      this.isActive = function(game) {
-        return this.asteroid.id != -1 && !this.asteroid.killed
-      }
-      this.tick = function(game) {
-        if (this.isActive() && game.step % this.interval === 0) {
-          this.size = this.asteroid.size;
-          this.x = this.asteroid.x;
-          this.last_updated = game.step;
-          this.asteroid.set(this.orbit())
-        }
-      }
-      this.asteroid = u?new Asteroid(game, {x: this.x, size: this.size}):this.asteroid;
-      let opts = this.orbit();
-      opts.size = this.size;
-      opts.x = this.x;
-      if (u) this.asteroid = game.addAsteroid(opts);
-      else this.isActive() && this.asteroid.set(opts)
-    }
-  }
-  if (!Array.isArray(game.orbitingAsteroids)) game.orbitingAsteroids = [];
-  game.addOrbitingAsteroid = function (options) {
-    let result = new OrbitingAsteroid(this, options);
-    return game.orbitingAsteroids.push(result), result
-  }
-  var tickOrbitingAsteroids = function (game) {
-    game.orbitingAsteroids = game.orbitingAsteroids.filter(orbitingAsteroid => (orbitingAsteroid.tick(game), orbitingAsteroid.persistent || !orbitingAsteroid.asteroid.killed))
-  }
-  var game_clone = Object.assign({}, this);
-  var checkClone = function() {
-    for (let key of Object.keys(this)) delete this[key];
-    Object.assign(this, game_clone);
-
-    this.tick = function () {
-      try { tickOrbitingAsteroids.apply(this, arguments) } catch(e){}
-      let u = typeof game_clone.tick == "function" && game_clone.tick.apply(game_clone, arguments);
-      try { checkClone.call(this) } catch(e){}
-      return u
-    }
-  }
-  checkClone.call(this)
-}).call(this);
-
