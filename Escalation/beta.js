@@ -14,7 +14,8 @@ var progressBar = {
   distanceY: 2 // height distance multiplier (global)
 };
 //todo: add maps (2 more) 
-//todo: final 10 kills ui 
+//todo: clean up code, optimize 
+//todo: fix minor bugs
 var modUtils = {
   setTimeout: function(f,time){
     this.jobs.push({f:f,time:game.step+time});
@@ -752,24 +753,25 @@ function isWrongSpeed(car,vx,vy){
 }
 
 var colors = [
-  {team:"Amongus",hue:0,team2:"Yeetus",hue2:240},
-  {team:"Doge",hue:60,team2:"Nyan Cat",hue2:300},
-  {team:"Shrek",hue:120,team2:"Big Chungus",hue2:270},
-  {team:"Lmao",hue:150,team2:"Lol",hue2:30}
+  {names:["Red","Blue"],hues:[0,240,60]},
+  {names:["Yellow","Pink"],hues:[60,300,240]},
+  {names:["Green","Purple"],hues:[120,270,30]},
+  {names:["Aqua","Orange"],hues:[150,30,300]}
 ].map((a) => ({sort:Math.random(),value:a})).sort((a, b) => a.sort - b.sort).map((a) => a.value);
+var team = colors[0];
 
 var teams = {
-  names: [colors[0].team,colors[0].team2],
+  names: [team.names[0],team.names[1]],
   points: [0,0],
   points2: [0,0],
   count: [0,0],
   ships: [[],[]],
-  hues: [colors[0].hue,colors[0].hue2],
+  hues: [team.hues[0],team.hues[1],team.hues[2]],
   level: [1,1],
   update: [false,false],
   current: [stages.level_1,stages.level_1]
 };
-
+console.log(team,teams)
 var update = 1;
 if (!game.custom.map) game.custom.map = maps[Math.trunc(Math.random()*maps.length)];
 var map = game.custom.map;
@@ -986,7 +988,7 @@ var scorebar = {
     let filled = teams.points.map(i => i/pointsToFinal);
     let index = teams.points.map(i => Math.trunc(i/PointsRange));
     let checked = [["hsla(210, 50%, 87%, 1)","hsla(210, 50%, 87%, 1)"]]; // color for unachieved checkpoints
-    let achieved = [[`hsla(${Math.abs(teams.hues[0])}, 100%, 62.55%, 1)`,`hsla(${Math.abs(teams.hues[1])}, 97%, 74%, 1)`],[`hsl(${Math.abs(teams.hues[0]*2)}, 100%, 1)`,`hsl(${Math.abs(teams.hues[1]*2)}, 100%, 1)`]]; // checkpoints' color after the checkpoint has finished
+    let achieved = [[`hsla(${Math.abs(teams.hues[0])}, 100%, 65%, 1)`,`hsla(${Math.abs(teams.hues[1])}, 100%, 74%, 1)`],[`hsl(${Math.abs(teams.hues[0]*2)}, 100%, 1)`,`hsl(${Math.abs(teams.hues[1]*2)}, 100%, 1)`]]; // checkpoints' color after the checkpoint has finished
     let {px, py, dbx, dby, dx, dy, offsetY, distanceY} = progressBar;
     let rbax = (1 + dbx/2);
     let rpy = dy/dby;
@@ -1043,27 +1045,27 @@ var scorebar = {
         offsetX[teams.level[Math.abs(ship.custom.team-1)]-1],
         offsetX[teams.level[ship.custom.team]-1]        
       ],[
-        shiptree.icons[Math.trunc(stages[`level_${teams.level[ship.custom.team||0]+1}`]/100)-1][(stages[`level_${teams.level[ship.custom.team||0]+1}`]%10)-1],
+        (shiptree.icons[Math.trunc(stages[`level_${teams.level[ship.custom.team||0]+1}`]/100)-1][(stages[`level_${teams.level[ship.custom.team||0]+1}`]%10)-1])||shiptree.icons[0][0],
         shiptree.icons[Math.trunc(stages[`level_${teams.level[Math.abs(ship.custom.team-1)]}`]/100)-1][(stages[`level_${teams.level[Math.abs(ship.custom.team-1)]}`]%10)-1],
         shiptree.icons[Math.trunc(stages[`level_${teams.level[ship.custom.team]}`]/100)-1][(stages[`level_${teams.level[ship.custom.team]}`]%10)-1]
       ],[
         `hsla(0, 100%, 100%, .1)`,
-        `hsla(${teams.hues[Math.abs(ship.custom.team-1)]}, 97%, 74%, .3)`,
-        `hsla(${Math.abs(teams.hues[ship.custom.team])}, 100%, 62.55%, .3)`
+        `hsla(${teams.hues[Math.abs(ship.custom.team-1)]}, 100%, 65%, .3)`,
+        `hsla(${Math.abs(teams.hues[ship.custom.team])}, 100%, 65%, .3)`
       ]],
       indicators: [[
         offsetX[ship.custom.stage-1],
         offsetX[teams.level[ship.custom.team]-1],
         offsetX[teams.level[Math.abs(ship.custom.team-1)]-1]      
       ],[
-        `hsl(0, 0%, 35%)`,
-        `hsla(${teams.hues[0]}, 100%, 75%, 1)`,
-        `hsla(${teams.hues[1]}, 100%, 75%, 1)`      
+        `hsla(${teams.hues[2]}, 100%, 65%, 1)`,
+        `hsla(${teams.hues[0]}, 100%, 65%, 1)`,
+        `hsla(${teams.hues[1]}, 100%, 65%, 1)`      
       ]]
     };
     if (icons.indicators[0][0] == icons.indicators[0][1]) icons.indicators[0][0]--;
     if (icons.indicators[0][2] == icons.indicators[0][1]) icons.indicators[0][2]++;
-    let current = [offsetX[ship.custom.stage-1],shiptree.icons[Math.trunc(ship.type/100)-1][(ship.type%10)-1],`hsla(${Math.abs(Math.max(...teams.hues)-Math.min(...teams.hues))}, 100%, 70%, .3)`];
+    let current = [offsetX[ship.custom.stage-1],shiptree.icons[Math.trunc(ship.type/100)-1][(ship.type%10)-1],`hsla(${teams.hues[2]}, 100%, 70%, .3)`];
     if (ship.type != teams.current[ship.custom.team] && ship.type != teams.current[Math.abs(ship.custom.team-1)]){
       for (let i=0; i<current.length; i++)
       icons.symbols[i].push(current[i]);
@@ -1076,22 +1078,22 @@ var scorebar = {
     let colors = shiptree.color[Math.trunc(ship.type/100)-1][(ship.type%10)-1];
     for (let i=0; i<4; i++){
       sendUI(ship, {
-        id: "iconsBar"+i,
-        position: [icons.symbols[0][i],19,4.2,4.2*1.5], 
-        visible: icons.symbols[0][i+1]==icons.symbols[0][i]?false:this.status[0],
-        components: [
-          {type:"box",position:[0,0,100,100],fill:icons.symbols[2][i],stroke:"#cde",width:2},
-          {type:"text",position:[10,5,75,65],value:icons.symbols[1][i],color:colors},
-        ]
-      });  
-      sendUI(ship, {
         id: "iconsBarIndicator"+i,
         position: [icons.indicators[0][i]+1.9,23.9,1,1], 
         visible: icons.indicators[0][i]!=null?this.status[0]:false,
         components: [
-          {type:"round",position:[0,0,50,100],fill:icons.indicators[1][i],stroke:"#cde"},
+          {type:"round",position:[0,0,50,100],fill:icons.indicators[1][i],stroke:"#cde"}
         ]
       }); 
+      sendUI(ship, {
+        id: "iconsBar"+i,
+        position: [icons.symbols[0][i]==null?50:icons.symbols[0][i],19,4.2,4.2*1.5], 
+        visible: icons.symbols[0][i+1]==icons.symbols[0][i]?false:this.status[0],
+        components: [
+          {type:"box",position:[0,0,100,100],fill:icons.symbols[2][i],stroke:"#cde",width:2},
+          {type:"text",position:[10,5,75,65],value:icons.symbols[1][i],color:colors}
+        ]
+      });  
     }
   }
 }
@@ -1111,7 +1113,7 @@ function checkstatus(game, team){
           teams.points[i] == pointsToFinal?text="Team final level":text="Team level up";
           sendUI(ship, {
             id: "up",
-            position: [32,18,34,32],
+            position: [32,16,34,32],
             visible: true,
             components: [
               {type: "text",position:[0,3,100,50],value:text,color:"#cde"},
@@ -1121,7 +1123,6 @@ function checkstatus(game, team){
           if (ship.custom.points >= 1){
             if (!ship.custom.seventh){
             ship.custom.timer = true;
-            ship.custom.get = false;
             countdown(ship,4,1,[44,85,7,7]);
             sendUI(ship, {
               id: "get",
@@ -1135,12 +1136,10 @@ function checkstatus(game, team){
             });
             modUtils.setTimeout(function(){
               sendUI(ship, {id:"get",visible:false});
-              if (!ship.custom.get){
-                ship.custom.points--; 
-                ship.custom.stage++; 
-                ship.custom.ship = stages[`level_${ship.custom.stage}`];
-                ship.set({type:stages[`level_${ship.custom.stage}`],stats:88888888});
-              }
+              ship.custom.points--; 
+              ship.custom.stage++; 
+              ship.custom.ship = stages[`level_${ship.custom.stage}`];
+              ship.set({type:stages[`level_${ship.custom.stage}`],stats:88888888});
             },60*4);            
           }
         }
@@ -1240,7 +1239,7 @@ function configship(ship,t){
 function joinmessage(ship){
   sendUI(ship, {
     id: "join",
-    position: [32,16,34,32],
+    position: [32,18,34,32],
     visible: true,
     components: [
       {type: "text",position:[0,3,100,50],value:`Kill the enemy team to unlock new ships for your team!`,color:"#cde"},
@@ -1273,9 +1272,7 @@ function joinmessage(ship){
       {type:"box",position:[0,0,100,100],fill:"rgba(68, 85, 102, 0)",stroke:"#cde",width:5},
     ]
   });     
-  modUtils.setTimeout(function(){
-    sendUI(ship, {id:"join",visible:false});
-  },480);
+  modUtils.setTimeout(function(){sendUI(ship,{id:"join",visible:false})},480);
 }
 
 function countdown(ship, time, id, pos){
@@ -1292,9 +1289,7 @@ function countdown(ship, time, id, pos){
       });           
     },i*60);  
   }
-  modUtils.setTimeout(function(){
-    sendUI(ship, {id:"countdown"+id,visible:false});    
-  },time*60);  
+  modUtils.setTimeout(function(){sendUI(ship,{id:"countdown"+id,visible:false})},time*60);  
 }
 
 var scoreboard = {
@@ -1418,7 +1413,7 @@ this.event = function(event, game){
               }
             }
           }  
-        },20);
+        },10);
       }
       checkstatus(game);
       break;
@@ -1433,13 +1428,8 @@ this.event = function(event, game){
             ship.custom.tree?shiptree.remove(ship):shiptree.tree(ship);
           break;
           case "get": 
-            ship.custom.get = true;
             sendUI(ship,{id:"get",visible:false});         
             ship.custom.timer = false;
-            ship.custom.points--; 
-            ship.custom.stage++; 
-            ship.custom.ship = stages[`level_${ship.custom.stage}`];
-            ship.set({type:stages[`level_${ship.custom.stage}`],stats:88888888});
           break;
         }
     break;
