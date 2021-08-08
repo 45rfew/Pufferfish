@@ -760,8 +760,8 @@ var colors = [
 
 var teams = {
   names: [colors[0].team,colors[0].team2],
-  points: [80,0],
-  points2: [80,0],
+  points: [0,0],
+  points2: [0,0],
   count: [0,0],
   ships: [[],[]],
   hues: [colors[0].hue,colors[0].hue2],
@@ -933,7 +933,6 @@ var waiting = function(game){
     scorebar.checkscores(game);
     //checkteambase(game)
     checkstatus(game);
-    finalten(game)
     updateScoreboard(game);
   }
 }, finishgame = function(game, condition){
@@ -981,10 +980,11 @@ var waiting = function(game){
 
 this.tick = waiting;
 var scorebar = {
+  hues: [[`hsla(${Math.abs(teams.hues[0]-7)}, 100%, 65%, 0.7)`,`hsla(${Math.abs(teams.hues[1]-7)}, 100%, 65%, .7)`],["hsl(353, 100%, 55%)","hsl(233, 100%, 55%)"]],
+  status: [true,27],
   checkscores: function(game){
     let filled = teams.points.map(i => i/pointsToFinal);
     let index = teams.points.map(i => Math.trunc(i/PointsRange));
-    let hues = [[`hsla(${Math.abs(teams.hues[0]-5)}, 100%, 62.55%, 0.7)`,`hsla(${Math.abs(teams.hues[1]-7)}, 97%, 74%, .7)`],["hsl(353, 100%, 55%)","hsl(233, 100%, 55%)"]];
     let checked = [["hsla(210, 50%, 87%, 1)","hsla(210, 50%, 87%, 1)"]]; // color for unachieved checkpoints
     let achieved = [[`hsla(${Math.abs(teams.hues[0])}, 100%, 62.55%, 1)`,`hsla(${Math.abs(teams.hues[1])}, 97%, 74%, 1)`],[`hsl(${Math.abs(teams.hues[0]*2)}, 100%, 1)`,`hsl(${Math.abs(teams.hues[1]*2)}, 100%, 1)`]]; // checkpoints' color after the checkpoint has finished
     let {px, py, dbx, dby, dx, dy, offsetY, distanceY} = progressBar;
@@ -995,21 +995,45 @@ var scorebar = {
     let apy = py * dby;
     let p = Math.trunc(pointsToFinal/PointsRange);
     // let ty = 100 - rby;
+    if (Math.max(...teams.points) >= pointsToFinal) this.status = [false,13];
     for (let i=0; i<2; i++){
       sendUI(game, {
         id: "progressBar"+i,
         position: [(100 - apx)/2, offsetY+i*distanceY*apy, apx, apy], 
-        visible: true,
+        visible: this.status[0],
         components: [
           {type:"box",position:[0, 50*(1 - 1/dby), 100/rbax, 100/dby],fill:"hsla(170, 32%, 28%, .1)",stroke:"#cde",width:2},
-          {type:"box",position:[0, 50*(1 - 1/dby), 100/rbax*filled[i], 100/dby],fill:hues[0][i]},
+          {type:"box",position:[0, 50*(1 - 1/dby), 100/rbax*filled[i], 100/dby],fill:this.hues[0][i]},
           ...Array(p-1).fill(0).map((v,j) => ({type:"round",position:[100*(p*PointsRange/pointsToFinal)/rbax/p*(j+1) - 50*pax, 50*(1 - rpy), 100*pax, 100*rpy],fill:((index[i]>=j+1)?achieved:checked)[0][i]})),
           {type:"round",position:[100*(2/rbax - 1), 0, 200*(1 - 1/rbax), 100],fill:((index[i]>=p)?achieved:checked)[0][i]}
         ]
       }); 
     }
+    if (Math.max(...teams.points) >= pointsToFinal-PointsRange) this.finalstage(game);
     for (let ship of game.ships) if (ship != null && ship.custom.team != null) this.icons(ship);
   },
+  finalstage: function(game){
+    let filled = teams.points.map(i => (i-pointsToFinal)/PointsRange);
+    let index = teams.points.map(i => Math.trunc(i/1));
+    let {px, py, dbx, dby, dx, dy, offsetY, distanceY} = progressBar;
+    let rbax = (1 + dbx/2);
+    let rpy = dy/dby;
+    let pax = dx/rbax;
+    let apx = px * rbax;
+    let p = Math.trunc((pointsToWin-pointsToFinal)/1);
+    let icon = shiptree.icons[Math.trunc(stages[`level_12`]/100)-1][(stages[`level_12`]%10)-1];
+    sendUI(game, {
+      id: "finalstage",
+      position: [43,this.status[1],apx/4,3], 
+      visible: true,
+      components: [
+        ...Array(2).fill(0).map((v,j) => ({type:"box",position:[1, 50*(1 - 1/dby)+j*30, 100/rbax, 100/dby],fill:"hsla(170, 32%, 28%, .1)",stroke:"#cde",width:1})),
+        ...Array(2).fill(0).map((v,j) => ({type:"box",position:[1, 50*(1 - 1/dby)+j*30, 100/rbax*filled[j], 100/dby],fill:this.hues[0][j]})),
+        ...Array(p-1).fill(0).map((v,j) => ({type:"round",position:[100*(p*PointsRange/pointsToWin)/rbax/p*(j+1)*1.7 - 50*pax+1, 50, 150*pax, 50*rpy],fill:"#cde"})),
+        ...Array(2).fill(0).map((v,j) => ({type:"round",position:[j*99-3, 30, 300*pax, 100*rpy],fill:"#cde"})),
+      ]
+    }); 
+  },  
   icons: function(ship){
     let offsetX = Array.from(Array(Math.trunc(pointsToFinal/PointsRange)).fill(1)).map((a,b) => ((b+1)*4.54-4.54)+24.7);
     let color = shiptree.color[Math.trunc(ship.type/100)-1][(ship.type%10)-1];
@@ -1054,7 +1078,7 @@ var scorebar = {
       sendUI(ship, {
         id: "iconsBar"+i,
         position: [icons.symbols[0][i],19,4.2,4.2*1.5], 
-        visible: icons.symbols[0][i+1]==icons.symbols[0][i]?false:true,
+        visible: icons.symbols[0][i+1]==icons.symbols[0][i]?false:this.status[0],
         components: [
           {type:"box",position:[0,0,100,100],fill:icons.symbols[2][i],stroke:"#cde",width:2},
           {type:"text",position:[10,5,75,65],value:icons.symbols[1][i],color:colors},
@@ -1063,40 +1087,13 @@ var scorebar = {
       sendUI(ship, {
         id: "iconsBarIndicator"+i,
         position: [icons.indicators[0][i]+1.9,23.9,1,1], 
-        visible: icons.indicators[0][i]!=null?true:false,
+        visible: icons.indicators[0][i]!=null?this.status[0]:false,
         components: [
           {type:"round",position:[0,0,50,100],fill:icons.indicators[1][i],stroke:"#cde"},
         ]
       }); 
     }
   }
-}
-
-function finalten(game){
-  let filled = teams.points.map(i => (i-pointsToFinal)/PointsRange);
-  let index = teams.points.map(i => Math.trunc(i/1));
-  let hues = [[`hsla(${Math.abs(teams.hues[0]-5)}, 100%, 62.55%, 0.7)`,`hsla(${Math.abs(teams.hues[1]-7)}, 97%, 74%, .7)`],["hsl(353, 100%, 55%)","hsl(233, 100%, 55%)"]];
-  let {px, py, dbx, dby, dx, dy, offsetY, distanceY} = progressBar;
-  let rbax = (1 + dbx/2);
-  let rpy = dy/dby;
-  let pax = dx/rbax;
-  let apx = px * rbax;
-  let p = Math.trunc((pointsToWin-pointsToFinal)/1);
-  let icon = shiptree.icons[Math.trunc(stages[`level_12`]/100)-1][(stages[`level_12`]%10)-1];
-  for (let i=0; i<2; i++){
-    sendUI(game, {
-      id: "finalten"+i,
-      position: [43,27,apx/4,3], 
-      visible: true,
-      components: [
-        {type:"box",position:[1, 50*(1 - 1/dby)+i*30, 100/rbax, 100/dby],fill:"hsla(170, 32%, 28%, .1)",stroke:"#cde",width:1},
-        {type:"box",position:[1, 50*(1 - 1/dby)+i*30, 100/rbax*filled[i], 100/dby],fill:hues[0][i]},
-        //...Array(p-1).fill(0).map((v,j) => ({type:"text",position:[100*(p*PointsRange/pointsToWin)/rbax/p*(j+1)*1.2 - 50*pax, 30, 100*pax, 100*rpy],value:"♦️",color:"#cde"})),
-        ...Array(p-1).fill(0).map((v,j) => ({type:"round",position:[100*(p*PointsRange/pointsToWin)/rbax/p*(j+1)*1.7 - 50*pax+1, 50, 150*pax, 50*rpy],fill:"#cde"})),
-        ...Array(2).fill(0).map((v,j) => ({type:"round",position:[j*99-3, 30, 300*pax, 100*rpy],fill:"#cde"})),
-      ]
-    }); 
-  }  
 }
 
 function checkstatus(game, team){
