@@ -186,7 +186,7 @@ var ships_list = [
   ["Lunatic Destroyer","Lunatic Cannoner","Lunatic Phantom","Lunatic Tyrant","Lunatic Predator","Lunatic Infernal","Lunatic Proto"],
   ["Lunatic Artillery","Lunatic Oblivion","Lunatic Teslator","Lunatic Comet","Lunatic Caliber","Lunatic Speedster","Lunatic Dualities"],
 ];
-var ship_codes = ships_list, remove_ships = [101,201,202,203,204,301,302,303,304,305,306,603,606];
+var ship_codes = ships_list, remove_ships = [101,201,202,203,204,301,302,303,304,305,306,603,606,605];
 
 for (let i=0; i<ship_codes.length; i++){
   for (let j=0;j<ship_codes[i].length; j++){
@@ -232,12 +232,12 @@ function randomPath(shipTree, tierGap){
 var startingship = Math.floor(Math.random()*2);
 var stages = {
   level_1: [603,606][startingship],
-  level_2: [603,606][Math.abs(startingship-1)],
+  level_2: [603,606,605].filter(a => a != [603,606][startingship])[Math.abs(startingship-1)],
   level_3: ship_codes[4][Math.floor(Math.random()*ship_codes[4].length)],
   level_12: 101,
   level_13: 101
 };
-
+console.log(stages)
 let random_ships = randomPath(ship_codes,2).concat().filter(a => a != stages.level_3);
 for (let i=4; i<12; i++) stages[`level_${i}`] = random_ships[i]; 
 
