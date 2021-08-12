@@ -85,20 +85,25 @@ a.Lunatic_speedster_606 = '{"name":"Lunatic Speedster","level":6,"model":6,"size
 a.Lunatic_Dualities_607 = '{"name":"Lunatic Dualities","level":6,"model":7,"size":1.65,"specs":{"shield":{"capacity":[305,345],"reload":[10,13]},"generator":{"capacity":[55,60],"reload":[90,125]},"ship":{"mass":355,"speed":[95,125],"rotation":[60,78],"acceleration":[90,110]}},"bodies":{"main":{"section_segments":9,"offset":{"x":0,"y":0,"z":-5},"position":{"x":[0,0,0,0,0,0,0,0,0],"y":[-58,-58,-60,-10,0,30,70,100,90],"z":[0,0,0,0,0,0,0,0,0]},"width":[0,8,10,16,15,15,18,10,10],"height":[0,6,8,10,10,15,15,10,0],"texture":[18,12.9,1,12,11,2,4,17],"propeller":true},"cockpit":{"section_segments":8,"offset":{"x":0,"y":-20,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0],"y":[-38,-35,-23,-10,0,30,40],"z":[0,2,3,3,3,3,3]},"width":[0,4,5,6,7,8,0],"height":[0,2,5,5,5,7,0],"texture":[4,9,9,3,10.24,12],"propeller":false},"reactor":{"section_segments":12,"offset":{"x":0,"y":10,"z":-62},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0,0],"y":[-20,-20,0,3,-1,4,3,6,6,6],"z":[0,0,0,0,0,0,0,0,0,0,0,0]},"width":[0,20,20,18,16,16,13,12,8,0],"height":[0,20,20,18,16,16,13,12,8,0],"propeller":false,"texture":[4,12,11,8,4,17,3,3,17],"vertical":true,"angle":0},"Reactor_piece":{"section_segments":[40,45,50,130,135,140,220,225,230,310,315,320],"offset":{"x":0,"y":40,"z":6},"position":{"x":[0,0,0,0,0,0,0],"y":[0,0,0,0,0,10,10],"z":[0,0,0,0,0,0,0]},"width":[0,5,5,5,5,5,0],"height":[0,15,15,15,15,15,0],"texture":[18,6,11,10,11,18],"propeller":false,"vertical":false},"Reactor_piece2":{"section_segments":[40,45,50,130,135,140,220,225,230,310,315,320],"offset":{"x":12.2,"y":62,"z":6},"position":{"x":[0,0,0,0,0,0,0],"y":[0,0,0,0,0,10,10],"z":[0,0,0,0,0,0,0]},"width":[0,5,5,5,5,5,0],"height":[0,15,15,15,15,15,0],"texture":[18,6,11,10,11,18],"propeller":false,"vertical":false,"angle":90},"Reactor_piece3":{"section_segments":[40,45,50,130,135,140,220,225,230,310,315,320],"offset":{"x":0,"y":74.5,"z":6},"position":{"x":[0,0,0,0,0,0,0],"y":[0,0,0,0,0,10,10],"z":[0,0,0,0,0,0,0]},"width":[0,5,5,5,5,5,0],"height":[0,15,15,15,15,15,0],"texture":[18,6,11,10,11,18],"propeller":false,"vertical":false},"Reactor_piece4":{"section_segments":18,"offset":{"x":0,"y":5,"z":-62},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0,0],"y":[-1,-1,-1,-1,-1,2,2,2,2,-1],"z":[0,0,0,0,0,0,0,0,0,0,0,0]},"width":[23,5,25,25,25,25,25,25,23,23],"height":[23,25,25,25,25,25,25,25,23,23],"propeller":false,"texture":[11,12,11,8,18,18,3,17,18],"vertical":true,"angle":0},"Decoration":{"section_segments":8,"offset":{"x":4.3,"y":10,"z":2},"position":{"x":[0,0,0,0,0,5,-5],"y":[0,0,0,0,0,40,10],"z":[-3,-3,-3,-3,-3,0]},"width":[0,5,5,5,5,5,0],"height":[0,8,8,8,8,8,0],"texture":[18,6,11,10,63,18],"propeller":false,"vertical":false},"Not_a_Decoration":{"section_segments":8,"offset":{"x":15,"y":30,"z":-4},"position":{"x":[-3,-3,-3,-2,-3,-3,-3,0,0,5,-5],"y":[-73,-75,-70,-40,-10,-10,-3,4,10,40,40],"z":[-3,-3,-3,-3,-3,-3,-3,-3,-3,0]},"width":[0,3,4,4,4,5,5,5,5,5,0],"height":[0,5,6,6,6,8,8,8,8,8,0],"texture":[13,4,63,18,18,63,11,12,63,18],"propeller":false,"vertical":false},"tubes":{"section_segments":8,"offset":{"x":45,"y":-120,"z":-8},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[0,0,23,27,62,62,97,102,163],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[0,2,2,2,2,2,2,2,2],"height":[0,2,2,2,2,2,2,2,2],"texture":[13,13,17,13,17,4,13]},"tubes2":{"section_segments":8,"offset":{"x":55,"y":-120,"z":-8},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[0,0,23,27,62,62,97,102,163],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[0,2,2,2,2,2,2,2,2],"height":[0,2,2,2,2,2,2,2,2],"texture":[13,13,17,13,17,4,13]},"tubes3":{"section_segments":8,"offset":{"x":68,"y":10,"z":5},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[0,0,13,17,42,42,67,82,88],"z":[-1,-4,0,0,0,0,0,-3,-6,-6]},"width":[0,2,2,2,2,2,2,2,2],"height":[0,2,2,2,2,2,2,2,2],"texture":[12,12,12,11,12,3,11,12]},"ring":{"section_segments":8,"offset":{"x":68,"y":5,"z":-4},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[0,0,-6,-4,-4,4,4,6,0,0],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[5,5,5,7,7,7,7,5,5,5],"height":[5,5,5,7,7,7,7,5,5,5],"texture":[17],"propeller":false},"ring2":{"section_segments":8,"offset":{"x":68,"y":15,"z":-4},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[0,0,-6,-4,-4,4,4,6,0,0],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[5,5,5,7,7,7,7,5,5,5],"height":[5,5,5,7,7,7,7,5,5,5],"texture":[17],"propeller":false},"ring3":{"section_segments":8,"offset":{"x":68,"y":25,"z":-4},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[0,0,-6,-4,-4,4,4,6,0,0],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[5,5,5,7,7,7,7,5,5,5],"height":[5,5,5,7,7,7,7,5,5,5],"texture":[17],"propeller":false},"ring4":{"section_segments":8,"offset":{"x":68,"y":35,"z":-4},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[0,0,-6,-4,-4,4,4,6,0,0],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[5,5,5,7,7,7,7,5,5,5],"height":[5,5,5,7,7,7,7,5,5,5],"texture":[17],"propeller":false},"ring5":{"section_segments":8,"offset":{"x":68,"y":45,"z":-4},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[0,0,-6,-4,-4,4,4,6,0,0],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[5,5,5,7,7,7,7,5,5,5],"height":[5,5,5,7,7,7,7,5,5,5],"texture":[17],"propeller":false},"cannons":{"section_segments":12,"offset":{"x":68,"y":40,"z":-2},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0,0,0,0],"y":[-65,-68,-55,-55,-45,-45,-20,0,20,30,30,50,60,60],"z":[0,0,0,0,0,0,0,0,0,0,0,0,-1,-1]},"width":[0,4,5,4,4,5,6,6,6,6,7,7,6,0],"height":[0,4,5,4,4,5,6,6,6,6,7,7,4,0],"angle":0,"laser":{"damage":[32,50],"rate":2,"type":1,"speed":[180,200],"number":1,"angle":0,"error":0,"recoil":130},"propeller":false,"texture":[12,4,4,13,17,10.24,13,1,3,17,4,11]},"top_propulsor":{"section_segments":10,"offset":{"x":40,"y":65,"z":5},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0,0,0],"y":[-10,-10,-15,-15,0,10,20,25,30,40,50,70,65],"z":[0,0,0,0,0,0,0,0,0,0,0,0,0]},"width":[0,4,10,11,13,13,13,13,13,13,8,8,0],"height":[0,4,10,11,13,13,13,13,13,13,8,8,0],"texture":[18,4,17,63,13,13,18,63,4,10,11,17],"propeller":true},"Propulsor_piece":{"section_segments":[40,45,50,130,135,140,220,225,230,310,315,320],"offset":{"x":40,"y":110,"z":5},"position":{"x":[0,0,0,0,0,0,0],"y":[0,0,0,0,0,10,10],"z":[0,0,0,0,0,0,0]},"width":[0,5,5,5,5,5,0],"height":[0,10,10,11,15,11,0],"texture":[18,6,11,10,18,18],"propeller":false,"vertical":false},"Propulsor_piece2":{"section_segments":[40,45,50,130,135,140,220,225,230,310,315,320],"offset":{"x":40,"y":50,"z":5},"position":{"x":[0,0,0,0,0,0,0],"y":[0,0,0,0,0,10,10],"z":[0,0,0,0,0,0,0]},"width":[0,3,3,3,3,3,0],"height":[0,12,12,12,12,12,0],"texture":[18,6,11,10,18,18],"propeller":false,"vertical":false},"Propulsor_piece3":{"section_segments":[40,45,50,130,135,140,220,225,230,310,315,320],"offset":{"x":40,"y":50.1,"z":5},"position":{"x":[0,0,0,0,0,0,0],"y":[0,0,0,0,0,10,10],"z":[0,0,0,0,0,0,0]},"width":[0,12,12,12,12,12,0],"height":[0,3,3,3,3,3,0],"texture":[18,6,11,10,18,18],"propeller":false,"vertical":false},"wing":{"section_segments":[40,45,50,130,135,140,220,225,230,310,315,320],"offset":{"x":70,"y":-20,"z":-9},"position":{"x":[8,8,8,8,14,0,0,0],"y":[-5,-5,-5,-5,10,10,10,10],"z":[1,1,1,1,1,1,1,1]},"width":[0,35,43,120,125,25,0],"height":[0,2,2,2,2,2,0],"texture":[17,18,12,63,12,17],"angle":-90,"propeller":false},"part_wing":{"section_segments":[40,45,50,130,135,140,220,225,230,310,315,320],"offset":{"x":72,"y":-20,"z":-9},"position":{"x":[8,8,8,8,14,0,0,0],"y":[-4,-4,-4,-4,10,10,10,10],"z":[1,1,1,1,1,1,1,1]},"width":[0,35,43,120,125,25,0],"height":[0,1.5,1.5,1.5,1.5,1.5,0],"texture":[17,18,12,4,12,17],"angle":-90,"propeller":false},"part_wing2":{"section_segments":[40,45,50,130,135,140,220,225,230,310,315,320],"offset":{"x":70.5,"y":-55,"z":-8.6},"position":{"x":[0,0,0,0,0,0,0,0],"y":[-4,-4,-4,-4,10,10,10,10],"z":[1,1,1,1,1,1,1,1]},"width":[0,35,43,45,45,40,0],"height":[0,1.5,1.5,1.5,1.5,1.5,0],"texture":[17,18,12,13,12,17],"angle":-90,"propeller":false},"wing2":{"section_segments":[40,45,50,130,135,140,220,225,230,310,315,320],"offset":{"x":70,"y":30,"z":-9},"position":{"x":[8,8,8,8,14,0,0,20,30,20,20],"y":[-7,-7,-7,-7,11,11,11,40,40,60],"z":[1,1,1,1,1,1,1,1,1,1,1]},"width":[0,35,43,80,85,25,20,20,45,45],"height":[0,5,5,5,5,5,4,4,5,5],"texture":[18,18,12,4,12,17,13,18,18],"angle":-90,"propeller":false},"wing3":{"section_segments":[40,45,50,130,135,140,220,225,230,310,315,320],"offset":{"x":50,"y":-105,"z":-9},"position":{"x":[20,20,20,20,-10,-10,-10,-10],"y":[-9,-9,-9,-9,27,27,27,27],"z":[1,1,1,1,1,1,1,1]},"width":[0,6,8,10,15,5,0],"height":[0,3,3,3,3,3,0],"texture":[17,18,12,4,12,17],"angle":90,"propeller":false}},"wings":{"top_join":{"offset":{"x":12,"y":68,"z":-3},"length":[28],"width":[40,20],"angle":[10],"position":[0,30,30,30],"texture":[11],"doubleside":1,"bump":{"position":10,"size":20}}},"typespec":{"name":"Lunatic_Dualities","level":6,"model":7,"code":607,"specs":{"shield":{"capacity":[305,345],"reload":[10,13]},"generator":{"capacity":[55,60],"reload":[90,125]},"ship":{"mass":355,"speed":[95,125],"rotation":[60,78],"acceleration":[90,110]}},"shape":[1.984,2.006,4.582,4.559,4.413,4.344,3.986,3.439,3.1,2.862,2.697,2.623,2.561,2.561,2.623,2.732,2.899,3.138,3.486,3.986,4.146,4.102,4.724,4.684,3.316,3.306,3.316,4.684,4.724,4.102,4.146,3.986,3.486,3.138,2.899,2.732,2.623,2.561,2.561,2.623,2.697,2.862,3.1,3.439,3.986,4.344,4.413,4.559,4.582,2.006],"lasers":[{"x":2.244,"y":-0.924,"z":-0.066,"angle":0,"damage":[32,50],"rate":2,"type":1,"speed":[180,200],"number":1,"spread":0,"error":0,"recoil":130},{"x":-2.244,"y":-0.924,"z":-0.066,"angle":0,"damage":[32,50],"rate":2,"type":1,"speed":[180,200],"number":1,"spread":0,"error":0,"recoil":130}],"radius":4.724}}';
 var ships = [];
 for (let ship in a) ships.push(a[ship]);
-for (var i=0; i<ships.length; i++){
-  let ship = JSON.parse(ships[i]);
-  ship.specs.ship.rotation = ship.specs.ship.rotation.map(a => Math.floor(a *= 1.3));
-  ship.specs.ship.acceleration = ship.specs.ship.acceleration.map(a => Math.floor(a *= 1.3));
-  ship.specs.generator.capacity = ship.specs.generator.capacity.map(a => a *= Math.floor([1,1.8,1.6,1.4,1.2,1][parseInt(ship.level)-1]));
-  ship.specs.generator.reload = ship.specs.generator.reload.map(a => a *= Math.floor([1,1.8,1.6,1.4,1.2,1][parseInt(ship.level)-1]));
-  ship.typespec.specs.ship.rotation = ship.typespec.specs.ship.rotation.map(a => Math.floor(a *= 1.3));
-  ship.typespec.specs.ship.acceleration = ship.typespec.specs.ship.acceleration.map(a => Math.floor(a *= 1.3));
-  ship.typespec.specs.generator.capacity = ship.typespec.specs.generator.capacity.map(a => a *= Math.floor([1,1.8,1.6,1.4,1.2,1][parseInt(ship.level)-1]));
-  ship.typespec.specs.generator.reload = ship.typespec.specs.generator.reload.map(a => a *= Math.floor([1,1.8,1.6,1.4,1.2,1][parseInt(ship.level)-1]));
-  for (let j=0; j<ship.typespec.lasers.length; j++){
-    ship.typespec.lasers[j].rate *= [1,1.4,1.3,1.2,1,1][parseInt(ship.level)-1];
-  } 
-  ships[i] = JSON.stringify(ship);
+
+function modifyShips(ships){
+  let modified = [];
+  for (var i=0; i<ships.length; i++){
+    let ship = JSON.parse(ships[i]);
+    ship.specs.ship.rotation = ship.specs.ship.rotation.map(a => Math.floor(a *= 1.3));
+    ship.specs.ship.acceleration = ship.specs.ship.acceleration.map(a => Math.floor(a *= 1.3));
+    ship.specs.generator.capacity = ship.specs.generator.capacity.map(a => a *= Math.floor([1,1.8,1.6,1.4,1.2,1][parseInt(ship.level)-1]));
+    ship.specs.generator.reload = ship.specs.generator.reload.map(a => a *= Math.floor([1,1.8,1.6,1.4,1.2,1][parseInt(ship.level)-1]));
+    ship.typespec.specs.ship.rotation = ship.typespec.specs.ship.rotation.map(a => Math.floor(a *= 1.3));
+    ship.typespec.specs.ship.acceleration = ship.typespec.specs.ship.acceleration.map(a => Math.floor(a *= 1.3));
+    ship.typespec.specs.generator.capacity = ship.typespec.specs.generator.capacity.map(a => a *= Math.floor([1,1.8,1.6,1.4,1.2,1][parseInt(ship.level)-1]));
+    ship.typespec.specs.generator.reload = ship.typespec.specs.generator.reload.map(a => a *= Math.floor([1,1.8,1.6,1.4,1.2,1][parseInt(ship.level)-1]));
+    for (let j=0; j<ship.typespec.lasers.length; j++){
+      ship.typespec.lasers[j].rate *= [1,1.4,1.3,1.2,1,1][parseInt(ship.level)-1];
+    } 
+    modified.push(JSON.stringify(ship));
+  }
+  return modified; 
 }
 
 var shiptree = {
@@ -234,16 +239,7 @@ var stages = {
 };
 
 let random_ships = randomPath(ship_codes,2).concat().filter(a => a != stages.level_3);
-for (let i=4; i<12; i++){
-  stages[`level_${i}`] = random_ships[i]; 
-}
-
-function findShipCode(name){
-  for (let i=0;i<ships_list.length;i++)
-  for (let j=0;j<ships_list[i].length;j++)
-  if (ships_list[i][j] == name) return (i+3)*100+j+1;
-  return null;
-}
+for (let i=4; i<12; i++) stages[`level_${i}`] = random_ships[i]; 
 
 var vocabulary = [
   {text: "Yes", icon:"\u004c", key:"Y"},
@@ -544,32 +540,32 @@ var maps = [
   shipspawn: [{x:-210,y:0},{x:210,y:0}],
   radar: {type:"box",width:10,height:18},
   traffic: function(game){
-    /*for (let i=0; i<8; i++){
-    let rad = 210;
-    let t = function(x){return Math.sqrt(rad**2 - x**2)}
-    let v = 0.5; 
-    game.addOrbitingAsteroid({
-      size: 50,
-      velocity: v,
-      starting_x: i*100,
-      graph: t,
-      interval: 15,
-      orbiter: function(asteroid){
-        let x = asteroid.x;
-        let y = asteroid.y;
-        let gy = this.graph(x);
-        let o = {custom: !gy}
-        if (!gy){
-          let sign = -Math.sign(v/this.velocity);
-          x = Math.sign(x) * rad;
-          this.set({velocity:sign*v,graph:function(tx){return sign*t(tx)}});
-          asteroid.set({x:x,vy:sign*Math.abs(this.velocity)/Math.SQRT2,vx:-Math.sign(x)*Math.abs(this.velocity)/Math.SQRT2});
+    function asteroids(asteroid){
+      let rad = 210;
+      let t = function(x){return Math.sqrt(rad**2 - x**2)}
+      let v = 0.5; 
+      game.addOrbitingAsteroid({
+        size: 50,
+        velocity: v,
+        starting_x: i*100,
+        graph: t,
+        interval: 15,
+        orbiter: function(asteroid){
+          let x = asteroid.x;
+          let y = asteroid.y;
+          let gy = this.graph(x);
+          let o = {custom: !gy}
+          if (!gy){
+            let sign = -Math.sign(v/this.velocity);
+            x = Math.sign(x) * rad;
+            this.set({velocity:sign*v,graph:function(tx){return sign*t(tx)}});
+            asteroid.set({x:x,vy:sign*Math.abs(this.velocity)/Math.SQRT2,vx:-Math.sign(x)*Math.abs(this.velocity)/Math.SQRT2});
+          }
+          if (!o.custom) o.x = x;
+          return o;
         }
-        if (!o.custom) o.x = x;
-        return o;
-      }
-    })
-    }*/
+      });
+    }
   },
   cars: function(game){
    // game.asteroids.forEach((asteroid,i) => isWrongSpeed(asteroid,asteroid.custom.vx,0) && asteroid.set({vx:asteroid.custom.vx,vy:0}));
@@ -789,7 +785,7 @@ this.options = {
   crystal_value: 0,
   speed_mod: 1.5,
   max_players: 14,
-  ships: ships,
+  ships: modifyShips(ships),
   release_crystal: false,
   hues: [colors[0].hue,colors[0].hue2],
   asteroids_strength: 1e6,
@@ -843,7 +839,7 @@ var check = function(game, isWaiting, isGameOver){
 };
 
 var endgametext = ["Unknown", "Unknown"], endgamestatus = {};
-var gameover = function (ship){
+var gameover = function(ship){
   ship.gameover({
     "Match status": endgametext[0],
     "Match results": endgametext[1],
@@ -979,7 +975,7 @@ var waiting = function(game){
 this.tick = waiting;
 var scorebar = {
   hues: [[`hsla(${Math.abs(teams.hues[0]-7)}, 100%, 65%, 0.7)`,`hsla(${Math.abs(teams.hues[1]-7)}, 100%, 65%, .7)`],["hsl(353, 100%, 55%)","hsl(233, 100%, 55%)"]],
-  status: [true,27],
+  status: [true,27,26.8],
   checkscores: function(game){
     let filled = teams.points.map(i => i/pointsToFinal);
     let index = teams.points.map(i => Math.trunc(i/PointsRange));
@@ -992,7 +988,7 @@ var scorebar = {
     let apx = px * rbax;
     let apy = py * dby;
     let p = Math.trunc(pointsToFinal/PointsRange);
-    if (Math.max(...teams.points) >= pointsToFinal) this.status = [false,13];
+    if (Math.max(...teams.points) >= pointsToFinal) this.status = [false,13,12.8];
     for (let i=0; i<2; i++){
       sendUI(game, {
         id: "progressBar"+i,
@@ -1010,6 +1006,7 @@ var scorebar = {
     for (let ship of game.ships) if (ship != null && ship.custom.team != null) this.icons(ship);
   },
   finalstage: function(game){
+    if (!game.custom.final) game.custom.final = true;
     let filled = teams.points.map(i => (i-pointsToFinal)/PointsRange);
     let index = teams.points.map(i => Math.trunc(i/1));
     let {px, py, dbx, dby, dx, dy, offsetY, distanceY} = progressBar;
@@ -1029,7 +1026,16 @@ var scorebar = {
         ...Array(p-1).fill(0).map((v,j) => ({type:"round",position:[100*(p*PointsRange/pointsToWin)/rbax/p*(j+1)*1.7 - 50*pax+1, 50, 150*pax, 50*rpy],fill:"#cde"})),
         ...Array(2).fill(0).map((v,j) => ({type:"round",position:[j*99-3, 30, 300*pax, 100*rpy],fill:"#cde"})),
       ]
-    }); 
+    });
+    sendUI(game, {
+      id: "icon",
+      position: [56,this.status[2],2.5,4], 
+      visible: true,
+      components: [
+        {type:"text",position:[0,3,100,100],value:shiptree.icons[0][0],color:colors},
+        {type:"box",position:[0,0,100,100],fill:"hsla(0, 0%, 50%, 0.2)",stroke:"#cde",width:2},
+      ]
+    });  
   },  
   icons: function(ship){
     let offsetX = Array.from(Array(Math.trunc(pointsToFinal/PointsRange)).fill(1)).map((a,b) => ((b+1)*4.54-4.54)+24.7);
@@ -1040,7 +1046,7 @@ var scorebar = {
         offsetX[teams.level[Math.abs(ship.custom.team-1)]-1],
         offsetX[teams.level[ship.custom.team]-1]        
       ],[
-        (shiptree.icons[Math.trunc(stages[`level_${teams.level[ship.custom.team||0]+1}`]/100)-1][(stages[`level_${teams.level[ship.custom.team||0]+1}`]%10)-1])||shiptree.icons[0][0],
+        shiptree.icons[Math.trunc(stages[`level_${teams.level[ship.custom.team||0]+1}`]/100)-1][(stages[`level_${teams.level[ship.custom.team||0]+1}`]%10)-1],
         shiptree.icons[Math.trunc(stages[`level_${teams.level[Math.abs(ship.custom.team-1)]}`]/100)-1][(stages[`level_${teams.level[Math.abs(ship.custom.team-1)]}`]%10)-1],
         shiptree.icons[Math.trunc(stages[`level_${teams.level[ship.custom.team]}`]/100)-1][(stages[`level_${teams.level[ship.custom.team]}`]%10)-1]
       ],[
@@ -1082,7 +1088,7 @@ var scorebar = {
       }); 
       sendUI(ship, {
         id: "iconsBar"+i,
-        position: [icons.symbols[0][i]==null?50:icons.symbols[0][i],19,4.2,4.2*1.5], 
+        position: [icons.symbols[0][i]==null?300:icons.symbols[0][i],19,4.2,4.2*1.5], 
         visible: icons.symbols[0][i+1]==icons.symbols[0][i]?false:this.status[0],
         components: [
           {type:"box",position:[0,0,100,100],fill:icons.symbols[2][i],stroke:"#cde",width:2},
@@ -1294,14 +1300,10 @@ var scoreboard = {
   components: []
 };
 
-function getcolor(color){
-  return `hsla(${color},100%,50%,1)`;
-}
-
 function updateScoreboard(game){
   scoreboard.components = [];
   for (let i=0; i<2; i++){
-    scoreboard.components.push({type:"box",id:"la"+i,position:[0,0+i*50,100,7],fill:getcolor(teams.hues[i]),stroke:"hsla(0, 0%, 41%, 1)",width:2});
+    scoreboard.components.push({type:"box",id:"la"+i,position:[0,0+i*50,100,7],fill:`hsla(${teams.hues[i]},100%,50%,1)`,stroke:"hsla(0, 0%, 41%, 1)",width:2});
     scoreboard.components.push({type:"text",id:"na"+i,position:[20,0+i*50,60,7],value:teams.names[i],color:"hsla(0, 0%, 0%, 1)"});
   }
   let icons = shiptree.icons;
@@ -1366,9 +1368,11 @@ this.event = function(event, game){
         teams.points2[killer.custom.team] = Math.trunc(teams.points2[killer.custom.team]);
         killer.custom.frags++;
       } else {
-        teams.points[Math.abs(ship.team-1)]++;
-        teams.points2[Math.abs(killer.custom.team-1)]++;
-        teams.points2[Math.abs(killer.custom.team-1)] = Math.trunc(teams.points2[Math.abs(killer.custom.team-1)]);        
+        if (!game.custom.final){
+          teams.points[Math.abs(ship.custom.team-1)]++;
+          teams.points2[Math.abs(ship.custom.team-1)]++;
+          teams.points2[Math.abs(ship.custom.team-1)] = Math.trunc(teams.points2[Math.abs(ship.custom.team-1)]);       
+        }
       }
       ship.custom.deaths++;
       update = 1;
