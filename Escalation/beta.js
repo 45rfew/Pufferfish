@@ -103,12 +103,12 @@ function modifyShips(ships){
   let modified = [];
   for (var i=0; i<ships.length; i++){
     let ship = JSON.parse(ships[i]);
-    ship.specs.ship.rotation = ship.specs.ship.rotation.map(a => Math.floor(a *= 1.3));
-    ship.specs.ship.acceleration = ship.specs.ship.acceleration.map(a => Math.floor(a *= 1.3));
+    ship.specs.ship.rotation = ship.specs.ship.rotation.map(a => Math.floor(a *= 1.2));
+    ship.specs.ship.acceleration = ship.specs.ship.acceleration.map(a => Math.floor(a *= 1.2));
     ship.specs.generator.capacity = ship.specs.generator.capacity.map(a => a *= Math.floor([1,1.8,1.6,1.4,1.2,1][parseInt(ship.level)-1]));
     ship.specs.generator.reload = ship.specs.generator.reload.map(a => a *= Math.floor([1,1.8,1.6,1.4,1.2,1][parseInt(ship.level)-1]));
-    ship.typespec.specs.ship.rotation = ship.typespec.specs.ship.rotation.map(a => Math.floor(a *= 1.3));
-    ship.typespec.specs.ship.acceleration = ship.typespec.specs.ship.acceleration.map(a => Math.floor(a *= 1.3));
+    ship.typespec.specs.ship.rotation = ship.typespec.specs.ship.rotation.map(a => Math.floor(a *= 1.2));
+    ship.typespec.specs.ship.acceleration = ship.typespec.specs.ship.acceleration.map(a => Math.floor(a *= 1.2));
     ship.typespec.specs.generator.capacity = ship.typespec.specs.generator.capacity.map(a => a *= Math.floor([1,1.8,1.6,1.4,1.2,1][parseInt(ship.level)-1]));
     ship.typespec.specs.generator.reload = ship.typespec.specs.generator.reload.map(a => a *= Math.floor([1,1.8,1.6,1.4,1.2,1][parseInt(ship.level)-1]));
     for (let j=0; j<ship.typespec.lasers.length; j++){
@@ -847,7 +847,7 @@ this.options = {
   map_size: 50,
   starting_ship: 801,
   crystal_value: 0,
-  speed_mod: 1.5,
+  speed_mod: 1.4,
   max_players: 50,
   ships: modifyShips(ships),
   release_crystal: false,
