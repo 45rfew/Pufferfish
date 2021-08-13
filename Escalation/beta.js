@@ -1,8 +1,21 @@
-var pointsToWin = 7*12;
-var pointsToFinal = 7*11;
-var PointsRange = 7; // ranges between checkpoints
+/*
++++ Escalation +++
+CREDITS:
+* Idea: 45rfew
+* Coding: 45rfew (with help from Bhpsngum)
+* Ships: Absolute Kun
+* Maps: rob0nuko, X7, GumZ, EDEN and 45rfew
+* Testing and debugging: 45rfew and Team Asia members
+* Based on Escalation mode from Valorant
+* Thanks to Paw and Rob0nuko for helping with the ship icons
+*/
+
+var pointsRange = 7; //number of kills required per stage 
+var stageCount = 12; //don't go lower than 3 or higher than 36
+var pointsToWin = pointsRange*stageCount;
+var pointsToFinal = pointsRange*(stageCount-1);
+var timer = 15; // in minutes
 var delay = 90/5; // in seconds
-var timer = 15*10; // in minutes
 var progressBar = {
   px: 50, // width of the progress bar (global)
   py: 1, // height of the progress bar (global)
@@ -234,12 +247,9 @@ var stages = {
   level_1: [603,606][startingship],
   level_2: [603,606,605].filter(a => a != [603,606][startingship])[Math.abs(startingship-1)],
   level_3: ship_codes[4][Math.floor(Math.random()*ship_codes[4].length)],
-  level_12: 101,
-  level_13: 101
 };
-console.log(stages)
 let random_ships = randomPath(ship_codes,2).concat().filter(a => a != stages.level_3);
-for (let i=4; i<12; i++) stages[`level_${i}`] = random_ships[i]; 
+for (let i=4; i<stageCount+2; i++) stages[`level_${i}`] = i<stageCount?random_ships[i>=random_ships.length?i-random_ships.length:i]:101; 
 
 var vocabulary = [
   {text: "Yes", icon:"\u004c", key:"Y"},
@@ -265,6 +275,60 @@ var vocabulary = [
 ];
 
 var maps = [
+  {name: "Paragon", author: "45rfew", map:
+    "    99999999999999999999  99999999999999999999    \n"+
+    "     99999999  99999999    99999999  99999999     \n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "9                                                9\n"+
+    "99       9999999999            9999999999       99\n"+
+    "99        99999999      99      99999999        99\n"+
+    "99                     9999                     99\n"+
+    "99                    99  99                    99\n"+
+    "99   9       9       99    99       9       9   99\n"+
+    "99   99     99      99      99      99     99   99\n"+
+    "99   99    99      99        99      99    99   99\n"+
+    "99   99   99       9          9       99   99   99\n"+
+    "9    99  99             99             99  99    9\n"+
+    "9    99                9999                99    9\n"+
+    "99   99               99  99               99   99\n"+
+    "99   99              99    99              99   99\n"+
+    "99   99             99      99             99   99\n"+
+    "99   9                                      9   99\n"+
+    "99         9                          9         99\n"+
+    "99        99            99            99        99\n"+
+    "99       99     99     9999     99     99       99\n"+
+    "99      99     99     999999     99     99      99\n"+
+    "9      99     99     999  999     99     99      9\n"+
+    "9     99     99     999 99 999     99     99     9\n"+
+    "9     99     99     999 99 999     99     99     9\n"+
+    "9      99     99     999  999     99     99      9\n"+
+    "99      99     99     999999     99     99      99\n"+
+    "99       99     99     9999     99     99       99\n"+
+    "99        99            99            99        99\n"+
+    "99         9                          9         99\n"+
+    "99   9                                      9   99\n"+
+    "99   99             99      99             99   99\n"+
+    "99   99              99    99              99   99\n"+
+    "99   99               99  99               99   99\n"+
+    "9    99                9999                99    9\n"+
+    "9    99  99             99             99  99    9\n"+
+    "99   99   99       9          9       99   99   99\n"+
+    "99   99    99      99        99      99    99   99\n"+
+    "99   99     99      99      99      99     99   99\n"+
+    "99   9       9       99    99       9       9   99\n"+
+    "99                    99  99                    99\n"+
+    "99                     9999                     99\n"+
+    "99        99999999      99      99999999        99\n"+
+    "99       9999999999            9999999999       99\n"+
+    "9                                                9\n"+
+    "                                                  \n"+
+    "                                                  \n"+
+    "     99999999  99999999    99999999  99999999     \n"+
+    "    99999999999999999999  99999999999999999999    ",
+  shipspawn: [{x:-210,y:0},{x:210,y:0}],
+  radar: {type:"box",width:10,height:18}
+  },
   {name: "Heart's Edge", author: "X7", map:
     "    9999999999999999999    9999999999999999999    \n"+
     "    9               999    999               9    \n"+
@@ -539,7 +603,7 @@ var maps = [
     "99   999  99999999999        99999999999  999   99",
   shipspawn: [{x:-210,y:0},{x:210,y:0}],
   radar: {type:"box",width:10,height:18},
-  traffic: function(game){
+  traffic2: function(game){
     function asteroids(asteroid){
       let rad = 210;
       let t = function(x){return Math.sqrt(rad**2 - x**2)}
@@ -567,8 +631,8 @@ var maps = [
       });
     }
   },
-  cars: function(game){
-   // game.asteroids.forEach((asteroid,i) => isWrongSpeed(asteroid,asteroid.custom.vx,0) && asteroid.set({vx:asteroid.custom.vx,vy:0}));
+  cars2: function(game){
+    game.asteroids.forEach((asteroid,i) => isWrongSpeed(asteroid,asteroid.custom.vx,0) && asteroid.set({vx:asteroid.custom.vx,vy:0}));
   }},    
   {name: "Sequence", author: "EDEN", map:
     "99999999999999999999999999999999999999999999999999\n"+
@@ -784,7 +848,7 @@ this.options = {
   starting_ship: 801,
   crystal_value: 0,
   speed_mod: 1.5,
-  max_players: 14,
+  max_players: 50,
   ships: modifyShips(ships),
   release_crystal: false,
   hues: [colors[0].hue,colors[0].hue2],
@@ -978,7 +1042,7 @@ var scorebar = {
   status: [true,27,26.8],
   checkscores: function(game){
     let filled = teams.points.map(i => i/pointsToFinal);
-    let index = teams.points.map(i => Math.trunc(i/PointsRange));
+    let index = teams.points.map(i => Math.trunc(i/pointsRange));
     let checked = [["hsla(210, 50%, 87%, 1)","hsla(210, 50%, 87%, 1)"]]; // color for unachieved checkpoints
     let achieved = [[`hsla(${Math.abs(teams.hues[0])}, 100%, 65%, 1)`,`hsla(${Math.abs(teams.hues[1])}, 100%, 74%, 1)`],[`hsl(${Math.abs(teams.hues[0]*2)}, 100%, 1)`,`hsl(${Math.abs(teams.hues[1]*2)}, 100%, 1)`]]; // checkpoints' color after the checkpoint has finished
     let {px, py, dbx, dby, dx, dy, offsetY, distanceY} = progressBar;
@@ -987,7 +1051,7 @@ var scorebar = {
     let pax = dx/rbax;
     let apx = px * rbax;
     let apy = py * dby;
-    let p = Math.trunc(pointsToFinal/PointsRange);
+    let p = Math.trunc(pointsToFinal/pointsRange);
     if (Math.max(...teams.points) >= pointsToFinal) this.status = [false,13,12.8];
     for (let i=0; i<2; i++){
       sendUI(game, {
@@ -997,17 +1061,17 @@ var scorebar = {
         components: [
           {type:"box",position:[0, 50*(1 - 1/dby), 100/rbax, 100/dby],fill:"hsla(170, 32%, 28%, .1)",stroke:"#cde",width:2},
           {type:"box",position:[0, 50*(1 - 1/dby), 100/rbax*filled[i], 100/dby],fill:this.hues[0][i]},
-          ...Array(p-1).fill(0).map((v,j) => ({type:"round",position:[100*(p*PointsRange/pointsToFinal)/rbax/p*(j+1) - 50*pax, 50*(1 - rpy), 100*pax, 100*rpy],fill:((index[i]>=j+1)?achieved:checked)[0][i]})),
+          ...Array(p-1).fill(0).map((v,j) => ({type:"round",position:[100*(p*pointsRange/pointsToFinal)/rbax/p*(j+1) - 50*pax, 50*(1 - rpy), 100*pax, 100*rpy],fill:((index[i]>=j+1)?achieved:checked)[0][i]})),
           {type:"round",position:[100*(2/rbax - 1), 0, 200*(1 - 1/rbax), 100],fill:((index[i]>=p)?achieved:checked)[0][i]}
         ]
       }); 
     }
-    if (Math.max(...teams.points) >= pointsToFinal-PointsRange) this.finalstage(game);
+    if (Math.max(...teams.points) >= pointsToFinal-pointsRange) this.finalstage(game);
     for (let ship of game.ships) if (ship != null && ship.custom.team != null) this.icons(ship);
   },
   finalstage: function(game){
     if (!game.custom.final) game.custom.final = true;
-    let filled = teams.points.map(i => (i-pointsToFinal)/PointsRange);
+    let filled = teams.points.map(i => (i-pointsToFinal)/pointsRange);
     let index = teams.points.map(i => Math.trunc(i/1));
     let {px, py, dbx, dby, dx, dy, offsetY, distanceY} = progressBar;
     let rbax = (1 + dbx/2);
@@ -1023,7 +1087,7 @@ var scorebar = {
       components: [
         ...Array(2).fill(0).map((v,j) => ({type:"box",position:[1, 50*(1 - 1/dby)+j*30, 100/rbax, 100/dby],fill:"hsla(170, 32%, 28%, .1)",stroke:"#cde",width:1})),
         ...Array(2).fill(0).map((v,j) => ({type:"box",position:[1, 50*(1 - 1/dby)+j*30, 100/rbax*filled[j], 100/dby],fill:this.hues[0][j]})),
-        ...Array(p-1).fill(0).map((v,j) => ({type:"round",position:[100*(p*PointsRange/pointsToWin)/rbax/p*(j+1)*1.7 - 50*pax+1, 50, 150*pax, 50*rpy],fill:"#cde"})),
+        ...Array(p-1).fill(0).map((v,j) => ({type:"round",position:[100*(p*pointsRange/pointsToWin)/rbax/p*(j+1)*1.7 - 50*pax+1, 50, 150*pax, 50*rpy],fill:"#cde"})),
         ...Array(2).fill(0).map((v,j) => ({type:"round",position:[j*99-3, 30, 300*pax, 100*rpy],fill:"#cde"})),
       ]
     });
@@ -1038,7 +1102,7 @@ var scorebar = {
     });  
   },  
   icons: function(ship){
-    let offsetX = Array.from(Array(Math.trunc(pointsToFinal/PointsRange)).fill(1)).map((a,b) => ((b+1)*4.54-4.54)+24.7);
+    let offsetX = Array.from(Array(Math.trunc(pointsToFinal/pointsRange)).fill(1)).map((a,b) => ((b+1)*4.54-4.54)+24.7);
     let color = shiptree.color[Math.trunc(ship.type/100)-1][(ship.type%10)-1];
     let icons = {
       symbols: [[
@@ -1101,7 +1165,7 @@ var scorebar = {
 
 function checkstatus(game, team){
   let upgraded = [[],[]];
-  let checkpoints = Array.from(Array(pointsToFinal/PointsRange)).map((a,b) => (b+1)*PointsRange);
+  let checkpoints = Array.from(Array(pointsToFinal/pointsRange)).map((a,b) => (b+1)*pointsRange);
   for (let i=0; i<2; i++){
     if (checkpoints.some(a => a === teams.points2[i])){
       teams.points2[i] += 0.05
@@ -1241,7 +1305,7 @@ function configship(ship,t){
 function joinmessage(ship){
   sendUI(ship, {
     id: "join",
-    position: [32,18,34,32],
+    position: [32,19,34,32],
     visible: true,
     components: [
       {type: "text",position:[0,3,100,50],value:`Kill the enemy team to unlock new ships for your team!`,color:"#cde"},
@@ -1377,7 +1441,7 @@ this.event = function(event, game){
       ship.custom.deaths++;
       update = 1;
       ship.custom.hasbeenkilled = true;
-      teams.points[killer.custom.team]%PointsRange==0?killer.custom.seventh=true:killer.custom.seventh=false;
+      teams.points[killer.custom.team]%pointsRange==0?killer.custom.seventh=true:killer.custom.seventh=false;
       killer.type == teams.current[killer.custom.team]?killer.custom.points+=0.5:killer.custom.points++;
       if (!killer.custom.pending){
         modUtils.setTimeout(function(){
