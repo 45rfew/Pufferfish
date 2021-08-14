@@ -854,7 +854,7 @@ this.options = {
   starting_ship: 801,
   crystal_value: 0,
   speed_mod: 1.4,
-  max_players: 50,
+  max_players: 12,
   ships: modifyShips(ships),
   release_crystal: false,
   hues: [colors[0].hue,colors[0].hue2],
