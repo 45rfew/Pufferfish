@@ -26,9 +26,7 @@ var progressBar = {
   offsetY: 10.2, //position from the top of screen (global)
   distanceY: 2 // height distance multiplier (global)
 };
-//todo: add maps (2 more) 
-//todo: clean up code, optimize 
-//todo: fix minor bugs
+
 var modUtils = {
   setTimeout: function(f,time){
     this.jobs.push({f:f,time:game.step+time});
@@ -144,7 +142,7 @@ var shiptree = {
     ["#f02711","#696969","#ffffff","#ba9269","#75a62f","#f7620d","#f9df0d"],
     ["#e6a209","#c0c0c0","#1b9e09","#0976cc","#595959","#f296bf","#cdecde"]
   ],
-  components: ["join"],
+  components: ["join","credit"],
   tree: function(ship){
     if (!ship.custom.tree){
       ship.custom.tree = true;
@@ -173,7 +171,15 @@ var shiptree = {
         components: [
           {type: "text",position:[0,0,100,50],value:`Press [V] to close ship tree`,color:"#cde"},
         ]
-      });       
+      });   
+      sendUI(ship, {
+        id: "credit",
+        position: [36,88,16,15],
+        visible: true,
+        components: [
+          {type: "text",position:[0,0,100,50],value:`Ships kindly provided by Absolute Kun`,color:"#cde"},
+        ]
+      });         
     }
   },
   remove: function(ship){
@@ -1110,7 +1116,7 @@ var scorebar = {
         offsetX[teams.level[Math.abs(ship.custom.team-1)]-1],
         offsetX[teams.level[ship.custom.team]-1]        
       ],[
-        shiptree.icons[Math.trunc(stages[`level_${teams.level[ship.custom.team||0]+1}`]/100)-1][(stages[`level_${teams.level[ship.custom.team||0]+1}`]%10)-1],
+        shiptree.icons[Math.trunc(stages[`level_${teams.level[ship.custom.team]+1}`]/100)-1][(stages[`level_${teams.level[ship.custom.team]+1}`]%10)-1],
         shiptree.icons[Math.trunc(stages[`level_${teams.level[Math.abs(ship.custom.team-1)]}`]/100)-1][(stages[`level_${teams.level[Math.abs(ship.custom.team-1)]}`]%10)-1],
         shiptree.icons[Math.trunc(stages[`level_${teams.level[ship.custom.team]}`]/100)-1][(stages[`level_${teams.level[ship.custom.team]}`]%10)-1]
       ],[
@@ -1140,7 +1146,7 @@ var scorebar = {
         icons.symbols[i].unshift();
       }       
     }
-    let colors = shiptree.color[Math.trunc(ship.type/100)-1][(ship.type%10)-1];
+    let colors = shiptree.color[Math.trunc(stages[`level_${teams.level[ship.custom.team]+1}`]/100)-1][(stages[`level_${teams.level[ship.custom.team]+1}`]%10)-1];
     for (let i=0; i<4; i++){
       sendUI(ship, {
         id: "iconsBarIndicator"+i,
@@ -1308,7 +1314,7 @@ function joinmessage(ship){
     position: [32,19,34,32],
     visible: true,
     components: [
-      {type: "text",position:[0,3,100,50],value:`Kill the enemy team to unlock new ships for your team!`,color:"#cde"},
+      {type: "text",position:[0,3,100,50],value:`Kill the enemy team to increase your team's stage level!`,color:"#cde"},
       {type: "text",position:[10,21,80,35],value:`First team to complete the final stage wins!`,color:"#cde"},
     ]
   });
