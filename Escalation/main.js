@@ -1007,7 +1007,7 @@ var waiting = function(game){
       win = teams.points.indexOf(Math.max(...teams.points));
       endgametext = `${teams.names[win]} team wins!`;
     } else endgametext = "It's a draw!";
-    endgametext = [condition?`${teams.names[win]} team reaches ${pointsToWin} kills`:"Time's up!", endgametext];
+    endgametext = [condition?`${teams.names[win]} team completed the final stage!`:"Time's up!", endgametext];
   }
   else {
     win = teams.count.indexOf(0);
