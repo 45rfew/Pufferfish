@@ -15,7 +15,7 @@ var stageCount = 12; //don't go lower than 3 or higher than 36
 var pointsToWin = pointsRange*stageCount;
 var pointsToFinal = pointsRange*(stageCount-1);
 var timer = 15; // in minutes
-var delay = 90/5; // in seconds
+var delay = 90; // in seconds
 var progressBar = {
   px: 50, // width of the progress bar (global)
   py: 1, // height of the progress bar (global)
@@ -854,7 +854,7 @@ this.options = {
   starting_ship: 801,
   crystal_value: 0,
   speed_mod: 1.4,
-  max_players: 50,
+  max_players: 12,
   ships: modifyShips(ships),
   release_crystal: false,
   hues: [colors[0].hue,colors[0].hue2],
@@ -972,7 +972,7 @@ var waiting = function(game){
   }
 }, main_game = function(game){
   check(game);
-  //if (Math.min(...teams.count) == 0) finishgame(game, 2);
+  if (Math.min(...teams.count) == 0) finishgame(game, 2);
   if (Math.max(...teams.points) >= pointsToWin) finishgame(game, 1);
   else if (game.step % 30 === 0){
     let time = timer;
@@ -1007,7 +1007,7 @@ var waiting = function(game){
       win = teams.points.indexOf(Math.max(...teams.points));
       endgametext = `${teams.names[win]} team wins!`;
     } else endgametext = "It's a draw!";
-    endgametext = [condition?`${teams.names[win]} team reaches ${pointsToWin} kills`:"Time's up!", endgametext];
+    endgametext = [condition?`${teams.names[win]} team completed the final stage!`:"Time's up!", endgametext];
   }
   else {
     win = teams.count.indexOf(0);
