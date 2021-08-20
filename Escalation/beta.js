@@ -15,7 +15,7 @@ var stageCount = 12; //don't go lower than 3 or higher than 36
 var pointsToWin = pointsRange*stageCount;
 var pointsToFinal = pointsRange*(stageCount-1);
 var timer = 15; // in minutes
-var delay = 90; // in seconds
+var delay = 90/5; // in seconds
 var progressBar = {
   px: 50, // width of the progress bar (global)
   py: 1, // height of the progress bar (global)
@@ -332,8 +332,8 @@ var maps = [
     "                                                  \n"+
     "     99999999  99999999    99999999  99999999     \n"+
     "    99999999999999999999  99999999999999999999    ",
-  shipspawn: [{x:-210,y:0},{x:210,y:0}],
-  radar: {type:"box",width:10,height:18}
+  shipspawn: [{x:150,y:0},{x:-150,y:0}],
+  radar: {type:"box",width:16,height:30},
   },
   {name: "Heart's Edge", author: "X7", map:
     "    9999999999999999999    9999999999999999999    \n"+
@@ -386,8 +386,8 @@ var maps = [
     "                     99    99                     \n"+
     "    9               999    999               9    \n"+
     "    9999999999999999999    9999999999999999999    ",
-  shipspawn: [{x:-210,y:0},{x:210,y:0}],
-  radar: {type:"box",width:10,height:18}
+  shipspawn: [{x:150,y:0},{x:-150,y:0}],
+  radar: {type:"box",width:16,height:30},
   },
   {name: "Torment", author: "GumZ", map:
     "    8999999999999999999    9999999999999999998    \n"+
@@ -441,7 +441,7 @@ var maps = [
     "    8999999999999778  9    9  8779999999999998    \n"+
     "    8999999999999999999    9999999999999999998    ",
   shipspawn: [{x:-100,y:0},{x:100,y:0}],
-  radar: {type:"box",width:10,height:18}
+  radar: {type:"box",width:16,height:30},
   },
   {name: "VY Asylum", author: "GumZ", map:
     "997    898    799999997    799999997    898    799\n"+
@@ -495,7 +495,7 @@ var maps = [
     "997  7 8998    7 7 7 7      7 7 7 7    8998 7  799\n"+
     "997    898    799999997    799999997    898    799",
   shipspawn: [{x:-130,y:0},{x:130,y:0}],
-  radar: {type:"box",width:10,height:18},
+  radar: {type:"box",width:16,height:30},
   traffic: function(game){
     for (let i=0; i<2; i++) game.addAsteroid({x:[-20,15][i],y:[170,-130][i],vx:Math.floor(Math.random()*2)==1?(Math.random()*0.6)*-1:Math.random()*0.6,vy:Math.floor(Math.random()*2)==1?(Math.random()*0.6)*-1:Math.random()*0.6,size:50});
   },
@@ -553,8 +553,8 @@ var maps = [
     "  9    999                              999    9  \n"+
     "99    99999             99             99999    99\n"+
     "99   999999999999999   9999   999999999999999   99",
-  shipspawn: [{x:-210,y:0},{x:210,y:0}],
-  radar: {type:"box",width:10,height:18}
+  shipspawn: [{x:150,y:0},{x:-150,y:0}],
+  radar: {type:"box",width:16,height:30}
   },
   {name: "Turbine", author: "rob0nuko", map:
     "99   999  99999999999        99999999999  999   99\n"+
@@ -607,8 +607,8 @@ var maps = [
     "      99999999                      99999999      \n"+
     "9     9999999999                  9999999999     9\n"+
     "99   999  99999999999        99999999999  999   99",
-  shipspawn: [{x:-210,y:0},{x:210,y:0}],
-  radar: {type:"box",width:10,height:18},
+  shipspawn: [{x:150,y:0},{x:-150,y:0}],
+  radar: {type:"box",width:16,height:30},
   traffic2: function(game){
     function asteroids(asteroid){
       let rad = 210;
@@ -691,8 +691,8 @@ var maps = [
     "                                                  \n"+
     "                                                  \n"+
     "99999999999999999999999999999999999999999999999999",
-  shipspawn: [{x:-210,y:0},{x:210,y:0}],
-  radar: {type:"box",width:10,height:18}
+  shipspawn: [{x:150,y:0},{x:-150,y:0}],
+  radar: {type:"box",width:16,height:30},
   },  
   {name: "Colosseum", author: "rob0nuko", map:
     "    999999999999999999      999999999999999999    \n"+
@@ -745,8 +745,8 @@ var maps = [
     "     99                                    99     \n"+
     " 8  999999                              999999  8 \n"+
     "    999999999999999999      999999999999999999    ", 
-  shipspawn: [{x:-210,y:0},{x:210,y:0}],
-  radar: {type:"box",width:10,height:18}
+  shipspawn: [{x:150,y:0},{x:-150,y:0}],
+  radar: {type:"box",width:16,height:30},
   },
   {name: "Antares Belt", author: "GumZ", map:
     "55599999997557999999999999999999999959959999999955\n"+
@@ -799,8 +799,8 @@ var maps = [
     "9999999999755799999999997     79999999999999999999\n"+
     "99999999995995999999999999999999999999999999999995\n"+
     "55999999995995999999999999999999999975579999999555",
-  shipspawn: [{x:-210,y:0},{x:210,y:0}],
-  radar: {type:"box",width:10,height:18},
+  shipspawn: [{x:150,y:0},{x:-150,y:0}],
+  radar: {type:"box",width:16,height:30},
   traffic: function(game){
     let sizes = [[30,10,20,10,20],[20,10,30,10,20],[20,10,20,10,30],[30,10,20,10,20]].map(a => a.map(b => b += 10));
     let x = [[-215,-150,-65,35,150],[-220,-150,-70,35,160],[-210,-155,-70,35,165],[-190,-100,-20,65,175]]
@@ -838,7 +838,7 @@ var teams = {
   current: [stages.level_1,stages.level_1]
 };
 var update = 1;
-if (!game.custom.map) game.custom.map = maps[Math.trunc(Math.random()*maps.length)];
+if (!game.custom.map) game.custom.map = maps[Math.floor(Math.random()*maps.length)];
 var map = game.custom.map;
 delay = delay*60;
 timer = timer*60*60+delay;
@@ -854,7 +854,7 @@ this.options = {
   starting_ship: 801,
   crystal_value: 0,
   speed_mod: 1.4,
-  max_players: 12,
+  max_players: 120,
   ships: modifyShips(ships),
   release_crystal: false,
   hues: [colors[0].hue,colors[0].hue2],
@@ -864,7 +864,7 @@ this.options = {
   shield_regen_factor: 0.2,
   reset_tree: true
 };
-
+console.log(map.name)
 var check = function(game, isWaiting, isGameOver){
   modUtils.tick();
   if (game.step % 15 === 0){
@@ -884,7 +884,7 @@ var check = function(game, isWaiting, isGameOver){
         random_spawns.setup(ship);
         ship.custom.stage = teams.level[ship.custom.team]||1;
         ship.custom.ship = stages[`level_${teams.level[ship.custom.team]}`]||stages.level_1; 
-        //sendUI(ship, game.custom.radar_background);
+        sendUI(ship, game.custom.radar_background);
         if (isGameOver) gameover(ship);
       }
       else if (isGameOver && !ship.custom.exited){
@@ -972,7 +972,7 @@ var waiting = function(game){
   }
 }, main_game = function(game){
   check(game);
-  if (Math.min(...teams.count) == 0) finishgame(game, 2);
+  //if (Math.min(...teams.count) == 0) finishgame(game, 2);
   if (Math.max(...teams.points) >= pointsToWin) finishgame(game, 1);
   else if (game.step % 30 === 0){
     let time = timer;
@@ -1254,8 +1254,11 @@ var random_spawns = {
     return t[r];
   },
   checkspawn: function(arr){
-    let max = 150, min = 50;
-    return (Math.abs(arr.x) <= max && Math.abs(arr.x) >= min && Math.abs(arr.y) <= max && Math.abs(arr.y) >= min);
+    let extrema = {
+      max: {x:150,y:80},
+      min: {x:70,y:Infinity}
+    }
+    return (Math.abs(arr.x) <= extrema.max.x && Math.abs(arr.x) >= extrema.min.x && Math.abs(arr.y) <= extrema.max.y);
   },
   parseArray: function(map, placeholder){
     map = [...map];
@@ -1345,6 +1348,30 @@ function joinmessage(ship){
     ]
   });     
   modUtils.setTimeout(function(){sendUI(ship,{id:"join",visible:false})},480);
+}
+
+game.custom.radar_background = {
+  id: "radar_background",
+  components: [],
+};
+
+var scale_pos = 100 / (this.options.map_size * 10);
+var scale_size = 50 / this.options.map_size;
+function addRadarSpot (x, y, type, width, height, alpha, color){
+  game.custom.radar_background.components.push({
+    type: type,
+    position: [
+      50+x*scale_pos-width*scale_size/2,
+      50-y*scale_pos-height*scale_size/2,
+      width*scale_size, height*scale_size,
+    ],
+    fill:`hsla(${color},100%,50%,${alpha})`
+  });
+}
+
+for (let i=0; i<map.shipspawn.length; i++){
+  addRadarSpot(map.shipspawn[i].x,map.shipspawn[i].y,map.radar.type,map.radar.width,map.radar.height,0.3,teams.hues[Math.abs(i-1)]);
+  addRadarSpot(map.shipspawn[i].x,map.shipspawn[i].y,map.radar.type,map.radar.width-2,map.radar.height-2,0.2,teams.hues[Math.abs(i-1)]);
 }
 
 function countdown(ship, time, id, pos){
