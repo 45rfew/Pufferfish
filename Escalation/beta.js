@@ -8,14 +8,20 @@ CREDITS:
 * Testing and debugging: 45rfew and Team Asia members
 * Based on Escalation mode from Valorant
 * Thanks to Paw and Rob0nuko for helping with the ship icons
+
+CHANGELOG 1.1.0
+  * Added radar UI to illuminate team's ship respawn range 
+  * Reduced both team's random respawn range 
+  * Increased upgrade points given when killing on the current stage (0.5 -> 0.75)
+  * Upon reaching the final stage all ships belonging to corresponding team will upgrade into the final ship
 */
 
-var pointsRange = 4; //number of kills required per stage 
-var stageCount = 4; //don't go lower than 4 or higher than 36
+var pointsRange = 7; //number of kills required per stage 
+var stageCount = 12; //don't go lower than 4 or higher than 36
 var pointsToWin = pointsRange*stageCount;
 var pointsToFinal = pointsRange*(stageCount-1);
 var timer = 15; // in minutes
-var delay = 90/5; // in seconds
+var delay = 90; // in seconds
 var progressBar = {
   px: 50, // width of the progress bar (global)
   py: 1, // height of the progress bar (global)
@@ -256,7 +262,7 @@ var stages = {
 };
 let random_ships = randomPath(ship_codes,2).concat().filter(a => a != stages.level_3);
 for (let i=4; i<stageCount+2; i++) stages[`level_${i}`] = i<stageCount?random_ships[i>=random_ships.length?i-random_ships.length:i]:101; 
-console.log(stages)
+
 var vocabulary = [
   {text: "Yes", icon:"\u004c", key:"Y"},
   {text: "No", icon:"\u004d", key:"N"},
@@ -332,8 +338,8 @@ var maps = [
     "                                                  \n"+
     "     99999999  99999999    99999999  99999999     \n"+
     "    99999999999999999999  99999999999999999999    ",
-  shipspawn: [{x:150,y:0},{x:-150,y:0}],
-  radar: {type:"box",width:16,height:30},
+  shipspawn: [{x:-110,y:0},{x:110,y:0}],
+  radar: {type:"box",width:17,height:31},
   },
   {name: "Heart's Edge", author: "X7", map:
     "    9999999999999999999    9999999999999999999    \n"+
@@ -386,8 +392,8 @@ var maps = [
     "                     99    99                     \n"+
     "    9               999    999               9    \n"+
     "    9999999999999999999    9999999999999999999    ",
-  shipspawn: [{x:150,y:0},{x:-150,y:0}],
-  radar: {type:"box",width:16,height:30},
+  shipspawn: [{x:-110,y:0},{x:110,y:0}],
+  radar: {type:"box",width:17,height:31},
   },
   {name: "Torment", author: "GumZ", map:
     "    8999999999999999999    9999999999999999998    \n"+
@@ -440,8 +446,8 @@ var maps = [
     "     799999999778                877999999997     \n"+
     "    8999999999999778  9    9  8779999999999998    \n"+
     "    8999999999999999999    9999999999999999998    ",
-  shipspawn: [{x:-100,y:0},{x:100,y:0}],
-  radar: {type:"box",width:16,height:30},
+  shipspawn: [{x:-110,y:0},{x:110,y:0}],
+  radar: {type:"box",width:17,height:31},
   },
   {name: "VY Asylum", author: "GumZ", map:
     "997    898    799999997    799999997    898    799\n"+
@@ -494,8 +500,8 @@ var maps = [
     "77      88                              88      77\n"+
     "997  7 8998    7 7 7 7      7 7 7 7    8998 7  799\n"+
     "997    898    799999997    799999997    898    799",
-  shipspawn: [{x:-130,y:0},{x:130,y:0}],
-  radar: {type:"box",width:16,height:30},
+  shipspawn: [{x:-110,y:0},{x:110,y:0}],
+  radar: {type:"box",width:17,height:31},
   traffic: function(game){
     for (let i=0; i<2; i++) game.addAsteroid({x:[-20,15][i],y:[170,-130][i],vx:Math.floor(Math.random()*2)==1?(Math.random()*0.6)*-1:Math.random()*0.6,vy:Math.floor(Math.random()*2)==1?(Math.random()*0.6)*-1:Math.random()*0.6,size:50});
   },
@@ -553,7 +559,7 @@ var maps = [
     "  9    999                              999    9  \n"+
     "99    99999             99             99999    99\n"+
     "99   999999999999999   9999   999999999999999   99",
-  shipspawn: [{x:150,y:0},{x:-150,y:0}],
+  shipspawn: [{x:-110,y:0},{x:110,y:0}],
   radar: {type:"box",width:16,height:30}
   },
   {name: "Turbine", author: "rob0nuko", map:
@@ -607,8 +613,8 @@ var maps = [
     "      99999999                      99999999      \n"+
     "9     9999999999                  9999999999     9\n"+
     "99   999  99999999999        99999999999  999   99",
-  shipspawn: [{x:150,y:0},{x:-150,y:0}],
-  radar: {type:"box",width:16,height:30},
+  shipspawn: [{x:-110,y:0},{x:110,y:0}],
+  radar: {type:"box",width:17,height:31},
   traffic2: function(game){
     function asteroids(asteroid){
       let rad = 210;
@@ -691,8 +697,8 @@ var maps = [
     "                                                  \n"+
     "                                                  \n"+
     "99999999999999999999999999999999999999999999999999",
-  shipspawn: [{x:150,y:0},{x:-150,y:0}],
-  radar: {type:"box",width:16,height:30},
+  shipspawn: [{x:-110,y:0},{x:110,y:0}],
+  radar: {type:"box",width:17,height:31},
   },  
   {name: "Colosseum", author: "rob0nuko", map:
     "    999999999999999999      999999999999999999    \n"+
@@ -745,8 +751,8 @@ var maps = [
     "     99                                    99     \n"+
     " 8  999999                              999999  8 \n"+
     "    999999999999999999      999999999999999999    ", 
-  shipspawn: [{x:150,y:0},{x:-150,y:0}],
-  radar: {type:"box",width:16,height:30},
+  shipspawn: [{x:-110,y:0},{x:110,y:0}],
+  radar: {type:"box",width:17,height:31},
   },
   {name: "Antares Belt", author: "GumZ", map:
     "55599999997557999999999999999999999959959999999955\n"+
@@ -799,8 +805,8 @@ var maps = [
     "9999999999755799999999997     79999999999999999999\n"+
     "99999999995995999999999999999999999999999999999995\n"+
     "55999999995995999999999999999999999975579999999555",
-  shipspawn: [{x:150,y:0},{x:-150,y:0}],
-  radar: {type:"box",width:16,height:30},
+  shipspawn: [{x:-110,y:0},{x:110,y:0}],
+  radar: {type:"box",width:17,height:31},
   traffic: function(game){
     let sizes = [[30,10,20,10,20],[20,10,30,10,20],[20,10,20,10,30],[30,10,20,10,20]].map(a => a.map(b => b += 10));
     let x = [[-215,-150,-65,35,150],[-220,-150,-70,35,160],[-210,-155,-70,35,165],[-190,-100,-20,65,175]]
@@ -854,7 +860,7 @@ this.options = {
   starting_ship: 801,
   crystal_value: 0,
   speed_mod: 1.4,
-  max_players: 120,
+  max_players: 12,
   ships: modifyShips(ships),
   release_crystal: false,
   hues: [colors[0].hue,colors[0].hue2],
@@ -891,13 +897,15 @@ var check = function(game, isWaiting, isGameOver){
         modUtils.setTimeout(function(){gameover(ship)},300);
         ship.custom.exited = true;
       }
-      if (!ship.custom.joined && !isWaiting && !isGameOver) {
+      if (!ship.custom.joined && !isWaiting && !isGameOver){
         joinmessage(ship);
         ship.custom.joined = true;
       }
       ship.set({idle:!!isWaiting,collider:!(isWaiting || isGameOver)});
       teams.count[ship.custom.team]++;
       (ship.score != ship.custom.frags) && ship.set({score:ship.custom.frags});
+      if (ship.custom.pendingfinal && ship.type != stages[`${Object.keys(stages)[Object.keys(stages).length-1]}`])
+      ship.set({type:stages[`${Object.keys(stages)[Object.keys(stages).length-1]}`],stats:11111111,shield:999});
     }
     typeof (map||{}).cars == "function" && map.cars(game);
   }
@@ -972,7 +980,7 @@ var waiting = function(game){
   }
 }, main_game = function(game){
   check(game);
-  //if (Math.min(...teams.count) == 0) finishgame(game, 2);
+  if (Math.min(...teams.count) == 0) finishgame(game, 2);
   if (Math.max(...teams.points) >= pointsToWin) finishgame(game, 1);
   else if (game.step % 30 === 0){
     let time = timer;
@@ -1007,7 +1015,7 @@ var waiting = function(game){
       win = teams.points.indexOf(Math.max(...teams.points));
       endgametext = `${teams.names[win]} team wins!`;
     } else endgametext = "It's a draw!";
-    endgametext = [condition?`${teams.names[win]} team completed the final stage!`:"Time's up!", endgametext];
+    endgametext = [condition?`${teams.names[win]} completed the final stage!`:"Time's up!", endgametext];
   }
   else {
     win = teams.count.indexOf(0);
@@ -1192,7 +1200,8 @@ function checkstatus(game, team){
           }); 
           modUtils.setTimeout(function(){sendUI(ship, {id:"up",visible:false})},180);
           if (teams.points[i] == pointsToFinal && ship.type != stages[`${Object.keys(stages)[Object.keys(stages).length-1]}`]){
-            ship.set({type:stages[`${Object.keys(stages)[Object.keys(stages).length-1]}`],stats:11111111,shield:999});
+            if (ship != null) ship.set({type:stages[`${Object.keys(stages)[Object.keys(stages).length-1]}`],stats:11111111,shield:999});
+            else ship.custom.pendingfinal = true;
           } else {
             if (ship.custom.points >= 1){
               if (!ship.custom.seventh){
@@ -1375,10 +1384,8 @@ function addRadarSpot (x, y, type, width, height, alpha, color){
   });
 }
 
-for (let i=0; i<map.shipspawn.length; i++){
-  addRadarSpot(map.shipspawn[i].x,map.shipspawn[i].y,map.radar.type,map.radar.width,map.radar.height,0.3,teams.hues[Math.abs(i-1)]);
-  addRadarSpot(map.shipspawn[i].x,map.shipspawn[i].y,map.radar.type,map.radar.width-2,map.radar.height-2,0.2,teams.hues[Math.abs(i-1)]);
-}
+for (let i=0; i<map.shipspawn.length; i++) for (let j=0; j<6; j++)
+addRadarSpot(map.shipspawn[i].x,map.shipspawn[i].y,map.radar.type,map.radar.width-j*3,map.radar.height-j*4.5,0.1,teams.hues[i]);
 
 function countdown(ship, time, id, pos){
   let t = time * 60 + game.step; 
