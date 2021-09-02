@@ -48,6 +48,7 @@ jab = (x,y,z,s,w,l,h,a,v) ->
     angle: a or 90
     vertical: v or false
 a = [45,135,225,315]
+
 model =
   name: 'Agartha'
   level: 6
@@ -75,6 +76,9 @@ model =
   bodies:
     ring: ring(16,0,5,12,1,.8,1.2)
     ring2: ring(16,-6,5,12,.9,.7,1.1)
+    ring3: ring(0,62,15,6,1.2,1,1)
+    ring4: ring(0,69,15,6,1.2,1,1)
+    ring5: ring(0,76,15,6,1.2,1,1)
     main:
       section_segments: 6
       offset:
@@ -83,11 +87,11 @@ model =
         z: 10
       position:
         x: [0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        y: [-24,-19,-5,0,20,35,80,140,145,145,145,133,142].mult(-1).reverse()
+        y: [-24.5,-19,-5,0,20,35,80,140,145,145,145,133,142].mult(-1).reverse()
         z: [2.5,1,0,0,0,0,0,0,0,0,0,0,0].reverse()
-      width: [1,9,16,18,20,22,22,22,19,19,18,5,0].reverse()
+      width: [0,9,16,18,20,22,22,22,19,19,18,5,0].reverse()
       height: [0,3,10,10,10,12,15,15,12,12,10,5,0].reverse()
-      texture: [16.9,17.9,16.9,16.9,63,4,3,3,10,63,9.99,1,16.9]
+      texture: [16.9,17.9,16.9,16.9,17.9,4,3,3,10,63,9.99,2,2]
       angle: 180
     mainback:
       section_segments: 6
@@ -101,7 +105,7 @@ model =
         z: [0,0,0,0,0,0]
       width: [0,22,22,5,5,10]
       height: [0,15,15,5,5,10]
-      texture: [17,63,18]
+      texture: [17,4,18]
       propeller: true
     main2:
       section_segments: 6
@@ -138,9 +142,9 @@ model =
         z: 29
       position:
         x: [0,0,0,0,0,0,0,0]
-        y: [-18.5,-13,10,40]
-        z: [-0.5,-0.5,0,-1.5,0,0,0,0,0]
-      width: [0,9.5,16.5,17]
+        y: [-18.5,-13.5,6,40]
+        z: [-1.5,-1,0,-1.5,0,0,0,0,0]
+      width: [0,10,17,19]
       height: [2,2,2,4]
       texture: [3]
     windshield:
@@ -150,8 +154,8 @@ model =
         y: -20-30
         z: 24
       position:
-        x: [-40,-11,10,15,10,-11,-40]
-        y: [-14,-12,-7,0,7,12,14]
+        x: [-45,-11,10,15,10,-11,-45]
+        y: [-13.5,-12,-7,0,7,12,13.5]
         z: [1,0,0,0,0,0,1]
       width: [0,20,10,10,10,20,0]
       height: [0,5,5,5,5,5,0]
@@ -165,24 +169,11 @@ model =
         z: 17
       position:
         x: [0,0,0,0,0,0,0,0]
-        y: [-24,-18.5,-5,40]
+        y: [-24,-18.5,-5,45]
         z: [0,0,0,1.5,0,0,0,0,0]
       width: [0,10.5,18,20]
       height: [2,2,2,4].add(5)
       texture: [ 2,2,8,3,4,5 ]
-    cockpitback:
-      section_segments: [40,90,180,270,320]
-      offset:
-        x: 1101
-        y: -70
-        z: 22
-      position:
-        x: [0,0,0,0]
-        y: [15,35,50,95]
-        z: [-10,3,6,6]
-      width: [5,5,5,5]
-      height: [0,14,12,12]
-      texture: [9.93,1,4]            
     top_box:
       section_segments: [40,45,50,130,135,140,220,225,230,310,315,320]
       offset:
@@ -210,6 +201,19 @@ model =
       height: [21,21,21,20,19,17,16,12,11,0]
       texture: [2,2,4,18,18,17,18,113,17]      
       vertical: true 
+    rear_box:
+      section_segments: 6
+      offset:
+        x: 0
+        y: 34
+        z: 25
+      position:
+        x: [0,0,0,0,0,0]
+        y: [20,20,30,45,60,60]
+        z: [0,0,0,0,-3.5,-3.5]
+      width: [0,5,5,5,5,0]
+      height: [0,5,5,5,2,0]
+      texture: [17,4,1,10,12.9]      
     wire:
       section_segments: 8
       angle: 0
@@ -631,6 +635,10 @@ model =
         error: 0.1
   wings:
     Back_connector:
+      offset:
+        x: 20
+        y: 85
+        z: 6   
       length: [13,0,12,0,0]
       width: [70,55,30,25,15]
       angle: [5,50,50,0,0,0]
@@ -640,11 +648,11 @@ model =
       bump:
         position: 40
         size: 10
-      offset:
-        x: 20
-        y: 85
-        z: 6
     Front_connector:
+      offset:
+        x: 0
+        y: 0
+        z: 0   
       length: [28,0]
       width: [50,65,65]
       angle: [0,0]
@@ -654,25 +662,7 @@ model =
       bump:
         position: 40
         size: 5
-      offset:
-        x: 0
-        y: 0
-        z: 0
-    ###top:
-      doubleside: true
-      offset:
-        x: 0
-        y: 20
-        z: 7.6
-      length: [0,20,0,5,-2,0]
-      width: [30,30,30,60,40,25,0]
-      angle: [90,90,90,90,90,90]
-      position: [-30,-30,-5,-5,0,-8,-14]
-      texture: [4,4,4,3,18,16.7]
-      bump:
-        position: 35
-        size: 20    
-    ###
+
     cover:
       doubleside: true
       offset:
@@ -700,15 +690,39 @@ model =
       texture: [4,17,18,18]
       bump:
         position: 20
-        size: -5        
+        size: -5     
+    back:
+      doubleside: true
+      offset:
+        x: 28
+        y: 20
+        z: 15-3
+      length: [0,10,0,0,30].div(1.3)
+      width: [0,42,40,0,80,100].div(1.3)
+      angle: [90,120,0,0,200].div(1.3)
+      position: [80,80,80,90,90,30].div(1.3)
+      texture: 4
+      bump:
+        position: 5
+        size: 5        
+    back2:
+      doubleside: true
+      offset:
+        x: 28
+        y: 20-1
+        z: 15-3.05
+      length: [0,10,0,0,30].div(1.3)
+      width: [0,42,40,0,80,100].div(1.3)
+      angle: [90,120,0,0,200].div(1.3)
+      position: [80,80,80,90,90,30].div(1.3)
+      texture: [4,4,18]
+      bump:
+        position: 5
+        size: 5                    
 for i in [0...12]
   xpos = [42,41,63.9,63.9,63.9,63.9,63.9,63.9,123,124,125]
   ypos = [24,44,30,50,70,90,110,130,96,116,136]
-  xpos2 = [98,99,100,63.9,63.9,63.9,45,44]
-  ypos2 = [50-2,50-22,50-42,25,45,65,60,80].add(-100)
   rsize = 8
-  if i<8 then 
-  model.bodies['jab2'+i] = jab xpos2[i], ypos2[i],0,[0,0,-0.7,-1,-2,-2.3,-2.5,-2.5],2,1,1,if i<3 then 240 else if i>5 then 300 else 270
   model.bodies['jab'+i] = jab xpos[i], ypos[i],0,[0,0,-0.7,-1,-2,-2.3,-2.5,-2.5],2,1,1,if i<2 then 55 else if i>7 then 120 else 90
   model.bodies['reactorcore'+i] =
     section_segments: 6
@@ -737,7 +751,27 @@ for i in [0...12]
       z: [0,0,0,0,0,0,0,0,0,0]
     width: [60,75,77,75,60,50,60].div(rsize)
     height: [60,75,77,75,60,50,60].div(rsize)
-    texture: [4,17,17,4]        
+    texture: [4,17,17,4] 
+for i in [0..7]
+  th = (i/4)*Math.PI*4; rd = 16
+  model.bodies['reactorrings'+i] =
+    section_segments: [40,45,50,130,135,140,220,225,230,310,315,320]
+    offset:
+      x: 0
+      y: 40
+      z: 24.5
+    position:
+      x: Array(10).fill(Math.cos(th)*rd)
+      y: [-4.5,-3.5,-2.5,0,2.5,3.5,4.5,3.5,2.5,0,-2.5,-3.5,-4.5].div(2).add(Math.sin(th)*rd)
+      z: [0,0,0,0,0,0,0,0,0,0,0,0,0]
+    width: [10.6,12,13.3,14,13.3,12,10.6,9.3,8,7.3,8,9.3,10.6].div(2)
+    height: [10.6,12,13.3,14,13.3,12,10.6,9.3,8,7.3,8,9.3,10.6].mult(1.8)
+    vertical: 0
+    texture: [63,17,4,4,17,63,63]
+    angle: i*45   
+  xpos2 = [98,99,100,63.9,63.9,63.9,45,44]
+  ypos2 = [50-2,50-22,50-42,25,45,65,60,80].add(-100)  
+  model.bodies['jab2'+i] = jab xpos2[i], ypos2[i],0,[0,0,-0.7,-1,-2,-2.3,-2.5,-2.5],2,1,1,if i<3 then 240 else if i>5 then 300 else 270
 t = 10        
 if (1)
   for y,v of model.bodies
