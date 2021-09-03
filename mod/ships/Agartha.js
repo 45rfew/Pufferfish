@@ -48,7 +48,8 @@ jab = (x,y,z,s,w,l,h,a,v) ->
     angle: a or 90
     vertical: v or false
 a = [45,135,225,315]
-
+b = [310-30,360,180,230+30]
+c = [50,120,240,310]
 model =
   name: 'Agartha'
   level: 6
@@ -91,7 +92,7 @@ model =
         z: [2.5,1,0,0,0,0,0,0,0,0,0,0,0].reverse()
       width: [0,9,16,18,20,22,22,22,19,19,18,5,0].reverse()
       height: [0,3,10,10,10,12,15,15,12,12,10,5,0].reverse()
-      texture: [16.9,17.9,16.9,16.9,17.9,4,3,3,10,63,9.99,2,2]
+      texture: [16.9,17.9,16.9,16.9,17.9,4,3,3,10,0.9,9.99,2,2]
       angle: 180
     mainback:
       section_segments: 6
@@ -119,7 +120,7 @@ model =
         z: [0,0,0,0,0,0,0,0,0,0,0,0,0]
       width: [0,8,10,12,5,15,15,12,12,12,10,0]
       height: [0,8,10,12,5,15,15,15,15,15,12,0]
-      texture: [18,4,2,3,4,10,8,3.9,12.9,63,17]
+      texture: [18,4,2,3,4,10,8,3.9,12.9,4,17]
       propeller: true
     main2stripe:
       section_segments: 6
@@ -237,11 +238,11 @@ model =
         z: -11
       position:
         x: [0,0,0,0,0,0,0]
-        y: [-10,-10,-0,11,11,10,10]
+        y: [-10,-10,-0,11,11,10,13]
         z: [0,0,0,0,0,0,0]
       width: [0,25,25,18,15,15,0]
-      height: [0,28,28,28,25,25,0]
-      texture: [4,4,8,3.5,17,17]
+      height: [0,28,28,28,25,20,0]
+      texture: [4,4,8,3.5,10,16.97]
       vertical: true          
     Right_sides:
       section_segments: [310,360,180,230]
@@ -255,9 +256,9 @@ model =
         z: [0,0,0,0,0,0,0,0]
       width: [0,10,45,45,20,0].add(-1)
       height: [3,3,3,3,3,3]
-      texture: [ 2 ]
+      texture: 2
     Right_sides_outer:
-      section_segments: [310-30,360,180,230+30]
+      section_segments: b
       offset:
         x: 0
         y: -190
@@ -266,11 +267,11 @@ model =
         x: [40.5,40.5,69,69,49,49,49]
         y: [-1,-1,55,170,202.5,202.5,202.5]
         z: [0,0,0,0,0,0,0,0]
-      width: [0,4,4,4,4,4,0]#[0,10,45,45,17,0,0].add(5-1)
+      width: [0,4,4,4,4,4,0]
       height: [2,2,2,2,2,2,0]
-      texture: [4]
+      texture: 4
     Right_sides_outer2:
-      section_segments: [310-30,360,180,230+30]
+      section_segments: b
       offset:
         x: 0
         y: -190
@@ -294,7 +295,7 @@ model =
         z: [0,0,0,0,0,0,0,0]
       width: [0,10,45,45,20,0]
       height: [1,1,1,1,1,1]
-      texture: [ 63 ]
+      texture: 63
     Right_sides_inner2:
       section_segments: 6
       offset:
@@ -321,7 +322,7 @@ model =
         z: [0,0,0,-2]
       width: [0,20,20,0]
       height: [0,4,4,0]
-      texture: [3.3]
+      texture: 3.3
       angle: 180
     righttrianglesback:
       section_segments: [135,225,315]
@@ -335,7 +336,7 @@ model =
         z: [-2,-2,0,0,0]
       width: [0,0.1,20,20,0]
       height: [0,0.1,4,4,0]
-      texture: [3.3]
+      texture: 3.3
       angle: 180
     rightsidesten:
       section_segments: a
@@ -349,9 +350,8 @@ model =
         z: [0,2,-1.6,0]
       width: [0,35,35,0]
       height: [0,2,2,0]
-      texture: [18]
+      texture: 18
       angle: 90
-
     left_sides:
       section_segments: [310,360,180,230]
       offset:
@@ -364,10 +364,10 @@ model =
         z: [0,0,0,0,0,0,0,0]
       width: [0,10,45,45,20,0].add(-1).reverse()
       height: [3,3,3,3,3,3]
-      texture: [4]
+      texture: 4
       angle: 180
     left_sides_outer:
-      section_segments: [310-30,360,180,230+30]
+      section_segments: b
       offset:
         x: 0
         y: -190
@@ -378,10 +378,10 @@ model =
         z: [0,0,0,0,0,0,0,0]
       width: [0,4,4,4,4,4,0].reverse()
       height: [2,2,2,2,2,2,0]
-      texture: [2]
+      texture: 2
       angle: 180
     left_sides_outer2:
-      section_segments: [310-30,360,180,230+30]
+      section_segments: b
       offset:
         x: 0
         y: -190
@@ -406,7 +406,7 @@ model =
         z: [0,0,0,0,0,0,0,0]
       width: [0,10,45,45,20,0].reverse()
       height: [1,1,1,1,1,1]
-      texture: [ 63 ]
+      texture: 63
       angle: 180
     left_sides_inner2:
       section_segments: 6
@@ -434,7 +434,7 @@ model =
         z: [0,0,0,-2]
       width: [0,20,20,0].reverse()
       height: [0,4,4,0]
-      texture: [2.3]
+      texture: 2.3
       angle: 180+180
     lefttrianglesback:
       section_segments: [135,225,315]
@@ -448,7 +448,7 @@ model =
         z: [-2,-2,0,0,0].reverse()
       width: [0,0.1,20,20,0].reverse()
       height: [0,0.1,4,4,0].reverse()
-      texture: [2.3]
+      texture: 2.3
       angle: 180+180
     leftsidesten:
       section_segments: a
@@ -462,9 +462,8 @@ model =
         z: [0,2,-1.6,0]
       width: [0,25,25,0]
       height: [0,2,2,0]
-      texture: [11]
+      texture: 11
       angle: 90+180
-    
     Right_sides_back:
       section_segments: [310,360,180,230]
       offset:
@@ -473,37 +472,131 @@ model =
         z: 20
       position:
         x: [40,40,40,40,40,40,40]
-        y: [25,25,45,80,110,110]
+        y: [25,25,45,80,113,113]
         z: [0,0,0,0,0,0,0,0]
       width: [0,10,30,30,10,0]
       height: [3,3,3,3,3,3]
-      texture: [ 4 ]
-    Right_sides_back_outer:
+      texture: [2,4]
+    Right_sides_back2:
+      section_segments: b
+      offset:
+        x: 0
+        y: 0
+        z: 18.5
+      position:
+        x: [49.5,49.5,65,65,49,49].add(2)
+        y: [24,24,45,80,114,114]
+        z: [0,0,0,0,0,0,0,0]
+      width: [0,3,3,3,3,0]
+      height: [0,2,2,2,2,0]
+      texture: 2  
+    Right_sides_back3:
+      section_segments: b
+      offset:
+        x: 0
+        y: 0
+        z: 18.6
+      position:
+        x: [49.5,49.5,65,65,49,49].add(1.8)
+        y: [24,24,45,80,114,114]
+        z: [0,0,0,0,0,0,0,0]
+      width: [0,3,3,3,3,0]
+      height: [0,2,2,2,2,0]
+      texture: [1.9,17,17,17,1.9]     
+    Right_sides_back4:
       section_segments: [310,360,180,230]
       offset:
         x: 0
         y: 0
-        z: 20
+        z: 20.3
       position:
-        x: [43,43,42,42,40,40,41]
-        y: [26,26,45,80,113,113]
-        z: [0,0,0,0,0,0,0,0]
-      width: [0,10,30,30,10,0]
-      height: [2,2,2,2,2,2]
-      texture: [ 2 ]
+        x: [40,40,40,40,40,40,40]
+        y: [25,25,45.5,79.6,105,105]
+        z: [0,0,0,0,0.2,0,0,0]
+      width: [0,10,30,30,10,0].div(1.45)
+      height: [3,3,3,3,3,3]
+      texture: [2]
     Right_sides_back_Inner:
-      section_segments: [50,120,240,310]
+      section_segments: c
       offset:
         x: 0
         y: 41
         z: 20
       position:
         x: [40,40,40,40,40,40,40]
-        y: [-15,-15,72,72]
+        y: [-15,-15,71.5,71.5]
         z: [0,0,0,0,0]
       width: [4,4,4,4,4,4]
       height: [0,2,2,0,0,0]
-      texture: [ 63 ]
+      texture: 63
+    Right_sides_back_Inner2:
+      section_segments: c
+      offset:
+        x: 0
+        y: 41
+        z: 20.1
+      position:
+        x: [40,40,40,40,40,40,40].add(1.8)
+        y: [-15,-15,71.5,71.5]
+        z: [0,0,0,0,0]
+      width: [4,4,4,4,4,4]
+      height: [0,2,2,0,0,0]
+      texture: [63,16.5,63]     
+      texture: [1.5,16.5,1.5] 
+    righttop:
+      section_segments: [45,135,225,315,345,375].add(270)
+      offset:
+        x: 0
+        y: 23.5
+        z: -62.5
+      position:
+        x: [14,14,14,14,14,14,14,14].add(33)
+        y: [-1.5,-1.5,0.6,1.5,3,3,3,1.5]
+        z: [0,0,0,0,0,0,0,0]
+      width: [0,10,10,10,6,5,2,0]
+      height: [0,18,18,18,15,14,4.5,0]
+      texture: [4,4,17,3,17,18,17]
+      vertical: true
+      angle: 2
+    righttopwire:
+      section_segments: c.add(-90)
+      offset:
+        x: 0
+        y: 30
+        z: 21.7
+      position:
+        x: [0,0,0,0,5,5,5,5,5,0,0,0].add(42.2)
+        y: [0,0,5,7,18,40,47,50,55,66,75,75]
+        z: [0,0,0,0,0,0,0,0,0,0,0,0,0]
+      width: [0,2,2,2,2,2,2,2,2,2,2]
+      height: [0,2,2,2,2,2,2,2,2,2,2]
+      texture: 63
+    righttopbox:
+      section_segments: a
+      offset:
+        x: 0
+        y: 25.1
+        z: 23
+      position:
+        x: [0,0,0,0,0,0,0].add(43)
+        y: [0,0,1,1,1,6,6]
+        z: [0,0,0,0,0,0,0]
+      width: [0,4,4,4,4,4,0]
+      height: [0,3,3,3,3,3,0]
+      texture: [4,17,8,8,8,4]
+    righttopbox2:
+      section_segments: a
+      offset:
+        x: 0
+        y: 104
+        z: 22.5
+      position:
+        x: [0,0,0,0,0,0,0].add(43)
+        y: [0,0,2,2,2,9,9]
+        z: [0,0,0,0,0,0,0]
+      width: [0,4,4,4,4,4,0]
+      height: [0,3,3,3,3,3,0]
+      texture: [4,17,8,8,13,4]         
     Left_sides_back:
       section_segments: [0,50,130,180]
       offset:
@@ -516,61 +609,126 @@ model =
         z: [0,0,0,0,0,0,0,0]
       width: [0,10,30,30,10,0]
       height: [3,3,3,3,3,3]
-      texture: [ 63 ]
-    Left_sides_back_outer:
+      texture: [4,2]
+    Left_sides_back2:
+      section_segments: b.mult(-1).reverse()
+      offset:
+        x: 0
+        y: 10
+        z: 18.5
+      position:
+        x: [-51,-51,-66,-66,-48.5,-48.5].add(-1)
+        y: [24,24,45,105,149,149]
+        z: [0,0,0,0,0,0,0,0]
+      width: [0,3,3,3,3,0]
+      height: [0,2,2,2,2,0]
+      texture: 4      
+    Left_sides_back3:
+      section_segments: b.mult(-1).reverse()
+      offset:
+        x: 0
+        y: 10
+        z: 18.5
+      position:
+        x: [-51,-51,-66,-66,-48.5,-48.5].add(-0.9)
+        y: [24,24,45,105,149,149]
+        z: [0,0,0,0,0,0,0,0]
+      width: [0,3,3,3,3,0]
+      height: [0,2,2,2,2,0]
+      texture: [4,17,17,17,4]
+    Left_sides_back4:
       section_segments: [0,50,130,180]
       offset:
         x: 0
         y: 10
-        z: 20
+        z: 20.44
       position:
-        x: [-43,-43,-43,-43,-41,-41,-41]
-        y: [26,26,45,105,148,148]
+        x: [-40,-40,-40,-40,-40,-40,-40]
+        y: [25,25,45,105,145,145]
         z: [0,0,0,0,0,0,0,0]
-      width: [0,10,30,30,10,0]
-      height: [2,2,2,2,2,2]
-      texture: [ 4 ]
+      width: [0,6,27,27,10,0].div(1.5)
+      height: [3,3,3,3,3,3]
+      texture: 4
     Left_sides_back_Inner:
-      section_segments: [50,120,240,310]
+      section_segments: c
       offset:
         x: 0
         y: 50
         z: 20
       position:
-        x: [-40,-40,-40,-40,-40,-40,-40]
-        y: [-15,-15,108,108]
+        x: Array(6).fill(-39)
+        y: [-14.5,-14.5,108,108]
         z: [0,0,0,0,0]
       width: [4,4,4,4,4,4]
       height: [0,2,2,0,0,0]
-      texture: [ 1 ]
-    Left_sides_stripe1:
-      section_segments: [50,120,240,310]
+      texture: 63
+    Left_sides_back_Inner2:
+      section_segments: c
       offset:
         x: 0
-        y: 20
-        z: 20
+        y: 50
+        z: 20.1
       position:
-        x: [-112,-112,-112,-112,-75,0]
-        y: [10,10,35,35]
+        x: Array(6).fill(-40)
+        y: [-14.5,-14.5,108,108]
         z: [0,0,0,0,0]
-      width: [3,3,3,3,3,7]
-      height: [0,5,5,0,0,0]
-      texture: [ 3.2 ]
-      angle: 50
-    Left_sides_stripe2:
-      section_segments: [50,120,240,310]
+      width: [4,2,2,2,2,0]
+      height: [0,2,2,0,0,0]
+      texture: [63,16.5,63]
+    lefttop:
+      section_segments: [45,135,225,315,345,375].add(90)
       offset:
         x: 0
-        y: 0
-        z: 20
+        y: 23.5
+        z: -82.5
       position:
-        x: [-112,-112,-112,-112,-75,0]
-        y: [10,10,35,35]
-        z: [0,0,0,0,0]
-      width: [3,3,3,3,3,7]
-      height: [0,5,5,0,0,0]
-      texture: [ 3.2 ]
-      angle: 50
+        x: [14,14,14,14,13,13,13,13].add(-61)
+        y: [-1.5,-1.5,0.6,1.5,3,3,3,1.5]
+        z: [0,0,0,0,0,0,0,0]
+      width: [0,10,10,10,6,5,2,0]
+      height: [0,24,24,24,15,14,4.5,0]
+      texture: [4,4,17,3,17,18,17]
+      vertical: true
+      angle: 2
+    lefttopwire:
+      section_segments: c.add(90)
+      offset:
+        x: 0
+        y: 40
+        z: 22
+      position:
+        x: [0,0,0,0,5,5,0,0,0,0].add(42.5).mult(-1)
+        y: [0,0,5,9,20,70,81,110,105,105]
+        z: [0,0,0,0,0,0,0,0,0]
+      width: [0,2,2,2,2,2,2,2,2]
+      height: [0,2,2,2,2,2,2,2,2]
+      texture: 63
+    lefttopbox:
+      section_segments: a
+      offset:
+        x: 0
+        y: 35.1
+        z: 23
+      position:
+        x: [0,0,0,0,0,0,0].add(-43)
+        y: [0,0,1,1,1,6,6]
+        z: [0,0,0,0,0,0,0]
+      width: [0,4,4,4,4,4,0]
+      height: [0,3,3,3,3,3,0]
+      texture: [63,17,8,8,8,4]
+    lefttopbox2:  
+      section_segments: a
+      offset:
+        x: 0
+        y: 146
+        z: 23
+      position:
+        x: [0,0,0,0,0,0,0].add(-43)
+        y: [0,0,2,2,2,9,9]
+        z: [0,0,0,0,0,0,0]
+      width: [0,4,4,4,4,4,0]
+      height: [0,3,3,3,3,3,0]
+      texture: [4,17,8,8,13,63]   
     cannon:
       section_segments: 6
       offset:
@@ -648,6 +806,20 @@ model =
       bump:
         position: 40
         size: 10
+    Back_connector2:
+      offset:
+        x: 20
+        y: 82
+        z: 6
+      length: [13,0,12,0,0]
+      width: [70,55,30,25,15]
+      angle: [5,50,50,0,0,0]
+      position: [-20,-5,-13,-13,3]
+      texture: [17,17,4,4]
+      doubleside: true
+      bump:
+        position: 40
+        size: 0        
     Front_connector:
       offset:
         x: 0
@@ -657,18 +829,31 @@ model =
       width: [50,65,65]
       angle: [0,0]
       position: [10,-20,-30]
-      texture: [ 63 ]
+      texture: 63
       doubleside: true
       bump:
         position: 40
         size: 5
-
+    Front_connector2:
+      offset:
+        x: 0
+        y: 1
+        z: 0   
+      length: [28,0]
+      width: [50,65,65]
+      angle: [0,0]
+      position: [10,-20,-30]
+      texture: 11
+      doubleside: true
+      bump:
+        position: 40
+        size: 5
     cover:
       doubleside: true
       offset:
-        x: 15
+        x: 15-1.5
         y: 0
-        z: 20
+        z: 20+1.6
       length: [-12-4,-7+5,-20,-27,0].div(2)
       width: [40,40,100,40,0,0].div(2)
       angle: [270,315,325,350,350]
@@ -680,9 +865,9 @@ model =
     cover2:
       doubleside: true
       offset:
-        x: 15
+        x: 15-1.5
         y: 2
-        z: 20
+        z: 20+1.5
       length: [-12-4,-7+5,-20,-27,0].div(2)
       width: [40,40,100,40,11,0].div(2)
       angle: [270,315,325,370,370]
@@ -720,10 +905,8 @@ model =
         position: 5
         size: 5                    
 for i in [0...12]
-  xpos = [42,41,63.9,63.9,63.9,63.9,63.9,63.9,123,124,125]
-  ypos = [24,44,30,50,70,90,110,130,96,116,136]
   rsize = 8
-  model.bodies['jab'+i] = jab xpos[i], ypos[i],0,[0,0,-0.7,-1,-2,-2.3,-2.5,-2.5],2,1,1,if i<2 then 55 else if i>7 then 120 else 90
+  model.bodies['jab'+i] = jab [42,41,63.9,63.9,63.9,63.9,63.9,63.9,123,124,125][i], [24,44,30,50,70,90,110,130,96,116,136][i],0,[0,0,-0.7,-1,-2,-2.3,-2.5,-2.5],2,1,1,if i<2 then 55 else if i>7 then 120 else 90
   model.bodies['reactorcore'+i] =
     section_segments: 6
     angle: i*30
@@ -769,10 +952,11 @@ for i in [0..7]
     vertical: 0
     texture: [63,17,4,4,17,63,63]
     angle: i*45   
-  xpos2 = [98,99,100,63.9,63.9,63.9,45,44]
-  ypos2 = [50-2,50-22,50-42,25,45,65,60,80].add(-100)  
-  model.bodies['jab2'+i] = jab xpos2[i], ypos2[i],0,[0,0,-0.7,-1,-2,-2.3,-2.5,-2.5],2,1,1,if i<3 then 240 else if i>5 then 300 else 270
-t = 10        
+  model.bodies['jab2'+i] = jab [98,99,100,63.9,63.9,63.9,45,44][i], [50-2,50-22,50-42,25,45,65,60,80].add(-100)[i],0,[0,0,-0.7,-1,-2,-2.3,-2.5,-2.5],2,1,1,if i<3 then 240 else if i>5 then 300 else 270
+for i in [0..6] 
+  model.bodies['jab3'+i] = jab [24-1.2,62,62,62,62,114,116][i],[67,114,59,77,95,83,99][i],20.5,[0,0,-0.7,-1,-2,-2.3,-2.5,-2.5],1.5,1,1,if i<1 then 238 else if i>4 then 300 else 270
+  if i < 5 then model.bodies['jab4'+i] = jab [86,87,62.4,62.4,19][i],[-77,-60,-70,-52,-64][i],20.5,[0,0,-0.7,-1,-2,-2.3,-2.5,-2.5],1.5,1,1,[68,68,90,90,130][i]
+t = 15        
 if (1)
   for y,v of model.bodies
     if(v.vertical)
