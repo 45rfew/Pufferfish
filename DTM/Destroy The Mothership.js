@@ -8,12 +8,12 @@ CREDITS:
 * Testing and debugging: 45rfew, Bhpsngum
 * Poster design: Tournebulle
 
-CHANGELOG 1.2.5  
+CHANGELOG 1.2.5
   * Fixed scoreboard positioning
-  * Motherships are now teleported near the center when game starts 
-  * Patched Solar blade infinite firerate bug 
-  * Removed player collision at start while in waiting phase 
-  * Improved client performance 
+  * Motherships are now teleported near the center when game starts
+  * Patched Solar blade infinite firerate bug
+  * Removed player collision at start while in waiting phase
+  * Improved client performance
 CHANGELOG 1.1.5:
   * Motherships can no longer camp inside their base
 CHANGELOG 1.1:
@@ -533,20 +533,16 @@ var configMothership = function (i, isReAssign){
   let ship = game.findShip(teams.motherships[i]);
   if (ship != null) {
     let options = {type:791,shield:teams.motherships_health[i],hue:c[i]}
-    if (!isReAssign) options.x = i?120:-120;
+    options.x = i?120:-120;
     ship.set(options);
     if (isReAssign) teams.reassignments[i]++;
     echoc(teams.names[i]+" Mothership have been "+(isReAssign?"re":"")+"assigned","#fecce5");
   }
 }
 
-var checkMotherships = function (game) {
-  return teams.motherships.map(i=> Number(!!game.findShip(i)))
-}
-
 var isMothershipDied = function (ship_id) {
   let ship = game.findShip(ship_id), mid = teams.motherships.indexOf(ship_id);
-  if (ship != null || mid != -1) return teams.motherships_health[mid] == 0 && teams.pmh[mid] >= minimum_abnormal_shield_decrease;
+  if (ship != null || mid != -1) return !ship.alive;
   return false;
 }
 
@@ -593,7 +589,7 @@ this.tick = function(game){
         if (game.custom.ended) gameover(ship);
       }
       else if (game.custom.ended && !ship.custom.exited) {
-        ship.custom.exited = true
+        ship.custom.exited = true;
         modUtils.setTimeout(function(){gameover(ship)},300);
       }
       teams.count[ship.custom.team]++;
@@ -629,36 +625,38 @@ this.tick = function(game){
         }
       }
       if (game.step > delay && !game.custom.ended) {
-        let n = checkMotherships(game);
-        let diedMth = teams.motherships.findIndex(i => isMothershipDied(i) == true);
-        if (!Math.min(...n)) {
-          let succ = n.indexOf(0), suc = !1, max_reassignments = teams.reassignments[succ] < maximum_mothership_reassignments_per_team;
-          if (teams.ships[succ].length !== 0 && max_reassignments) {
-            for (let sus of teams.ships[succ]) {
-              if (game.findShip(sus)) {
-                teams.motherships[succ] = sus;
-                configMothership(succ, true);
-                suc = !0;
-                break;
+        let succ = teams.motherships.findIndex(isMothershipDied);
+        if (succ != -1) {
+          if (teams.pmh[succ] >= minimum_abnormal_shield_decrease) {
+            let suc = !1, max_reassignments = teams.reassignments[succ] < maximum_mothership_reassignments_per_team;
+            if (teams.ships[succ].length > 0 && max_reassignments) {
+              for (let sus of teams.ships[succ]) {
+                let suship = game.findShip(sus);
+                if (suship != null && suship.alive) {
+                  teams.motherships[succ] = sus;
+                  configMothership(succ, true);
+                  suc = !0;
+                  break;
+                }
               }
             }
+            if (!suc) endgame(game, succ, "left the game", max_reassignments?"Noone's responsible for being mothership anymore":"Maximum mothership reassignments reached");
+            else {
+              sendUI(game,  {
+                id: "reset",
+                visible: true,
+                position: [35,20,30,15],
+                components: [
+                	{type: "text",position:[0,0,100,50],value:`${teams.names[succ]}'s mothership left the game`,color:def_clr},
+                	{type: "text",position:[0,50,100,50],value:`A new mothership has been assigned!`,color:def_clr}
+                ]
+              });
+              modUtils.setTimeout(function(){
+                sendUI(game,  {id:"reset",visible:false});
+              },280);
+            }
           }
-          if (!suc) endgame(game, succ, "left the game", max_reassignments?"Noone's responsible for being mothership anymore":"Maximum mothership reassignments reached");
-          else if (diedMth == -1) {
-            sendUI(game,  {
-              id: "reset",
-              visible: true,
-              position: [35,20,30,15],
-              components: [
-              	{type: "text",position:[0,0,100,50],value:`${teams.names[succ]}'s mothership left the game`,color:def_clr},
-              	{type: "text",position:[0,50,100,50],value:`A new mothership has been assigned!`,color:def_clr}
-              ]
-            });
-            modUtils.setTimeout(function(){
-              sendUI(game,  {id:"reset",visible:false});
-            },280);
-          }
-          else endgame(game, diedMth, "has been killed", "He's not here anymore");
+          else endgame(game, succ, "has been killed", "He's not here anymore");
         }
       }
     }
@@ -853,7 +851,7 @@ function checkteambase(game){
       });
     } else {
       sendUI(ship, {id:"open",visible:false});
-      selectship(ship,false,true);      
+      selectship(ship,false,true);
     }
     if (dist2points(ship.x, ship.y, teams.x[t], 0) <= base_AoE_radius && ship.type > 780){
       if (game.step-delay > 3600/2){
@@ -863,8 +861,8 @@ function checkteambase(game){
           position: [28,20,40*1.4,40],
           visible: true,
           components: [{type:"text",position:[0,0,80,33*1.4],value:"Camping in your base ruins the game for others - your ship will take damage whilst inside the base!",color:"hsla(0, 88%, 80%, 1)"}]
-        });              
-      } 
+        });
+      }
       sendUI(ship, {id:"open",visible:false});
       selectship(ship,false,true);
     } else sendUI(ship, {id:"warnin",visible:false});
