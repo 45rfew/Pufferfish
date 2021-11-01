@@ -8,6 +8,8 @@ CREDITS:
 * Testing and debugging: 45rfew, Bhpsngum
 * Poster design: Tournebulle
 
+CHANGELOG 1.3.0
+  * Small fixes and enhancements
 CHANGELOG 1.2.5
   * Fixed scoreboard positioning
   * Motherships are now teleported near the center when game starts
@@ -634,6 +636,7 @@ this.tick = function(game){
                 let suship = game.findShip(sus);
                 if (suship != null && suship.alive) {
                   teams.motherships[succ] = sus;
+                  teams.mothership_health[succ] = teams.pmh[succ];
                   configMothership(succ, true);
                   suc = !0;
                   break;
