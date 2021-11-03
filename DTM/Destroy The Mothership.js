@@ -542,10 +542,9 @@ var configMothership = function (i, isReAssign){
   }
 }
 
-var isMothershipDied = function (ship_id) {
-  let ship = game.findShip(ship_id), mid = teams.motherships.indexOf(ship_id);
-  if (ship != null || mid != -1) return !ship.alive;
-  return false;
+var isMothershipDied = function (index) {
+  let ship = game.findShip(teams.motherships[index]);
+  return !ship || !ship.alive
 }
 
 this.tick = function(game){
@@ -627,16 +626,18 @@ this.tick = function(game){
         }
       }
       if (game.step > delay && !game.custom.ended) {
-        let succ = teams.motherships.findIndex(isMothershipDied);
+        teams.pmh = [...teams.motherships_health];
+        teams.motherships_health = teams.motherships.map(i => +(game.findShip(i)||{}).shield || 0);
+        let succ = teams.motherships.findIndex((v,i) => isMothershipDied(i));
         if (succ != -1) {
-          if (teams.pmh[succ] >= minimum_abnormal_shield_decrease) {
+          if (!game.findShip(teams.motherships[succ]) || teams.pmh[succ] >= minimum_abnormal_shield_decrease) {
             let suc = !1, max_reassignments = teams.reassignments[succ] < maximum_mothership_reassignments_per_team;
             if (teams.ships[succ].length > 0 && max_reassignments) {
               for (let sus of teams.ships[succ]) {
                 let suship = game.findShip(sus);
                 if (suship != null && suship.alive) {
                   teams.motherships[succ] = sus;
-                  teams.mothership_health[succ] = teams.pmh[succ];
+                  teams.motherships_health[succ] = teams.pmh[succ];
                   configMothership(succ, true);
                   suc = !0;
                   break;
@@ -752,10 +753,8 @@ function mothershiphealthbar(game){
       {type:"text",position:[10,10,80,80],value:"\u{1F6E1}",color:"hsla(0, 0%, 100%, 1)"}
     ]
   });
-  if (!Math.min(...checkMotherships(game))) return;
+  if (teams.motherships.findIndex((v,i) => isMothershipDied(i)) != -1) return;
   let color = [193,33];
-  teams.pmh = [...teams.motherships_health];
-  teams.motherships_health = teams.motherships.map(i=> game.findShip(i).shield);
   teams.motherships_health.map(i => i/mothership_health*100).forEach((i,j) => {
     sendUI(game,  {
       id: color[j]+" health",
