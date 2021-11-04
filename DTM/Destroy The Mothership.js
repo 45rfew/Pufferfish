@@ -398,6 +398,10 @@ var mothershipability = {
     	]
     });
   },
+  disableUIs: function (ship) {
+    for (let i = 0; i < this.names.length; i++) ["", "info"].forEach(id => sendUI(ship, {id: "ability" + id + i, visible: false}));
+    ["spam", "owarn"].forEach(id => sendUI(ship, {id: id, visible: false}))
+  },
   abilityactivation: function(ship){
     let a = this.names.length;
     if (!ship.custom.value){
@@ -547,6 +551,10 @@ var isMothershipDied = function (index) {
   return !ship || !ship.alive
 }
 
+var isMothership = function (ship) {
+  return teams.motherships.indexOf(ship?.id) != -1
+}
+
 this.tick = function(game){
   modUtils.tick();
   if (game.step === delay){
@@ -569,8 +577,7 @@ this.tick = function(game){
         ship.custom.init = true;
         ship.frags = 0;
         ship.deaths = 0;
-        setteam(ship);
-        setup(ship);
+        setteam(ship, true);
         sendUI(ship, {
           id: "buy_lifes_blocker",
           visible: true,
@@ -696,8 +703,11 @@ this.tick = function(game){
     updateScoreboard(game);
     mothershiphealthbar(game);
     for (let ship of game.ships){
-      if (ship.type > 790)
-      mothershipability.tick(ship);
+      if (isMothership(ship)) mothershipability.tick(ship);
+      else {
+        mothershipability.disableUIs(ship);
+        if (ship.type > 790) setType(ship)
+      }
     }
   }
 };
@@ -753,7 +763,6 @@ function mothershiphealthbar(game){
       {type:"text",position:[10,10,80,80],value:"\u{1F6E1}",color:"hsla(0, 0%, 100%, 1)"}
     ]
   });
-  if (teams.motherships.findIndex((v,i) => isMothershipDied(i)) != -1) return;
   let color = [193,33];
   teams.motherships_health.map(i => i/mothership_health*100).forEach((i,j) => {
     sendUI(game,  {
@@ -780,23 +789,30 @@ var gameover = function (ship) {
   }
 }
 
-function setteam(ship){
+function setteam(ship, init){
   let t;
-  if ([...new Set(teams.count)].length == 1) t=teams.points.indexOf(Math.min(...teams.points));
-  else t = teams.count.indexOf(Math.min(...teams.count));
+  if (init) {
+    if ([...new Set(teams.count)].length == 1) t=teams.points.indexOf(Math.min(...teams.points));
+    else t = teams.count.indexOf(Math.min(...teams.count));
+    echoc(teams.count,"#fee5cc");
+  }
+  else t = ship.custom.team
   ship.custom.team = t;
-  ship.set({type:701+((ship.custom.team*7)+(~~(Math.random()*7)))});
-  configship(ship, t);
-  echoc(teams.count,"#fee5cc");
+  if (ship.type > 790 || init) setType(ship);
+  ship.set({
+    x: teams.x[t],
+    y: 0,
+    hue: teams.hues[t],
+    team: t,
+    invulnerable: 120,
+    shield: 9999,
+    crystals: 980
+  })
 }
 
-function configship(ship,t){
-  ship.set({hue:teams.hues[t],team:t,invulnerable:100,stats:88888888});
-}
-
-function setup(ship){
-  let x = teams.x[ship.custom.team];
-  ship.set({x:x,y:0,stats:88888888,invulnerable:100,shield:9999,crystals:980});
+function setType (ship, code) {
+  let type = code ?? 701+((ship.custom.team*7)+(~~(Math.random()*7)));
+  ship.set({type: type, stats: 88888888, collider: !game.custom.ended})
 }
 
 function isRange(a,b,c){
@@ -817,6 +833,7 @@ function endgame(game, succ, ...message){
   game.custom.ended = true;
   game.setOpen(false);
   game.ships.forEach(ship => ship.set({collider: false}));
+  teams.motherships[succ] = null;
   let winner = Math.abs(succ-1), endmessage = `${teams.names[succ]}'s mothership ${message[0]}!`, winmessage = `${teams.names[winner]} team wins the game!`;
   sendUI(game,  {
     id: "win",
@@ -1149,7 +1166,7 @@ this.event = function(event,game) {
   switch (event.name){
     case "ui_component_clicked":
       var component = event.id;
-      if (component.includes("ability")&&ship.alive){
+      if (component.includes("ability") && ship.alive && isMothership(ship)) {
         a = component.replace('ability','');
         mothershipability.abilityeffect(ship,a);
       }
@@ -1162,7 +1179,7 @@ this.event = function(event,game) {
           break;
         default:
           if (ship.type < 790 && ship.type != findShipCode(component))
-          ship.set({type:findShipCode(component),stats:88888888,collider:true});
+          setType(ship, findShipCode(component));
         break;
       }
       break;
@@ -1170,7 +1187,7 @@ this.event = function(event,game) {
       let killer = event.killer;
       if (killer != null){
         killer.frags++;
-        killer.set({score:killer.score+ship.score/2+2000,collider:true});
+        killer.set({score:killer.score+ship.score/2+2000});
       }
       if (ship != null){
         ship.deaths++;
@@ -1178,8 +1195,7 @@ this.event = function(event,game) {
       }
       break;
     case "ship_spawned":
-      if (ship != null)
-      setup(ship);
+      if (ship != null) setteam(ship);
     break;
   }
 };
