@@ -772,7 +772,7 @@ var gameover = function (ship) {
   if (ship != null) {
     ship.gameover({
       Winner: match_winner,
-      Score: ship.score,
+      Score: Math.trunc(ship.score),
       Frags: ship.frags,
       Deaths: ship.deaths
     });
@@ -1107,7 +1107,7 @@ var updateScoreboard = function(game){
     let ship = sc[i];
     let shipicon = icons[(ship.type-700)-1];
     if (ship.type > 790) shipicon = "\u{1F30C}";
-    let length = Math.log(ship.score) * Math.LOG10E + 1 | 0;
+    let score = Math.trunc(ship.score), length = Math.log(score) * Math.LOG10E + 1 | 0;
     let fix = 0//length*2.4;
     if (ship != null){
       switch (ship.custom.team){
@@ -1116,7 +1116,7 @@ var updateScoreboard = function(game){
           scoreboard.components.push(
             {type:"player",id:ship.id,position:[1,7+(line*8+1.5),60,7],color:def_clr,align:"left"},
             {type:"text",position:[65,7+(line*8+1.5),60,7],value:shipicon,color:def_clr},
-            {type:"text",position:[29-fix,7+(line*8+1.5),60,7],value:ship.score,color:def_clr,align:"right"}
+            {type:"text",position:[29-fix,7+(line*8+1.5),60,7],value: score,color: def_clr,align:"right"}
           )
           line++;
         break;
@@ -1125,7 +1125,7 @@ var updateScoreboard = function(game){
           scoreboard.components.push(
             {type:"player",id:ship.id,position:[1,57+(line2*8+1.5),60,7],color:def_clr,align:"left"},
             {type:"text",position:[65,57+(line2*8+1.5),60,7],value:shipicon,color:def_clr},
-            {type:"text",position:[29-fix,57+(line2*8+1.5),60,7],value:ship.score,color:def_clr,align:"right"}
+            {type:"text",position:[29-fix,57+(line2*8+1.5),60,7],value: score,color: def_clr,align:"right"}
           )
           line2++;
         break;
@@ -1170,11 +1170,11 @@ this.event = function(event,game) {
       let killer = event.killer;
       if (killer != null){
         killer.frags++;
-        killer.set({score:Math.round(killer.score+ship.score/2+2000),collider:true});
+        killer.set({score:killer.score+ship.score/2+2000,collider:true});
       }
       if (ship != null){
         ship.deaths++;
-        ship.set({score:Math.round(ship.score/2),collider:true});
+        ship.set({score:ship.score/2,collider:true});
       }
       break;
     case "ship_spawned":
