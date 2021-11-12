@@ -377,7 +377,7 @@ var mothershipability = {
       ship.custom.info = true;
       this.abilityinfo(ship);
     }
-    if (ship.custom.overdrive) ship.set({shield:ship.shield-1500});
+    if (ship.custom.overdrive) ship.set({shield:Math.max(ship.shield-1500, 0)});
   },
   duration: ability_duration,
   delay: ability_delay*60,
@@ -538,7 +538,7 @@ var configMothership = function (i, isReAssign){
   let c = [240,0];
   let ship = game.findShip(teams.motherships[i]);
   if (ship != null) {
-    let options = {type:791,shield:teams.motherships_health[i],hue:c[i]}
+    let options = {type:791,shield:Math.max(teams.motherships_health[i], 0) || 0,hue:c[i]}
     options.x = i?120:-120;
     ship.set(options);
     if (isReAssign) teams.reassignments[i]++;
@@ -690,7 +690,8 @@ this.tick = function(game){
   }
   if (game.step % 15 === 0){
     for (let ship of game.ships){
-      if (Math.abs(ship.x)>742) if (ship.type > 790 && ship.shield > 1400) ship.set({shield:ship.shield-1500});
+      // check for barriers
+      if (Math.abs(ship.x)>742) if (isMothership(ship)) ship.set({shield:Math.max(ship.shield-1500, 0)});
       else ship.set({kill:true});
       if (ship.custom.spam){
         ship.emptyWeapons();
@@ -712,34 +713,30 @@ this.tick = function(game){
   }
 };
 
+let countDigits = function (num) {
+  if (num === 0) return 1;
+  return Math.floor(Math.log10(Math.abs(num))) + 1
+}, toEngineering = function (num) { // 10573 --> 10.57K
+  if (num < 1e3) return num;
+  let TriIndex = Math.trunc((countDigits(num) - 1) / 3);
+  return (num / 10**(TriIndex*3)).toFixed(2) + prefixes[TriIndex]
+}, shields = [2200,1575,1125,725,770,525,945,775,375,900,1405,625,725,505],
+prefixes = ["", "K", "M", "B", "t", "q", "Q", "s", "S", "o", "n", "d", "U", "D", "T", "Qt", "Qd"]; // Up to 10^48
+
 function shipshield(ship, b){
-  let shields = [2200,1575,1125,725,770,525,945,775,375,900,1405,625,725,505];
-  let postfix = "?";
-  let value = 0;
   let shipshield = shields[(ship.type-700)-1];
-  if (ship.type > 790) shipshield = mothership_health;
-  if (shipshield>998){
-    if (ship.shield<1000000){
-      postfix = "K";
-      value = (ship.shield/1000).toFixed(2);
-    } else if (ship.shield<1000000000){
-      postfix = "M";
-      value = (ship.shield/1000000).toFixed(2);
-    }
-    let filled = ship.shield/shipshield;
-    sendUI(ship, {
-      id: "shieldBar",
-      position: [3.3,10.5,17.4,3],
-      visible: true,
-      components: [
-        {type:"box",position:[0,0,100,100],fill:"hsla(170, 32%, 28%, 1)",stroke:"hsla(170, 32%, 28%, 1)",width:2},
-        {type:"box",position:[0,0,100*filled,100],fill:"hsla(192, 97%, 74%, 1)",stroke:"hsla(192, 97%, 74%, 1)",width:2},
-        {type: "text",position:[80,0,20,100],value:value+postfix,color:"hsla(0, 0%, 0%, 1)"}
-      ]
-    });
-  } else {
-    sendUI(ship, {id:"shieldBar",visible:false});
-  }
+  if (isMothership(ship)) shipshield = mothership_health;
+  if (!isNaN(ship.shield) && ship.shield >= 1e3) sendUI(ship, {
+    id: "shieldBar",
+    position: [3.3,10.5,17.4,3],
+    visible: true,
+    components: [
+      {type:"box",position:[0,0,100,100],fill:"hsla(170, 32%, 28%, 1)",stroke:"hsla(170, 32%, 28%, 1)",width:2},
+      {type:"box",position:[0,0,100*ship.shield/shipshield,100],fill:"hsla(192, 97%, 74%, 1)",stroke:"hsla(192, 97%, 74%, 1)",width:2},
+      {type: "text",position:[80,0,20,100],value: toEngineering(ship.shield),color:"hsla(0, 0%, 0%, 1)"}
+    ]
+  });
+  else sendUI(ship, {id:"shieldBar",visible:false})
 }
 
 function mothershiphealthbar(game){
@@ -1163,14 +1160,14 @@ var outputScoreboard = function(game){
 
 this.event = function(event,game) {
   var ship = event.ship;
-  switch (event.name){
+  if (ship != null) switch (event.name){
     case "ui_component_clicked":
       var component = event.id;
       if (component.includes("ability") && ship.alive && isMothership(ship)) {
         a = component.replace('ability','');
         mothershipability.abilityeffect(ship,a);
       }
-      switch (component){
+      else if (dist2points(ship.x, ship.y, teams.x[ship.custom.team], 0) <= base_AoE_radius) switch (component) {
         case "open":
           selectship(ship,true,false);
           break;
@@ -1182,6 +1179,7 @@ this.event = function(event,game) {
           setType(ship, findShipCode(component));
         break;
       }
+      else selectship(ship,false,true);
       break;
     case "ship_destroyed":
       let killer = event.killer;
