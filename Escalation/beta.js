@@ -8,12 +8,12 @@ CREDITS:
 * Testing and debugging: 45rfew and Team Asia members
 * Based on Escalation mode from Valorant
 * Thanks to Paw and Rob0nuko for helping with the ship icons
-
-CHANGELOG 1.1.0
+CHANGELOG 1.1.1
   * Added radar UI to illuminate team's ship respawn range 
   * Reduced both team's random respawn range 
   * Increased upgrade points given when killing on the current stage (0.5 -> 0.75)
   * Upon reaching the final stage all ships belonging to corresponding team will upgrade into the final ship
+  * Fixed gameover bug when 2 players die at the same time whist  both teams are 1 point away from winning
 */
 
 var pointsRange = 7; //number of kills required per stage 
@@ -1014,7 +1014,7 @@ var waiting = function(game){
     if (teams.points[0] != teams.points[1]){
       win = teams.points.indexOf(Math.max(...teams.points));
       endgametext = `${teams.names[win]} team wins!`;
-    } else endgametext = "It's a draw!";
+    } else endgametext = ["It's a draw!","It's a draw!"];
     endgametext = [condition?`${teams.names[win]} completed the final stage!`:"Time's up!", endgametext];
   }
   else {
