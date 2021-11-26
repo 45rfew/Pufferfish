@@ -9,14 +9,14 @@ CREDITS:
 * Based on Escalation mode from Valorant
 * Thanks to Paw and Rob0nuko for helping with the ship icons
 CHANGELOG 1.1.1
-  * Added radar UI to illuminate team's ship respawn range 
-  * Reduced both team's random respawn range 
+  * Added radar UI to illuminate team's ship respawn range
+  * Reduced both team's random respawn range
   * Increased upgrade points given when killing on the current stage (0.5 -> 0.75)
   * Upon reaching the final stage all ships belonging to corresponding team will upgrade into the final ship
   * Fixed gameover bug when 2 players die at the same time whist  both teams are 1 point away from winning
 */
 
-var pointsRange = 7; //number of kills required per stage 
+var pointsRange = 7; //number of kills required per stage
 var stageCount = 12; //don't go lower than 4 or higher than 36
 var pointsToWin = pointsRange*stageCount;
 var pointsToFinal = pointsRange*(stageCount-1);
@@ -117,10 +117,10 @@ function modifyShips(ships){
     ship.typespec.specs.generator.reload = ship.typespec.specs.generator.reload.map(a => a *= Math.floor([1,1.8,1.6,1.4,1.2,1][parseInt(ship.level)-1]));
     for (let j=0; j<ship.typespec.lasers.length; j++){
       ship.typespec.lasers[j].rate *= [1,1.4,1.3,1.2,1,1][parseInt(ship.level)-1];
-    } 
+    }
     modified.push(JSON.stringify(ship));
   }
-  return modified; 
+  return modified;
 }
 
 var shiptree = {
@@ -131,7 +131,7 @@ var shiptree = {
     ["Lunatic Barricade","Lunatic Quadra","Lunatic Warrior","Lunatic Fighter","Lunatic Tactical","Lunatic Mosquito","Solarium ZenionIII","Solarium Interceptor"],
     ["Lunatic Destroyer","Lunatic Cannoner","Lunatic Phantom","Lunatic Tyrant","Lunatic Predator","Lunatic Infernal","Lunatic Proto"],
     ["Lunatic Artillery","Lunatic Oblivion","Lunatic Teslator","Lunatic Comet","Lunatic Caliber","Lunatic Speedster","Lunatic Dualities"]
-  ],  
+  ],
   icons: [
     ["\u{1F41C}"],
     ["\u{1F300}","\u{269B}","\u{1F41F}","\u{1F980}"],
@@ -166,10 +166,10 @@ var shiptree = {
               {type:"text",position:[20,40,100,50],value:this.icons[i][j],color:this.color[i][j]||"#cde"},
               {type:"text",position:[7,50,50,25],value:(i+1)*100+j+1,color:"#cde"},
             ]
-          });   
+          });
           this.components.push("tree"+i+j);
-        }  
-      }   
+        }
+      }
       sendUI(ship, {
         id: "tip",
         position: [63,90,16,15],
@@ -177,7 +177,7 @@ var shiptree = {
         components: [
           {type: "text",position:[0,0,100,50],value:`Press [V] to close ship tree`,color:"#cde"},
         ]
-      });   
+      });
       sendUI(ship, {
         id: "credit",
         position: [36,88,16,15],
@@ -185,12 +185,12 @@ var shiptree = {
         components: [
           {type: "text",position:[0,0,100,50],value:`Ships kindly provided by Absolute Kun`,color:"#cde"},
         ]
-      });         
+      });
     }
   },
   remove: function(ship){
     for (let i=0; i<this.components.length; i++)
-    sendUI(ship,{id:this.components[i],visible:false});         
+    sendUI(ship,{id:this.components[i],visible:false});
     sendUI(ship, {
       id: "tip",
       position: [63,90,16,15],
@@ -198,7 +198,7 @@ var shiptree = {
       components: [
         {type: "text",position:[0,0,100,50],value:`Press [V] to view ship tree`,color:"#cde"},
       ]
-    });      
+    });
     ship.custom.tree = false;
   }
 };
@@ -216,7 +216,7 @@ var ship_codes = ships_list, remove_ships = [101,201,202,203,204,301,302,303,304
 for (let i=0; i<ship_codes.length; i++){
   for (let j=0;j<ship_codes[i].length; j++){
     ship_codes[i][j] = ((i+1)*100+j+1);
-  }  
+  }
 }
 ship_codes = ship_codes.map(ships => ships.filter(ship => remove_ships.indexOf(ship) == -1));
 //let t = Array(7).fill(0).map((i,j) => Array(99).fill(0).map((k,l) => (j+1)*100 + l + 1)); // max torturing test
@@ -261,7 +261,7 @@ var stages = {
   level_3: ship_codes[4][Math.floor(Math.random()*ship_codes[4].length)],
 };
 let random_ships = randomPath(ship_codes,2).concat().filter(a => a != stages.level_3);
-for (let i=4; i<stageCount+2; i++) stages[`level_${i}`] = i<stageCount?random_ships[i>=random_ships.length?i-random_ships.length:i]:101; 
+for (let i=4; i<stageCount+2; i++) stages[`level_${i}`] = i<stageCount?random_ships[i>=random_ships.length?i-random_ships.length:i]:101;
 
 var vocabulary = [
   {text: "Yes", icon:"\u004c", key:"Y"},
@@ -507,7 +507,7 @@ var maps = [
   },
   cars: function(game){
     //game.asteroids.forEach((asteroid,i) => isWrongSpeed(asteroid,asteroid.custom.vx,0) && asteroid.set({vx:asteroid.custom.vx,vy:0}));
-  }},      
+  }},
   {name: "Hryudigas", author: "rob0nuko", map:
     "99   999999999999999   9999   999999999999999   99\n"+
     "99    99999             99             99999    99\n"+
@@ -619,7 +619,7 @@ var maps = [
     function asteroids(asteroid){
       let rad = 210;
       let t = function(x){return Math.sqrt(rad**2 - x**2)}
-      let v = 0.5; 
+      let v = 0.5;
       game.addOrbitingAsteroid({
         size: 50,
         velocity: v,
@@ -645,7 +645,7 @@ var maps = [
   },
   cars2: function(game){
     game.asteroids.forEach((asteroid,i) => isWrongSpeed(asteroid,asteroid.custom.vx,0) && asteroid.set({vx:asteroid.custom.vx,vy:0}));
-  }},    
+  }},
   {name: "Sequence", author: "EDEN", map:
     "99999999999999999999999999999999999999999999999999\n"+
     "                                                  \n"+
@@ -699,7 +699,7 @@ var maps = [
     "99999999999999999999999999999999999999999999999999",
   shipspawn: [{x:-110,y:0},{x:110,y:0}],
   radar: {type:"box",width:17,height:31},
-  },  
+  },
   {name: "Colosseum", author: "rob0nuko", map:
     "    999999999999999999      999999999999999999    \n"+
     " 8  999999                              999999  8 \n"+
@@ -750,7 +750,7 @@ var maps = [
     "                                                  \n"+
     "     99                                    99     \n"+
     " 8  999999                              999999  8 \n"+
-    "    999999999999999999      999999999999999999    ", 
+    "    999999999999999999      999999999999999999    ",
   shipspawn: [{x:-110,y:0},{x:110,y:0}],
   radar: {type:"box",width:17,height:31},
   },
@@ -817,7 +817,7 @@ var maps = [
   },
   cars: function(game){
     game.asteroids.forEach((asteroid,i) => isWrongSpeed(asteroid,asteroid.custom.vx,0) && asteroid.set({vx:asteroid.custom.vx,vy:0}));
-  }},     
+  }},
 ];
 
 function isWrongSpeed(car,vx,vy){
@@ -882,14 +882,14 @@ var check = function(game, isWaiting, isGameOver){
         ship.custom.deaths = 0;
         ship.custom.points = 0;
         ship.custom.tree = false;
-        ship.custom.pending = false; 
+        ship.custom.pending = false;
         ship.custom.timer = true;
         ship.custom.stage = 1;
         ship.custom.ship = stages.level_1;
         setteam(ship);
         random_spawns.setup(ship);
         ship.custom.stage = teams.level[ship.custom.team]||1;
-        ship.custom.ship = stages[`level_${teams.level[ship.custom.team]}`]||stages.level_1; 
+        ship.custom.ship = stages[`level_${teams.level[ship.custom.team]}`]||stages.level_1;
         sendUI(ship, game.custom.radar_background);
         if (isGameOver) gameover(ship);
       }
@@ -932,7 +932,7 @@ var gameover = function(ship){
 
 var waiting = function(game){
   check(game, true);
-  if (game.step % 30 === 0) 
+  if (game.step % 30 === 0)
   for (let ship of game.ships){
     sendUI(ship, {
       id: "delay",
@@ -956,14 +956,14 @@ var waiting = function(game){
     sendUI(game, {id:"delay time",visible:false});
     sendUI(game, {id:"delay",visible:false});
     if (!game.custom.init){
-      game.custom.init = true; 
+      game.custom.init = true;
       typeof (map||{}).traffic == "function" && map.traffic(game);
       for (let asteroid of game.asteroids){
         if (!asteroid.custom.init){
           asteroid.custom.init = true;
-          asteroid.custom.vx = asteroid.vx; 
+          asteroid.custom.vx = asteroid.vx;
         }
-      }      
+      }
     }
     this.tick = main_game;
   }
@@ -1000,7 +1000,7 @@ var waiting = function(game){
   if (update){
     scorebar.checkscores(game);
     updateScoreboard(game);
-    checkstatus(game); 
+    checkstatus(game);
     update = 0;
   }
   if (game.step % 60 === 0){
@@ -1070,7 +1070,7 @@ var scorebar = {
     for (let i=0; i<2; i++){
       sendUI(game, {
         id: "progressBar"+i,
-        position: [(100 - apx)/2, offsetY+i*distanceY*apy, apx, apy], 
+        position: [(100 - apx)/2, offsetY+i*distanceY*apy, apx, apy],
         visible: this.status[0],
         components: [
           {type:"box",position:[0, 50*(1 - 1/dby), 100/rbax, 100/dby],fill:"hsla(170, 32%, 28%, .1)",stroke:"#cde",width:2},
@@ -1078,7 +1078,7 @@ var scorebar = {
           ...Array(p-1).fill(0).map((v,j) => ({type:"round",position:[100*(p*pointsRange/pointsToFinal)/rbax/p*(j+1) - 50*pax, 50*(1 - rpy), 100*pax, 100*rpy],fill:((index[i]>=j+1)?achieved:checked)[0][i]})),
           {type:"round",position:[100*(2/rbax - 1), 0, 200*(1 - 1/rbax), 100],fill:((index[i]>=p)?achieved:checked)[0][i]}
         ]
-      }); 
+      });
     }
     if (Math.max(...teams.points) >= pointsToFinal-pointsRange) this.finalstage(game);
     for (let ship of game.ships) if (ship != null && ship.custom.team != null) this.icons(ship);
@@ -1096,7 +1096,7 @@ var scorebar = {
     let icon = shiptree.icons[Math.trunc(stages[`${Object.keys(stages)[Object.keys(stages).length-1]}`]/100)-1][(stages[`${Object.keys(stages)[Object.keys(stages).length-1]}`]%10)-1];
     sendUI(game, {
       id: "finalstage",
-      position: [43,this.status[1],apx/4,3], 
+      position: [43,this.status[1],apx/4,3],
       visible: true,
       components: [
         ...Array(2).fill(0).map((v,j) => ({type:"box",position:[1, 50*(1 - 1/dby)+j*30, 100/rbax, 100/dby],fill:"hsla(170, 32%, 28%, .1)",stroke:"#cde",width:1})),
@@ -1107,14 +1107,14 @@ var scorebar = {
     });
     sendUI(game, {
       id: "icon",
-      position: [56,this.status[2],2.5,4], 
+      position: [56,this.status[2],2.5,4],
       visible: true,
       components: [
         {type:"text",position:[0,3,100,100],value:shiptree.icons[0][0],color:colors},
         {type:"box",position:[0,0,100,100],fill:"hsla(0, 0%, 50%, 0.2)",stroke:"#cde",width:2},
       ]
-    });  
-  },  
+    });
+  },
   icons: function(ship){
     let offsetX = Array.from(Array(Math.trunc(pointsToFinal/pointsRange)).fill(1)).map((a,b) => ((b+1)*4.54-4.54)+24.7);
     let color = shiptree.color[Math.trunc(ship.type/100)-1][(ship.type%10)-1];
@@ -1123,7 +1123,7 @@ var scorebar = {
         symbols: [[
           offsetX[teams.level[ship.custom.team]],
           offsetX[teams.level[Math.abs(ship.custom.team-1)]-1],
-          offsetX[teams.level[ship.custom.team]-1]        
+          offsetX[teams.level[ship.custom.team]-1]
         ],[
           shiptree.icons[Math.trunc(stages[`level_${teams.level[ship.custom.team]+1}`]/100)-1][(stages[`level_${teams.level[ship.custom.team]+1}`]%10)-1],
           shiptree.icons[Math.trunc(stages[`level_${teams.level[Math.abs(ship.custom.team-1)]}`]/100)-1][(stages[`level_${teams.level[Math.abs(ship.custom.team-1)]}`]%10)-1],
@@ -1136,11 +1136,11 @@ var scorebar = {
         indicators: [[
           offsetX[ship.custom.stage-1],
           offsetX[teams.level[ship.custom.team]-1],
-          offsetX[teams.level[Math.abs(ship.custom.team-1)]-1]      
+          offsetX[teams.level[Math.abs(ship.custom.team-1)]-1]
         ],[
           `hsla(${teams.hues[2]}, 100%, 65%, 1)`,
           `hsla(${teams.hues[0]}, 100%, 65%, 1)`,
-          `hsla(${teams.hues[1]}, 100%, 65%, 1)`      
+          `hsla(${teams.hues[1]}, 100%, 65%, 1)`
         ]]
       };
       if (icons.indicators[0][0] == icons.indicators[0][1]) icons.indicators[0][0]--;
@@ -1153,27 +1153,27 @@ var scorebar = {
         for (let i=0; i<current.length; i++){
           if (icons.symbols[i].length >= 4)
           icons.symbols[i].unshift();
-        }       
+        }
       }
       let colors = shiptree.color[Math.trunc(stages[`level_${teams.level[ship.custom.team]+1}`]/100)-1][(stages[`level_${teams.level[ship.custom.team]+1}`]%10)-1];
       for (let i=0; i<4; i++){
         sendUI(ship, {
           id: "iconsBarIndicator"+i,
-          position: [icons.indicators[0][i]+1.9,23.9,1,1], 
+          position: [icons.indicators[0][i]+1.9,23.9,1,1],
           visible: icons.indicators[0][i]!=null?this.status[0]:false,
           components: [
             {type:"round",position:[0,0,50,100],fill:icons.indicators[1][i],stroke:"#cde"}
           ]
-        }); 
+        });
         sendUI(ship, {
           id: "iconsBar"+i,
-          position: [icons.symbols[0][i]==null?300:icons.symbols[0][i],19,4.2,4.2*1.5], 
+          position: [icons.symbols[0][i]==null?300:icons.symbols[0][i],19,4.2,4.2*1.5],
           visible: icons.symbols[0][i+1]==icons.symbols[0][i]?false:this.status[0],
           components: [
             {type:"box",position:[0,0,100,100],fill:icons.symbols[2][i],stroke:"#cde",width:2},
             {type:"text",position:[10,5,75,65],value:icons.symbols[1][i],color:colors}
           ]
-        });  
+        });
       }
     }
   }
@@ -1197,7 +1197,7 @@ function checkstatus(game, team){
             components: [
               {type: "text",position:[0,3,100,50],value:teams.points[i]==pointsToFinal?"Team final level":"Team level up",color:"#cde"},
             ]
-          }); 
+          });
           modUtils.setTimeout(function(){sendUI(ship, {id:"up",visible:false})},180);
           if (teams.points[i] == pointsToFinal && ship.type != stages[`${Object.keys(stages)[Object.keys(stages).length-1]}`]){
             if (ship != null) ship.set({type:stages[`${Object.keys(stages)[Object.keys(stages).length-1]}`],stats:11111111,shield:999});
@@ -1220,17 +1220,17 @@ function checkstatus(game, team){
                 modUtils.setTimeout(function(){
                   sendUI(ship, {id:"get",visible:false});
                   if (ship.custom.stage < teams.level[ship.custom.team]){
-                    ship.custom.points--; 
-                    ship.custom.stage++; 
+                    ship.custom.points--;
+                    ship.custom.stage++;
                     ship.custom.ship = stages[`level_${ship.custom.stage}`];
                     ship.set({type:stages[`level_${ship.custom.stage}`],stats:88888888});
                   }
-                },60*3);            
+                },60*3);
               }
             }
             modUtils.setTimeout(function(){ship.custom.pending = false},60*3+1);
           }
-        }   
+        }
       }
     }
   }
@@ -1249,7 +1249,7 @@ var random_spawns = {
           asteroidXY.push([range[i],range[j]]);
         }
       }
-    }    
+    }
   },
   dist2points: function(x, y, z, t){
     return Math.sqrt((z-x)**2+(t-y)**2);
@@ -1260,7 +1260,7 @@ var random_spawns = {
   randomItem: function(arr, ship){
     let team = ship.custom.team;
     arr.sort((a,b) => a.x - b.x);
-    let p = n = [], i; 
+    let p = n = [], i;
     for (i=0; i<arr.length; i++) if (arr[i].x > 0) break;
     n = arr.slice(i); p = arr.slice(0,i);
     let t = team?n:p;
@@ -1351,7 +1351,7 @@ function joinmessage(ship){
     components: [
       {type: "text",position:[0,0,100,50],value:`Press [V] to view ship tree`,color:"#cde"},
     ]
-  });  
+  });
   sendUI(ship, {
     id: "tree",
     position: [0,100,0,0],
@@ -1361,7 +1361,7 @@ function joinmessage(ship){
     components: [
       {type:"box",position:[0,0,100,100],fill:"rgba(68, 85, 102, 0)",stroke:"#cde",width:5},
     ]
-  });     
+  });
   modUtils.setTimeout(function(){sendUI(ship,{id:"join",visible:false})},480);
 }
 
@@ -1388,7 +1388,7 @@ for (let i=0; i<map.shipspawn.length; i++) for (let j=0; j<6; j++)
 addRadarSpot(map.shipspawn[i].x,map.shipspawn[i].y,map.radar.type,map.radar.width-j*3,map.radar.height-j*4.5,0.1,teams.hues[i]);
 
 function countdown(ship, time, id, pos){
-  let t = time * 60 + game.step; 
+  let t = time * 60 + game.step;
   for (let i=0; i<time; i++){
     modUtils.setTimeout(function(){
       sendUI(ship, {
@@ -1398,10 +1398,10 @@ function countdown(ship, time, id, pos){
         components: [
           {type: "text",position:[0,0,100,50],value:FormatTime(t - game.step, [false, false, false], 0),color:"#cde"},
         ]
-      });           
-    },i*60);  
+      });
+    },i*60);
   }
-  modUtils.setTimeout(function(){sendUI(ship,{id:"countdown"+id,visible:false})},time*60);  
+  modUtils.setTimeout(function(){sendUI(ship,{id:"countdown"+id,visible:false})},time*60);
 }
 
 var scoreboard = {
@@ -1477,32 +1477,32 @@ this.event = function(event, game){
         teams.points2[killer.custom.team]++;
         teams.points2[killer.custom.team] = Math.trunc(teams.points2[killer.custom.team]);
         killer.custom.frags++;
+        teams.points[killer.custom.team]%pointsRange==0?killer.custom.seventh=true:killer.custom.seventh=false;
+        killer.type == teams.current[killer.custom.team]?killer.custom.points+=0.75:killer.custom.points++;
+        if (!killer.custom.pending){
+          modUtils.setTimeout(function(){
+            if (killer.custom.ship != stages[`level_${killer.custom.stage+1}`]){
+              if (killer.custom.stage < teams.level[killer.team]){
+                if (killer.custom.points >= 1){
+                  killer.custom.points--;
+                  killer.custom.stage++;
+                  killer.custom.ship = stages[`level_${killer.custom.stage}`];
+                  killer.set({type:stages[`level_${killer.custom.stage}`],stats:88888888});
+                }
+              }
+            }
+          },10);
+        }
       } else {
         if (!game.custom.final){
           teams.points[Math.abs(ship.custom.team-1)]++;
           teams.points2[Math.abs(ship.custom.team-1)]++;
-          teams.points2[Math.abs(ship.custom.team-1)] = Math.trunc(teams.points2[Math.abs(ship.custom.team-1)]);       
+          teams.points2[Math.abs(ship.custom.team-1)] = Math.trunc(teams.points2[Math.abs(ship.custom.team-1)]);
         }
       }
       ship.custom.deaths++;
       update = 1;
       ship.custom.hasbeenkilled = true;
-      teams.points[killer.custom.team]%pointsRange==0?killer.custom.seventh=true:killer.custom.seventh=false;
-      killer.type == teams.current[killer.custom.team]?killer.custom.points+=0.75:killer.custom.points++;
-      if (!killer.custom.pending){
-        modUtils.setTimeout(function(){
-          if (killer.custom.ship != stages[`level_${killer.custom.stage+1}`]){
-            if (killer.custom.stage < teams.level[killer.team]){
-              if (killer.custom.points >= 1){
-                killer.custom.points--; 
-                killer.custom.stage++; 
-                killer.custom.ship = stages[`level_${killer.custom.stage}`];
-                killer.set({type:stages[`level_${killer.custom.stage}`],stats:88888888});
-              }
-            }
-          }  
-        },10);
-      }
       checkstatus(game);
       break;
     case "ship_spawned":
@@ -1515,8 +1515,8 @@ this.event = function(event, game){
           case "tree":
             ship.custom.tree?shiptree.remove(ship):shiptree.tree(ship);
           break;
-          case "get": 
-            sendUI(ship,{id:"get",visible:false});         
+          case "get":
+            sendUI(ship,{id:"get",visible:false});
             ship.custom.timer = false;
           break;
         }
