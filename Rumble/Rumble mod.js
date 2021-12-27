@@ -1595,7 +1595,6 @@ let infoMessages = [
   createInfoMessage("tips", 3, 60 * 10, "Please DO NOT try to mine the asteroids", "Mining is pointless! Asteroids are unbreakable", modifier.friendly_fire ? "Also killing your teammate makes your team lose 1 point. Be careful!" : null)
 ];
 
-console.log(infoMessages);
 
 let queueInfoMessages = function (ship) {
   let timestamp = 0, lastID;
