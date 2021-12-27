@@ -9,10 +9,10 @@ var modifier = {
   healer_button: false,
   round_timer: 30, // in minutes
   game_delay: 60, // in seconds
-  round_ship_tier: "random",//choose from 3-7 or "random"
-  gems_upon_spawning: 0,//removed
+  round_ship_tier: "random", // choose from 3-7 or "random"
+  gems_upon_spawning: 0, // removed
   laggy_objs: false,
-  friendly_fire: false, // to enable friendly fire (ability to kill teammates)
+  friendly_fire: "random", // toggle friendly fire (ability to kill teammates), or "random" (10% true, 90% false)
 };
 
 var modUtils = {
@@ -117,8 +117,8 @@ var colors = [
 ];
 if (!game.custom.ship_name){
   game.custom.ship_name = true;
-  if (modifier.round_ship_tier === "random")
-  modifier.round_ship_tier = getRandByRatio(tierratio);
+  if (modifier.friendly_fire == "random") modifier.friendly_fire = Math.floor(Math.random() * 10) === 0;
+  if (modifier.round_ship_tier === "random") modifier.round_ship_tier = getRandByRatio(tierratio);
   var tier = modifier.round_ship_tier,ship_name,rand_ships,ship_choices = 4;
   switch (modifier.round_ship_tier){
     case 3:
@@ -1611,14 +1611,22 @@ let queueInfoMessages = function (ship) {
   if (lastID) modUtils.setTimeout(() => sendUI(ship, {id: lastID, visible: false}), timestamp);
 }
 
-function joinmessage(ship){
+joinmessage = function (ship){
   queueInfoMessages(ship);
   sendUI(ship, {
     id: "map info",
-    position: [2,88,24,22],
+    position: [0,92,40,4],
     visible: true,
     components: [
-      {type: "text",position:[0,0,100,50],value:`Map: ${map.name} by ${map.author}`,color:"#cde"},
+      {type: "text",position:[0,0,100,100],value:` Map: ${map.name} by ${map.author}`,color:"#cde", align: "left"},
+    ]
+  });
+  if (modifier.friendly_fire) sendUI(ship, {
+    id: "friendly_fire_warning",
+    position: [40,92,40,4],
+    visible: true,
+    components: [
+      {type: "text",position:[0,0,100,100],value: "WARNING: You can harm your teammates and they can harm you too. ",color:"hsla(60, 100%, 50%, 1)", align: "right"},
     ]
   });
 }
