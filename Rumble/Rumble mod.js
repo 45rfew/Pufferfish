@@ -1611,7 +1611,7 @@ let queueInfoMessages = function (ship) {
   if (lastID) modUtils.setTimeout(() => sendUI(ship, {id: lastID, visible: false}), timestamp);
 }
 
-joinmessage = function (ship){
+let joinmessage = function (ship){
   queueInfoMessages(ship);
   sendUI(ship, {
     id: "map info",
