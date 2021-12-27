@@ -11,7 +11,8 @@ var modifier = {
   game_delay: 60, // in seconds
   round_ship_tier: "random",//choose from 3-7 or "random"
   gems_upon_spawning: 0,//removed
-  laggy_objs: false
+  laggy_objs: false,
+  friendly_fire: false, // to enable friendly fire (ability to kill teammates)
 };
 
 var modUtils = {
@@ -1191,7 +1192,7 @@ var maps = [
   shipspawn: [{x:0,y:-250},{x:0,y:250}],
   radar: {type:"box",width:20,height:10},
   basedmg: [{x:-40,x2:40,y:-225,y2:-275},{x:-40,x2:40,y:225,y2:275}]
-  },  
+  },
 ];
 
 game.custom.radar_background = {
@@ -1227,7 +1228,7 @@ this.options = {
   custom_map: map.map,
   soundtrack: music[~~(Math.random()*music.length)],
   weapons_store: false,
-  friendly_colors: 2,
+  friendly_colors: !modifier.friendly_fire * 2,
   radar_zoom: 1,
   map_size: modifier.map_size,
   starting_ship: 801,
@@ -1508,7 +1509,7 @@ function sort(arr){
 function updatescoreboard(game){
   if (game.step >= delay){
     let t=[[],[]];
-    for (let ship of game.ships) t[ship.custom.team].push(ship);
+    for (let ship of game.ships) if (ship.custom.team != null) t[ship.custom.team].push(ship);
     scoreboard.components = [
       { type:"box",position:[0,0,50,8],fill:getcolor(teams.hues[0])},
       { type: "text",position: [0,0,50,8],color:"#e5e5e5",value: teams.names[0]},
@@ -1534,6 +1535,7 @@ function updatescoreboard(game){
 function outputscoreboard(game,tm){
   let origin =[...scoreboard.components];
   for (let ship of game.ships){
+    if (ship.custom.team == null) continue;
     let j=0,team=tm[ship.custom.team];
     for (j=0;j<team.length;j++){
       if (ship.id === team[j].id){
@@ -1553,30 +1555,64 @@ function outputscoreboard(game,tm){
   }
 }
 
-function checkscores(game){
-  if (game.step >= delay)
-  sendUI(game, {
-    id: "scores",
-    position: [33,10,42,40],
+let checkscores = function (game){
+  if (game.step >= delay) {
+    let joint = " - ";
+    let scoreLens = teams.points.map(p => p.toString().length), scoreMaxLen = Math.max(...scoreLens);
+    let digitWidth = 3;
+    let totalLen = scoreMaxLen * 2 + joint.length;
+    let PointPercentage = scoreMaxLen / totalLen * 100;
+    let jointPercentage = joint.length / totalLen * 100;
+    scoreLens = scoreLens.map(i => i / totalLen * 100);
+    let UIwidth = totalLen * digitWidth;
+    sendUI(game, {
+      id: "scores",
+      position: [(100 - UIwidth) / 2, 10, UIwidth, 10],
+      visible: true,
+      components: [
+        {type: "text", position: [PointPercentage - scoreLens[0], 0, scoreLens[0], 100], value: teams.points[0], color: getcolor(teams.hues[0])},
+        {type: "text", position: [PointPercentage, 0, jointPercentage, 100], value: joint, color: "#CDE"},
+        {type: "text", position: [PointPercentage + jointPercentage, 0, scoreLens[1], 100], value: teams.points[1], color: getcolor(teams.hues[1])},
+      ]
+    });
+  }
+}
+
+let createInfoMessage = function(id, height_per_line, duration, ...messages) {
+  messages = messages.filter(i => i);
+  let heightPercentage = 100 / messages.length;
+  return {
+    id: id || "join_info",
+    position: [25, 20, 50, messages.length * (height_per_line || 5)],
     visible: true,
-    components: [
-      {type: "text",position:[2-((Math.log(teams.points[0])*Math.LOG10E+1|0)*5)/2,5,80/1.5,33/1.5],value:teams.points[0],color:getcolor(teams.hues[0])},
-      {type: "text",position:[0,0,80,33],value:"-",color:"#CDE"},
-      {type: "text",position:[25+((Math.log(teams.points[1])*Math.LOG10E+1|0)*5)/2,5,80/1.5,33/1.5],value:teams.points[1],color:getcolor(teams.hues[1])},
-    ]
-  });
+    components: messages.map((message, i) => ({type: "text", position: [0, heightPercentage * i, 100, heightPercentage], value: message, color: "#cde"})),
+    duration: duration || (60 * 5)
+  }
+}
+
+let infoMessages = [
+  createInfoMessage("join_info", null, 60 * 10, `First team to reach ${modifier.kills_to_win} points wins`, "Kill an enemy to get 1 point to your team", "Good luck and have fun!"),
+  createInfoMessage("tips", 3, 60 * 10, "Please DO NOT try to mine the asteroids", "Mining is pointless! Asteroids are unbreakable", modifier.friendly_fire ? "Also killing your teammate makes your team lose 1 point. Be careful!" : null)
+];
+
+console.log(infoMessages);
+
+let queueInfoMessages = function (ship) {
+  let timestamp = 0, lastID;
+  for (let info of infoMessages) {
+    if (lastID) {
+      let cLastID = lastID;
+      modUtils.setTimeout(() => sendUI(ship, {id: cLastID, visible: false}), timestamp)
+    }
+    modUtils.setTimeout(() => sendUI(ship, info), timestamp);
+    timestamp += info.duration;
+    lastID = info.id;
+  }
+  if (lastID) modUtils.setTimeout(() => sendUI(ship, {id: lastID, visible: false}), timestamp);
 }
 
 function joinmessage(ship){
-  sendUI(ship, {
-    id: "join",
-    position: [36,16,34,32],
-    visible: true,
-    components: [
-      {type: "text",position:[0,0,85+3,38+3],value:`First team to reach ${modifier.kills_to_win} kills wins`,color:"#cde"},
-      {type: "text",position:[5.5,20,80-4,33-4],value:"Good luck and have fun!",color:"#cde"},
-    ]
-  });
+  queueInfoMessages(ship);
   sendUI(ship, {
     id: "map info",
     position: [2,88,24,22],
@@ -1585,21 +1621,6 @@ function joinmessage(ship){
       {type: "text",position:[0,0,100,50],value:`Map: ${map.name} by ${map.author}`,color:"#cde"},
     ]
   });
-  modUtils.setTimeout(function(){
-    sendUI(ship, {id:"join",visible:false});
-    sendUI(ship, {
-      id: "tips",
-      position: [36,16,34,32],
-      visible: true,
-      components: [
-        {type: "text",position:[5.5,20,76,33-4],value:"Please DO NOT try to mine the asteroids",color:"#cde"},
-        {type: "text",position:[0,30,90,33],value:"Mining is pointless! Asteroids are unbreakable",color:"#cde"},
-      ]
-    });
-    modUtils.setTimeout(function(){
-      sendUI(ship, {id:"tips",visible:false});
-    },300);
-  },480);
 }
 
 function checkButtons(ship){
@@ -1659,12 +1680,12 @@ this.event = function(event, game){
       let killer = event.killer;
       if (killer != null) {
         ship.set({collider:true});
-        teams.points[killer.custom.team]++;
+        if (killer.custom.team != ship.custom.team) teams.points[killer.custom.team]++;
+        else if (modifier.friendly_fire) teams.points[killer.custom.team] = Math.max(0, --teams.points[killer.custom.team]);
         killer.custom.frags++;
-        echo(`${killer.name} killed ${ship.name}`);
+        echo(`${killer.name} killed ${ship.name}`)
       } else {
         echo(ship.name + " killed themselves");
-        //teams.points[Math.abs(ship.team-1)]++;
       }
       ship.custom.deaths++;
       update = 1;
