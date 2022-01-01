@@ -115,8 +115,8 @@ var colors = [
   {team:"Green",hue:120,team2:"Purple",hue2:270},
   {team:"Aqua",hue:150,team2:"Orange",hue2:30}
 ];
-if (!game.custom.ship_name){
-  game.custom.ship_name = true;
+if (!game.custom.initialized){
+  game.custom.initialized = true;
   if (modifier.friendly_fire == "random") modifier.friendly_fire = Math.floor(Math.random() * 5) === 0;
   if (modifier.round_ship_tier === "random") modifier.round_ship_tier = getRandByRatio(tierratio);
   var tier = modifier.round_ship_tier,ship_name,rand_ships,ship_choices = 4;
