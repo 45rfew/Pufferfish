@@ -1563,10 +1563,12 @@ var check = function(game, isWaiting, isGameOver) {
 
 var endgametext = ["Unknown", "Unknown"], endgamestatus = {};
 var gameover = function (ship){
+  let friendly_kills = modifier.friendly_fire ? ({"Friendly kills": ship.custom.friendly_kills}) : null;
   ship.gameover({
     "Match status": endgametext[0],
     "Match results": endgametext[1],
     "Frags": ship.custom.frags,
+    ...friendly_kills,
     "Deaths": ship.custom.deaths,
     " ": " ",
     "#. Best killers":"Frags",
@@ -1957,7 +1959,7 @@ this.event = function(event, game){
     case "ship_destroyed":
       let killer = event.killer;
       ship.set({collider:true});
-      if (killer != null) {
+      if (killer != null && game.custom.kicked_ids.indexOf(killer.id) == -1) {
         if (killer.custom.team != ship.custom.team) {
           ++teams.points[killer.custom.team];
           ++killer.custom.frags
@@ -1974,7 +1976,7 @@ this.event = function(event, game){
           }
         }
         echo(`${killer.name} killed ${ship.name}`)
-      } else {
+      } else if (game.custom.kicked_ids.indexOf(ship.id) == -1) {
         teams.points[ship.custom.team] = Math.max(0, --teams.points[ship.custom.team])
         echo(ship.name + " killed themselves");
       }
