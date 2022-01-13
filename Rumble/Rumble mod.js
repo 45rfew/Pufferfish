@@ -13,6 +13,7 @@ var modifier = {
   gems_upon_spawning: 0, // removed
   laggy_objs: false,
   friendly_fire: "random", // toggle friendly fire (ability to kill teammates), or "random" (20% true, 80% false)
+  max_trolls_attempt: 3
 };
 
 var modUtils = {
@@ -117,6 +118,7 @@ var colors = [
 ];
 if (!game.custom.initialized){
   game.custom.initialized = true;
+  game.custom.kicked_ids = [];
   if (modifier.friendly_fire == "random") modifier.friendly_fire = Math.floor(Math.random() * 5) === 0;
   if (modifier.round_ship_tier === "random") modifier.round_ship_tier = getRandByRatio(tierratio);
   var tier = modifier.round_ship_tier,ship_name,rand_ships,ship_choices = 4;
@@ -1508,11 +1510,19 @@ var check = function(game, isWaiting, isGameOver) {
   modUtils.tick();
   if (game.step % 30 === 0) {
     teams.count = [0,0];
+    game.custom.kicked_ids.forEach(id => {
+      let s = game.findShip(id);
+      if (s && s.alive) s.set({kill: true})
+    })
     for (let ship of game.ships) {
       if (!ship.custom.init){
-        ship.custom.init = true;
-        ship.custom.frags = 0;
-        ship.custom.deaths = 0;
+        ship.custom = {
+          init: true,
+          frags: 0,
+          deaths: 0,
+          friendly_kills: 0,
+          trolls_attempt: 0
+        }
         setteam(ship);
         setup(ship);
         sendUI(ship, {
@@ -1853,7 +1863,7 @@ let createInfoMessage = function(id, height_per_line, duration, ...messages) {
 
 let infoMessages = [
   createInfoMessage("join_info", null, 60 * 10, `First team to reach ${modifier.kills_to_win} points wins`, "Kill an enemy to get 1 point to your team", "Good luck and have fun!"),
-  createInfoMessage("tips", 3, 60 * 10, "Please DO NOT try to mine the asteroids", "Mining is pointless! Asteroids are unbreakable", modifier.friendly_fire ? "Also killing your teammate makes your team lose 1 point. Be careful!" : null)
+  createInfoMessage("tips", 3, 60 * 10, "Please DO NOT try to mine the asteroids", "Mining is pointless! Asteroids are unbreakable", "Also killing yourself makes your team lose 1 point. Be careful!")
 ];
 
 
@@ -1946,16 +1956,30 @@ this.event = function(event, game){
   if (ship != null) switch (event.name){
     case "ship_destroyed":
       let killer = event.killer;
+      ship.set({collider:true});
       if (killer != null) {
-        ship.set({collider:true});
-        if (killer.custom.team != ship.custom.team) teams.points[killer.custom.team]++;
-        else if (modifier.friendly_fire) teams.points[killer.custom.team] = Math.max(0, --teams.points[killer.custom.team]);
-        killer.custom.frags++;
+        if (killer.custom.team != ship.custom.team) {
+          ++teams.points[killer.custom.team];
+          ++killer.custom.frags
+        }
+        else {
+          ++killer.custom.friendly_kills;
+          ++killer.custom.trolls_attempt;
+          if (killer.custom.trolls_attempt > modifier.max_trolls_attempt) {
+            killer.gameover({
+              "You have been kicked!": " ",
+              "Come on, you can't even distinguish between your teammates and enemies??": " "
+            });
+            game.custom.kicked_ids.push(killer.id);
+          }
+        }
         echo(`${killer.name} killed ${ship.name}`)
       } else {
+        teams.points[ship.custom.team] = Math.max(0, --teams.points[ship.custom.team])
         echo(ship.name + " killed themselves");
       }
       ship.custom.deaths++;
+      ship.custom.trolls_attempt = 0;
       update = 1;
       ship.custom.hasbeenkilled = true;
       echo(`${teams.names[0]}:${teams.points[0]},${teams.names[1]}:${teams.points[1]}`);
