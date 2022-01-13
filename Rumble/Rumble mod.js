@@ -1965,12 +1965,13 @@ this.event = function(event, game){
       if (killer != null && game.custom.kicked_ids.indexOf(killer.id) == -1) {
         if (killer.custom.team != ship.custom.team) {
           ++teams.points[killer.custom.team];
-          ++killer.custom.frags
+          ++killer.custom.frags;
+          killer.custom.trolls_attempt = 0
         }
         else {
           ++killer.custom.friendly_kills;
           ++killer.custom.trolls_attempt;
-          if (killer.custom.trolls_attempt > modifier.max_trolls_attempt) {
+          if (killer.custom.trolls_attempt >= modifier.max_trolls_attempt) {
             killer.gameover({
               "You have been kicked!": " ",
               "Come on, you can't even distinguish": " ",
@@ -1985,7 +1986,6 @@ this.event = function(event, game){
         echo(ship.name + " killed themselves");
       }
       ship.custom.deaths++;
-      ship.custom.trolls_attempt = 0;
       update = 1;
       ship.custom.hasbeenkilled = true;
       echo(`${teams.names[0]}:${teams.points[0]},${teams.names[1]}:${teams.points[1]}`);
