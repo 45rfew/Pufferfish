@@ -1973,7 +1973,7 @@ this.event = function(event, game){
           if (killer.custom.trolls_attempt > modifier.max_trolls_attempt) {
             killer.gameover({
               "You have been kicked!": " ",
-              "Come on, you can't even distinguish ": " ",
+              "Come on, you can't even distinguish": " ",
               " ": "between your teammates and enemies ??"
             });
             game.custom.kicked_ids.push(killer.id);
