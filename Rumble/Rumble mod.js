@@ -1127,8 +1127,8 @@ var maps = [
     " 99999999       99           999        99999      99 9 9   \n"+
     "       99       99                      99999      99       ",
   shipspawn: [{x:190,y:-190},{x:-190,y:190}],
-  radar: {type:"box",width:12,height:12},
-  basedmg: [{x:-40,x2:40,y:-225,y2:-275},{x:-40,x2:40,y:225,y2:275}]
+  radar: {type:"box",width:15,height:15},
+  basedmg: [{x:145,x2:225,y:-145,y2:-225},{x:-225,x2:-145,y:225,y2:145}]
   },
   {name: "Valhalla", author: "Robonuko", map:
     "  9999999999  9 999999999999 99 999999999999 9  9999999999  \n"+
@@ -1503,7 +1503,10 @@ this.options = {
   hues: [colors.hue,colors.hue2],
   asteroids_strength: 1e6,
   crystal_drop: 0,
-  max_level: 1
+  max_level: 1,
+  mines_self_destroy: true,
+  mines_destroy_delay: 0,
+  projectile_speed: Number.MAX_VALUE
 };
 
 var check = function(game, isWaiting, isGameOver) {
@@ -1970,7 +1973,8 @@ this.event = function(event, game){
           if (killer.custom.trolls_attempt > modifier.max_trolls_attempt) {
             killer.gameover({
               "You have been kicked!": " ",
-              "Come on, you can't even distinguish between your teammates and enemies??": " "
+              "Come on, you can't even distinguish ": " ",
+              " ": "between your teammates and enemies ??"
             });
             game.custom.kicked_ids.push(killer.id);
           }
