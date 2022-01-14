@@ -1962,13 +1962,13 @@ this.event = function(event, game){
     case "ship_destroyed":
       let killer = event.killer;
       ship.set({collider:true});
-      if (killer != null && game.custom.kicked_ids.indexOf(killer.id) == -1) {
+      if (killer != null) {
         if (killer.custom.team != ship.custom.team) {
           ++teams.points[killer.custom.team];
           ++killer.custom.frags;
           killer.custom.trolls_attempt = 0
         }
-        else {
+        else if (game.custom.kicked_ids.indexOf(killer.id) == -1 && game.custom.kicked_ids.indexOf(ship.id) == -1) {
           ++killer.custom.friendly_kills;
           ++killer.custom.trolls_attempt;
           if (killer.custom.trolls_attempt >= modifier.max_trolls_attempt) {
