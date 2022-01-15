@@ -1867,8 +1867,8 @@ let createInfoMessage = function(id, height_per_line, duration, ...messages) {
 }
 
 let infoMessages = [
-  createInfoMessage("join_info", null, 60 * 10, `First team to reach ${modifier.kills_to_win} points wins`, "Kill an enemy to get 1 point to your team", "Good luck and have fun!"),
-  createInfoMessage("tips", 3, 60 * 10, "Please DO NOT try to mine the asteroids", "Mining is pointless! Asteroids are unbreakable", "Also killing yourself makes your team lose 1 point. Be careful!")
+  createInfoMessage("join_info", null, 60 * 10, `First team to reach ${modifier.kills_to_win} points wins`, "Kill an enemy to earn 1 point for your team", "Good luck and have fun!"),
+  createInfoMessage("tips", 3, 60 * 10, "Please DO NOT try to mine the asteroids", "Mining is pointless! Asteroids are unbreakable", "Suicide deduces 1 point from your team. Be careful!")
 ];
 
 
@@ -1901,7 +1901,7 @@ let joinmessage = function (ship){
     position: [40,92,40,4],
     visible: true,
     components: [
-      {type: "text",position:[0,0,100,100],value: "WARNING: You can harm your teammates and they can harm you too. ",color:"hsla(60, 100%, 50%, 1)", align: "right"},
+      {type: "text",position:[0,0,100,100],value: "WARNING: Friendly fire is OFF",color:"hsla(60, 100%, 50%, 1)", align: "right"},
     ]
   });
 }
