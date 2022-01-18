@@ -12,7 +12,7 @@ var modifier = {
   round_ship_tier: "random", // choose from 3-7 or "random"
   gems_upon_spawning: 0, // removed
   laggy_objs: false,
-  friendly_fire: "random", // toggle friendly fire (ability to kill teammates), or "random" (20% true, 80% false)
+  friendly_fire: "random", // toggle friendly fire (ability to kill teammates), or "random" (10% true, 90% false)
   max_trolls_attempt: 3
 };
 
@@ -119,7 +119,7 @@ var colors = [
 if (!game.custom.initialized){
   game.custom.initialized = true;
   game.custom.kicked_ids = [];
-  if (modifier.friendly_fire == "random") modifier.friendly_fire = Math.floor(Math.random() * 5) === 0;
+  if (modifier.friendly_fire == "random") modifier.friendly_fire = Math.floor(Math.random() * 10) === 0;
   if (modifier.round_ship_tier === "random") modifier.round_ship_tier = getRandByRatio(tierratio);
   var tier = modifier.round_ship_tier,ship_name,rand_ships,ship_choices = 4;
   switch (modifier.round_ship_tier){
