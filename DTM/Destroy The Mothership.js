@@ -669,7 +669,7 @@ this.tick = function(game){
               },280);
             }
           }
-          else endgame(game, succ, "has been killed", "They're not here anymore");
+          else endgame(game, succ, "has been killed", "It's not here anymore");
         }
       }
     }
