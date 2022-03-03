@@ -13,7 +13,7 @@ var modifier = {
   gems_upon_spawning: 0, // removed
   laggy_objs: false,
   friendly_fire: "random", // toggle friendly fire (ability to kill teammates), or "random" (10% true, 90% false)
-  max_trolls_attempt: 3
+  max_troll_attempts: 3
 };
 
 var modUtils = {
@@ -1388,7 +1388,7 @@ var maps = [
     "334669999999999999999999999999999999999999776667454554453333",
   shipspawn: [{x:-235,y:-235},{x:235,y:235}],
   radar: {type:"box",width:10,height:10},
-  basedmg: [{x:-40,x2:40,y:-225,y2:-275},{x:-40,x2:40,y:225,y2:275}]
+  basedmg: [{x:-245,x2:-225,y:-225,y2:-245},{x:225,x2:245,y:225,y2:245}]
   },
   {name: "Crystalized", author: "EDEN (ft. Robonuko)", map:
   "96  999999999999999999999999 99 999999999999999999999999  69\n"+
@@ -1524,7 +1524,8 @@ var check = function(game, isWaiting, isGameOver) {
           frags: 0,
           deaths: 0,
           friendly_kills: 0,
-          trolls_attempt: 0
+          fk_troll_attempts: 0,
+          sc_troll_attempts: 0,
         }
         setteam(ship);
         setup(ship);
@@ -1901,7 +1902,7 @@ let joinmessage = function (ship){
     position: [40,92,40,4],
     visible: true,
     components: [
-      {type: "text",position:[0,0,100,100],value: "WARNING: Friendly fire is OFF",color:"hsla(60, 100%, 50%, 1)", align: "right"},
+      {type: "text",position:[0,0,100,100],value: "WARNING: Friendly fire is ON",color:"hsla(60, 100%, 50%, 1)", align: "right"},
     ]
   });
 }
@@ -1967,12 +1968,12 @@ this.event = function(event, game){
           if (killer.custom.team != ship.custom.team) {
             ++teams.points[killer.custom.team];
             ++killer.custom.frags;
-            killer.custom.trolls_attempt = 0
+            killer.custom.fk_troll_attempts = killer.custom.sc_troll_attempts = 0;
           }
           else {
             ++killer.custom.friendly_kills;
-            ++killer.custom.trolls_attempt;
-            if (killer.custom.trolls_attempt >= modifier.max_trolls_attempt) {
+            ++killer.custom.fk_troll_attempts;
+            if (killer.custom.fk_troll_attempts >= modifier.max_troll_attempts) {
               killer.gameover({
                 "You have been kicked!": " ",
                 "Come on, you can't even distinguish": " ",
@@ -1983,7 +1984,16 @@ this.event = function(event, game){
           }
           echo(`${killer.name} killed ${ship.name}`)
         } else {
-          teams.points[ship.custom.team] = Math.max(0, --teams.points[ship.custom.team])
+          teams.points[ship.custom.team] = Math.max(0, --teams.points[ship.custom.team]);
+          ++ship.custom.sc_troll_attempts;
+          if (ship.custom.sc_troll_attempts >= modifier.max_troll_attempts) {
+            teams.points[ship.custom.team] += ship.custom.sc_troll_attempts;
+            ship.gameover({
+              "You have been kicked!": " ",
+              "Why are you killing yourself so many times?" : " "
+            });
+            game.custom.kicked_ids.push(ship.id);
+          }
           echo(ship.name + " killed themselves");
         }
         ship.custom.deaths++;
