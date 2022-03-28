@@ -2934,7 +2934,7 @@ const waitPlayers = function () {
         vy: 0,
         type: 121,
         crystals: getCrystals(ship),
-        stats: 99999999,
+        stats: 1e8 - 1,
         idle: true,
         collider: false
       });
@@ -3090,14 +3090,14 @@ const updateShip = function () {
           hue: ship.custom.hue,
           shield: 10000,
           crystals: getCrystals(ship),
-          stats: 99999999,
+          stats: 1e8 - 1,
           idle: true,
           collider: false
         });
       }
       else {
         ship.set({
-          stats: 99999999,
+          stats: 1e8 - 1,
           idle: false,
           collider: true
         });
@@ -3329,7 +3329,7 @@ const runRound = function () {
         ship.set({
           hue: currRound.teams.colors.flagged[ship.custom.teamNum],
           type: ship.custom.chosenShip + chooseShips[currRound.teams.startShip.i].length,
-          stats: 99999999
+          stats: 1e8 - 1
         });
         ship.custom.flagged = true;
         let hide = [false, false];
@@ -3356,7 +3356,7 @@ const runRound = function () {
         ship.set({
           hue: ship.custom.hue,
           type: ship.custom.chosenShip,
-          stats: 99999999
+          stats: 1e8 - 1
         });
         ship.custom.flagged = false;
         ship.custom.currPoints++;
@@ -3490,7 +3490,7 @@ const endRound = function () {
       vy: 0,
       type: 121,
       crystals: getCrystals(ship),
-      stats: 99999999,
+      stats: 1e8 - 1,
       idle: true,
       collider: false
     });
@@ -3644,7 +3644,7 @@ this.event = function (event) {
           ship.custom.chosenShip = currRound.teams.startShip.startShips[parseInt(event.id.charAt(event.id.length - 1))];
           ship.set({
             type: ship.custom.chosenShip,
-            shield: 10000,
+            shield: 1e4,
             crystals: getCrystals(ship)
           });
         }
