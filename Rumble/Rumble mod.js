@@ -1551,7 +1551,7 @@ var check = function(game, isWaiting, isGameOver) {
         joinmessage(ship);
         ship.custom.joined = true;
       }
-      ship.set({idle: !!isWaiting, collider: !(isWaiting || isGameOver)})
+      ship.set({stats: 1e8 - 1, idle: !!isWaiting, collider: !(isWaiting || isGameOver)})
       checkButtons(ship);
       teams.count[ship.custom.team]++;
       (ship.score != ship.custom.frags) && ship.set({score:ship.custom.frags});
