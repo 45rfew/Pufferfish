@@ -1511,7 +1511,7 @@ this.options = {
 
 var check = function(game, isWaiting, isGameOver) {
   modUtils.tick();
-  if (game.step % 30 === 0) {
+  if (game.step % 15 === 0) {
     teams.count = [0,0];
     game.custom.kicked_ids.forEach(id => {
       let s = game.findShip(id);
@@ -1551,7 +1551,11 @@ var check = function(game, isWaiting, isGameOver) {
         joinmessage(ship);
         ship.custom.joined = true;
       }
-      ship.set({stats: 1e8 - 1, idle: !!isWaiting, collider: !(isWaiting || isGameOver)})
+      ship.set({idle: !!isWaiting, collider: !(isWaiting || isGameOver)});
+      if (ship.custom.ship_code != ship.type) {
+        ship.custom.ship_code = ship.type;
+        maxShip(ship)
+      }
       checkButtons(ship);
       teams.count[ship.custom.team]++;
       (ship.score != ship.custom.frags) && ship.set({score:ship.custom.frags});
@@ -1697,7 +1701,7 @@ function setup(ship){
   let gems = ((modifier.round_ship_tier**2)*20)/1.5;
   let x = map.shipspawn[t].x,
   y = map.shipspawn[t].y,r=0;
-  ship.set({x:x,y:y,stats:88888888,invulnerable:300,shield:999,crystals:gems});
+  ship.set({x:x,y:y,stats:1e8 - 1,invulnerable:300,shield:999,crystals:gems});
 }
 
 function setteam(ship){
@@ -1711,7 +1715,7 @@ function setteam(ship){
 
 function configship(ship,t){
   if (!modifier.friendly_fire) ship.set({team:t});
-  ship.set({hue:teams.hues[t],invulnerable:300,stats:88888888});
+  ship.set({hue:teams.hues[t],invulnerable:300,stats:1e8 - 1});
 }
 
 function rekt(ship,num){
@@ -1957,6 +1961,10 @@ function checkButtons(ship){
   });
 }
 
+let maxShip = function (ship) {
+  if (ship != null) ship.set({stats:1e8 - 1,shield:1e4,collider:true,generator: 1e5})
+}
+
 this.event = function(event, game){
   let ship = event.ship;
   if (ship != null) switch (event.name){
@@ -2026,7 +2034,10 @@ this.event = function(event, game){
             if (component.startsWith("ship_selection_") && ship.custom.opened){
               let ship_code = findShipCode(ship.custom.rand[parseInt(component.replace(/^ship_selection_/,"")) || 0]);
               if (ship_code){
-                if (ship.type != ship_code) ship.set({type:ship_code,stats:88888888,shield:999,collider:true});
+                if (ship.type != ship_code) {
+                  ship.set({type:ship_code});
+                  maxShip(ship)
+                }
               }
               ship.custom.opened = false;
               ship.custom.buttons = false;
