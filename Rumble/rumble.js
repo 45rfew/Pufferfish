@@ -1738,7 +1738,7 @@ function checkteambase(game){
         id: "dang",
         position: [34,20,40,40],
         visible: true,
-        components: [{type:"text",position:[0,0,80,33],value:"You are in the emeny's base - your ship will take damage!",color:"#f99e9e"}]
+        components: [{type:"text",position:[0,0,80,33],value:"You are in the enemy's base - your ship will take damage!",color:"#f99e9e"}]
       });
     } else sendUI(ship, {id:"dang",visible:true});
   }
