@@ -1518,6 +1518,10 @@ var check = function(game, isWaiting, isGameOver) {
       if (s && s.alive) s.set({kill: true})
     })
     for (let ship of game.ships) {
+      if (ship.type == 101) { // prevent Fly enjoyers from tryharding
+        ship.set({type: chooseships[0]});
+        maxShip(ship)
+      }
       if (!ship.custom.init){
         ship.custom = {
           init: true,
