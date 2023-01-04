@@ -82,14 +82,14 @@ var ships_list = [
   ["Odyssey","Shadow X-3","Bastion","Aries"]
 ];
 
-function findShipCode(name){
+var findShipCode = function (name){
   for (let i=0;i<ships_list.length;i++)
   for (let j=0;j<ships_list[i].length;j++)
   if (ships_list[i][j] == name) return (i+3)*100+j+1;
   return null;
 }
 
-function shuffle(array,yeetus){
+var shuffle = function (array,yeetus){
   var tmp, current, top = array.length;
   if (top) while(--top){
     current = Math.floor(Math.random()*(top+1));
@@ -101,7 +101,7 @@ function shuffle(array,yeetus){
   return array;
 }
 
-function getRandByRatio(tierratio){
+var getRandByRatio = function (tierratio){
   let idx = Math.floor(Math.random()*101);
   for (let item of tierratio){
     if (idx >= item.r[0] && idx <= item.r[1]) return item.t;
@@ -1464,7 +1464,7 @@ game.custom.radar_background = {
 
 var scale_pos = 100 / (modifier.map_size * 10);
 var scale_size = 50 / modifier.map_size;
-function addRadarSpot (x, y, type, width, height, alpha, color){
+var addRadarSpot  = function (x, y, type, width, height, alpha, color){
   game.custom.radar_background.components.push({
     type: type,
     position: [
@@ -1695,7 +1695,7 @@ var waiting = function (game) {
 
 this.tick = waiting;
 
-function setup(ship){
+var setup = function (ship){
   let t = ship.custom.team;
   let level = Math.trunc(ship.type/100); //level = (level<4)?4:level;
   let gems = ((modifier.round_ship_tier**2)*20)/1.5;
@@ -1704,7 +1704,7 @@ function setup(ship){
   ship.set({x:x,y:y,stats:1e8 - 1,invulnerable:300,shield:999,crystals:gems});
 }
 
-function setteam(ship){
+var setteam = function (ship){
   let t;
   if ([...new Set(teams.count)].length == 1) t=teams.points.indexOf(Math.min(...teams.points));
   else t = teams.count.indexOf(Math.min(...teams.count));
@@ -1713,12 +1713,12 @@ function setteam(ship){
   echo(teams.count);
 }
 
-function configship(ship,t){
+var configship = function (ship,t){
   if (!modifier.friendly_fire) ship.set({team:t});
   ship.set({hue:teams.hues[t],invulnerable:300,stats:1e8 - 1});
 }
 
-function rekt(ship,num){
+var rekt = function (ship,num){
   if (ship.shield<num){
     let val=ship.crystals + ship.shield;
     if (val < num) ship.set({kill:true});
@@ -1727,11 +1727,11 @@ function rekt(ship,num){
   else ship.set({shield:ship.shield-num});
 }
 
-function isRange(a,b,c){
+var isRange = function (a,b,c){
   return Math.min(a,b) <= c && c <= Math.max(a,b)
 }
 
-function checkteambase(game){
+var checkteambase = function (game){
   for (let ship of game.ships){
     let u = 1 - ship.custom.team;
     let x = map.basedmg[u];
@@ -1754,15 +1754,15 @@ var scoreboard = {
   components: []
 };
 
-function getcolor(color){
+var getcolor = function (color){
   return `hsla(${color},100%,50%,1)`;
 }
 
-function PlayerBox(posx,posy){
+var PlayerBox = function (posx,posy){
   return {type:"box",position:[posx,posy-1.8,50,7],fill:"hsla(210,24.3%,29%,0.5)",width:2};
 }
 
-function Tag(indtext,param,posx,posy,hex,al,size) {
+var Tag = function (indtext,param,posx,posy,hex,al,size) {
   let obj= {type: indtext,position: [posx,posy-0.5,50-(size||0),5],color: hex,align:al};
   switch(indtext) {
     case "text":
@@ -1775,7 +1775,7 @@ function Tag(indtext,param,posx,posy,hex,al,size) {
   return obj;
 }
 
-function sort(arr){
+var sort = function (arr){
   let array=[...arr],i=0;
   while (i<array.length-1) {
     if (array[i].custom.frags<array[i+1].custom.frags) {
@@ -1787,7 +1787,7 @@ function sort(arr){
   return array;
 }
 
-function updatescoreboard(game){
+var updatescoreboard = function (game){
   if (game.step >= delay){
     let t=[[],[]];
     for (let ship of game.ships) if (ship.custom.team != null) t[ship.custom.team].push(ship);
@@ -1813,7 +1813,7 @@ function updatescoreboard(game){
   }
 }
 
-function outputscoreboard(game,tm){
+var outputscoreboard = function (game,tm){
   let origin =[...scoreboard.components];
   for (let ship of game.ships){
     if (ship.custom.team == null) continue;
@@ -1911,7 +1911,7 @@ let joinmessage = function (ship){
   });
 }
 
-function checkButtons(ship){
+var checkButtons = function (ship){
   let shortcut = ["5","6","7"];
   for (let i=0; i<3; i++){
     sendUI(ship, {
