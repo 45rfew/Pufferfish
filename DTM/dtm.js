@@ -725,7 +725,7 @@ let countDigits = function (num) {
 }, shields = [2200,1575,1125,725,770,525,945,775,375,900,1405,625,725,505],
 prefixes = ["", "K", "M", "B", "t", "q", "Q", "s", "S", "o", "n", "d", "U", "D", "T", "Qt", "Qd"]; // Up to 10^48
 
-function shipshield(ship, b){
+var shipshield = function (ship, b){
   let shipshield = shields[(ship.type-700)-1];
   if (isMothership(ship)) shipshield = mothership_health;
   if (!isNaN(ship.shield) && ship.shield >= 1e3) sendUI(ship, {
@@ -741,7 +741,7 @@ function shipshield(ship, b){
   else sendUI(ship, {id:"shieldBar",visible:false})
 }
 
-function mothershiphealthbar(game){
+var mothershiphealthbar = function (game){
   sendUI(game,  {
     id: "blue",
     position:[22,5,6,7],
@@ -788,7 +788,7 @@ var gameover = function (ship) {
   }
 }
 
-function setteam(ship, init){
+var setteam = function (ship, init){
   let t;
   if (init) {
     if ([...new Set(teams.count)].length == 1) t=teams.points.indexOf(Math.min(...teams.points));
@@ -809,16 +809,16 @@ function setteam(ship, init){
   })
 }
 
-function setType (ship, code) {
+var setType  = function (ship, code) {
   let type = code ?? 701+((ship.custom.team*7)+(~~(Math.random()*7)));
   ship.set({type: type, stats: 88888888, collider: !game.custom.ended})
 }
 
-function isRange(a,b,c){
+var isRange = function (a,b,c){
   return Math.min(a,b) <= c && c <= Math.max(a,b);
 }
 
-function rekt(ship,num){
+var rekt = function (ship,num){
   if (ship.shield<num){
     let val=ship.crystals + ship.shield;
     if (val < num) ship.set({kill:true});
@@ -828,7 +828,7 @@ function rekt(ship,num){
 }
 
 var match_winner = "Unknown";
-function endgame(game, succ, ...message){
+var endgame = function (game, succ, ...message){
   game.custom.ended = true;
   game.setOpen(false);
   game.ships.forEach(ship => ship.set({collider: false}));
@@ -849,7 +849,7 @@ function endgame(game, succ, ...message){
   match_winner = teams.names[winner]+" team";
 }
 
-function checkteambase(game){
+var checkteambase = function (game){
   for (let ship of game.ships){
     let t = ship.custom.team;
     if (dist2points(ship.x, ship.y, teams.x[t], 0) <= base_AoE_radius && ship.type < 780){
@@ -897,7 +897,7 @@ function checkteambase(game){
   }
 }
 
-function drawbutton(ship,x,y,id,fill,bordercol,textcol,visible,shortcut,text,bwidth=10){
+var drawbutton = function (ship,x,y,id,fill,bordercol,textcol,visible,shortcut,text,bwidth=10){
   var components = [];
   var tcol = textcol;
   if (visible)
@@ -916,7 +916,7 @@ function drawbutton(ship,x,y,id,fill,bordercol,textcol,visible,shortcut,text,bwi
   });
 }
 
-function drawshipbutton(ship,x,y,id,fill,visible,shortcut,text,ch,cl){
+var drawshipbutton = function (ship,x,y,id,fill,visible,shortcut,text,ch,cl){
   var components = [];
   var tcol = def_clr;
   if (visible)
@@ -939,7 +939,7 @@ function drawshipbutton(ship,x,y,id,fill,visible,shortcut,text,ch,cl){
   });
 }
 
-function selectship(ship,open,close){
+var selectship = function (ship,open,close){
   let bcl = "hsla(0, 0%, 10%, 1)";
   if (ship.custom.team === 0){
     let t1names = ["Battleship","Lunar Blade","Lobos","Phaser","Falling Star","Invader","Tarantula"];
@@ -976,7 +976,7 @@ function selectship(ship,open,close){
   }
 }
 
-function getcolor(color,alpha = 1){
+var getcolor = function (color,alpha = 1){
   return `hsla(${color},100%,50%,${alpha})`;
 }
 
@@ -988,7 +988,7 @@ var transform = {
 };
 let t = num => Math.max(num,0) || 0;
 
-function getRadarInfo(){
+var getRadarInfo = function (){
   let zoom = transform.zoom(), rsize = base_AoE_radius*zoom*transform.scale, data = [];
   for (let i=0;i<2;i++) {
     let pos = [t(transform.X(teams.x[i])*zoom-rsize),t(transform.Y(0)*zoom-rsize),rsize*2,rsize*2];
@@ -1005,7 +1005,7 @@ function getRadarInfo(){
   };
 }
 
-function secondary(game){
+var secondary = function (game){
   if (game.step > delay){
     let c = [12,21];
     let x = Math.cos(Math.random()*Math.PI*2)*15;
@@ -1016,26 +1016,26 @@ function secondary(game){
 }
 
 var ships_list = [["Battleship","Lunar Blade","Lobos","Phaser","Falling Star","Invader","Tarantula","Berserker","Reaper","Barricade","Solar Spear","Warder","Artillery","Interceptor"]];
-function findShipCode(name){
+var findShipCode = function (name){
   for (let i=0;i<ships_list.length;i++)
   for (let j=0;j<ships_list[i].length;j++)
   if (ships_list[i][j] == name) return (i+7)*100+j+1;
 }
 
-function sqrDist(x, y){
+var sqrDist = function (x, y){
   return x*x+y*y;
 }
 
-function distance(x, y){
+var distance = function (x, y){
   return Math.sqrt(x*x+y*y);
 }
 
-function dist2points(x, y, z, t){
+var dist2points = function (x, y, z, t){
   return Math.sqrt((z-x)**2+(t-y)**2);
 }
 
 var ms = 150;
-function shortestPath(x1, y1, x2, y2, wrapV = true, wrapH = true){
+var shortestPath = function (x1, y1, x2, y2, wrapV = true, wrapH = true){
   var shortestDist = 10000;
   var map_size = ms*5;
   var coords = [];
@@ -1084,7 +1084,7 @@ function shortestPath(x1, y1, x2, y2, wrapV = true, wrapH = true){
   return shortest;
 }
 
-function drawdirectionmarker(ship, x, y, wrapV, wrapH, id, color, label){
+var drawdirectionmarker = function (ship, x, y, wrapV, wrapH, id, color, label){
   var sp = shortestPath(ship.x, ship.y, x, y, wrapV, wrapH);
   var dist = distance(sp[0],sp[1]);
   var x1 = sp[0]/dist;
@@ -1165,6 +1165,7 @@ this.event = function(event,game) {
   if (ship != null) switch (event.name){
     case "ui_component_clicked":
       var component = event.id;
+      if (["buy_lifes_blocker"].includes(component)) break;
       if (component.includes("ability") && ship.alive && isMothership(ship)) {
         a = component.replace('ability','');
         mothershipability.abilityeffect(ship,a);
@@ -1317,7 +1318,7 @@ for (let i=0; i<35; i++){
   });
 }
 
-function echoc(message, color, style, background=null){
+var echoc = function (message, color, style, background=null){
   if (!color) color = "";
   if (!style) style = "";
   if (!background) background = "";
