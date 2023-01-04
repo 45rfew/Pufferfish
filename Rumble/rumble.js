@@ -1476,6 +1476,25 @@ var addRadarSpot  = function (x, y, type, width, height, alpha, color){
   });
 }
 
+var blockerUIs = {
+  list: [
+    {
+      id: "buy_lives_blocker",
+      visible: true,
+      clickable: true,
+      shortcut: String.fromCharCode(187),
+      position: [65,0,10,10],
+      components: []
+    }
+  ],
+  set: function (ship) {
+    if (ship != null) for (let ui of this.list) sendUI(ship, ui)
+  },
+  has: function (id) {
+    return !!this.list.find(ui => ui.id === id)
+  }
+}
+
 var update = 1;
 var delay = modifier.game_delay * 60;
 if (!game.custom.map) game.custom.map = maps[Math.trunc(Math.random()*maps.length)];
@@ -1533,14 +1552,7 @@ var check = function(game, isWaiting, isGameOver) {
         }
         setteam(ship);
         setup(ship);
-        sendUI(ship, {
-          id: "buy_lifes_blocker",
-          visible: true,
-          clickable: true,
-          shortcut: String.fromCharCode(187),
-          position: [65,0,10,10],
-          components: []
-        });
+        blockerUIs.set(ship);
         sendUI(ship, game.custom.radar_background);
         echo(`${ship.name} spawned`);
         ship.custom.rand = ["","",""];
@@ -2024,8 +2036,8 @@ this.event = function(event, game){
       update = 1;
       break;
     case "ui_component_clicked":
-      if (ship.custom.buttons) {
-        let component = event.id;
+      let component = event.id;
+      if (ship.custom.buttons && !blockerUIs.has(component)) {
         switch (component){
           case "open": ship.custom.opened = true; break;
           case "heal": ship.set({healing:!ship.healing}); break;

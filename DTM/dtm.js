@@ -339,6 +339,25 @@ var teams = {
   pmh: [mothership_health, mothership_health],
 };
 
+var blockerUIs = {
+  list: [
+    {
+      id: "buy_lives_blocker",
+      visible: true,
+      clickable: true,
+      shortcut: String.fromCharCode(187),
+      position: [65,0,10,10],
+      components: []
+    }
+  ],
+  set: function (ship) {
+    if (ship != null) for (let ui of this.list) sendUI(ship, ui)
+  },
+  has: function (id) {
+    return !!this.list.find(ui => ui.id === id)
+  }
+}
+
 var modUtils = {
   setTimeout: function(f,time){
     this.jobs.push({f: f,time: game.step+time});
@@ -580,14 +599,7 @@ this.tick = function(game){
         ship.frags = 0;
         ship.deaths = 0;
         setteam(ship, true);
-        sendUI(ship, {
-          id: "buy_lifes_blocker",
-          visible: true,
-          clickable: true,
-          shortcut: String.fromCharCode(187),
-          position: [65,0,10,10],
-          components: []
-        });
+        blockerUIs.set(ship);
         sendUI(ship, getRadarInfo());
         echoc(`${ship.name} spawned`,"#fefecc");
         if (!game.custom.delayed){
@@ -852,7 +864,24 @@ var endgame = function (game, succ, ...message){
 var checkteambase = function (game){
   for (let ship of game.ships){
     let t = ship.custom.team;
-    if (dist2points(ship.x, ship.y, teams.x[t], 0) <= base_AoE_radius && ship.type < 780){
+    if (isMothership(ship)) {
+      if (dist2points(ship.x, ship.y, teams.x[t], 0) <= base_AoE_radius) {
+        if (game.step-delay > 3600/2){
+          rekt(ship,mothership_health/180);
+          sendUI(ship, {
+            id: "warnin",
+            position: [28,20,40*1.4,40],
+            visible: true,
+            components: [{type:"text",position:[0,0,80,33*1.4],value:"Camping in your base ruins the game for others - your ship will take damage whilst inside the base!",color:"hsla(0, 88%, 80%, 1)"}]
+          });
+        }
+        sendUI(ship, {id:"open",visible:false});
+        selectship(ship,false,true);
+      }
+      else sendUI(ship, {id:"warnin",visible:false});
+      return;
+    }
+    if (dist2points(ship.x, ship.y, teams.x[t], 0) <= base_AoE_radius){
       ship.set({invulnerable:100,generator:0});
       if (game.step > delay)
       sendUI(ship, {
@@ -871,19 +900,6 @@ var checkteambase = function (game){
       sendUI(ship, {id:"open",visible:false});
       selectship(ship,false,true);
     }
-    if (dist2points(ship.x, ship.y, teams.x[t], 0) <= base_AoE_radius && ship.type > 780){
-      if (game.step-delay > 3600/2){
-        rekt(ship,mothership_health/180);
-        sendUI(ship, {
-          id: "warnin",
-          position: [28,20,40*1.4,40],
-          visible: true,
-          components: [{type:"text",position:[0,0,80,33*1.4],value:"Camping in your base ruins the game for others - your ship will take damage whilst inside the base!",color:"hsla(0, 88%, 80%, 1)"}]
-        });
-      }
-      sendUI(ship, {id:"open",visible:false});
-      selectship(ship,false,true);
-    } else sendUI(ship, {id:"warnin",visible:false});
     let q = 1-ship.custom.team;
     if (dist2points(ship.x, ship.y, teams.x[q], 0) <= base_AoE_radius){
       rekt(ship,(ship.type < 790)?(10*Math.trunc(ship.type/100)):2000);
@@ -939,6 +955,8 @@ var drawshipbutton = function (ship,x,y,id,fill,visible,shortcut,text,ch,cl){
   });
 }
 
+var shipSelectPrefix = "ship_select_";
+
 var selectship = function (ship,open,close){
   let bcl = "hsla(0, 0%, 10%, 1)";
   if (ship.custom.team === 0){
@@ -947,13 +965,13 @@ var selectship = function (ship,open,close){
     let t1color = ["hsla(0, 0%, 70%, 1)","hsla(20, 60%, 35%, 1)","hsla(53, 100%, 55%, 1)","hsla(94, 100%, 35%, 1)","hsla(187, 100%, 45%, 1)","hsla(270, 100%, 70%, 1)","hsla(0, 0%, 100%, 1)"];
     if (open){
       for (let i=0; i<7; i++)
-      drawshipbutton(ship,10+i*10,70,t1names[i],t1color[i],true,""+(i+1),t1names[i],t1icons[i],"Lunatic");
+      drawshipbutton(ship,10+i*10,70,shipSelectPrefix + t1names[i],t1color[i],true,""+(i+1),t1names[i],t1icons[i],"Lunatic");
       drawbutton(ship,15.5,85,"close",bcl,def_clr,def_clr,true,"8","Close",5);
       drawbutton(ship,65.5,85,"nextpage",bcl,def_clr,def_clr,true,"9","Next page",5);
     }
     if (close){
       for (let i=0; i<7; i++)
-      drawshipbutton(ship,10+i*10,70,t1names[i],"",false,"","","","");
+      drawshipbutton(ship,10+i*10,70,shipSelectPrefix + t1names[i],"",false,"","","","");
       drawbutton(ship,15.5,85,"close",bcl,def_clr,def_clr,false,"8","Close",5);
       drawbutton(ship,65.5,85,"nextpage",bcl,def_clr,def_clr,false,"9","Next page",5);
     }
@@ -1165,12 +1183,15 @@ this.event = function(event,game) {
   if (ship != null) switch (event.name){
     case "ui_component_clicked":
       var component = event.id;
-      if (["buy_lifes_blocker"].includes(component)) break;
-      if (component.includes("ability") && ship.alive && isMothership(ship)) {
-        a = component.replace('ability','');
-        mothershipability.abilityeffect(ship,a);
+      if (blockerUIs.has(component)) break;
+      if (isMothership(ship)) {
+        if (component.includes("ability") && ship.alive) {
+          a = component.replace('ability','');
+          mothershipability.abilityeffect(ship,a);
+        }
+        break;
       }
-      else if (dist2points(ship.x, ship.y, teams.x[ship.custom.team], 0) <= base_AoE_radius) switch (component) {
+      if (dist2points(ship.x, ship.y, teams.x[ship.custom.team], 0) <= base_AoE_radius) switch (component) {
         case "open":
           selectship(ship,true,false);
           break;
@@ -1178,11 +1199,12 @@ this.event = function(event,game) {
           selectship(ship,false,true);
           break;
         default:
-          if (ship.type < 790 && ship.type != findShipCode(component))
-          setType(ship, findShipCode(component));
+          if (component.startsWith(shipSelectPrefix)) {
+            let newShipType = findShipCode(component.replace(shipSelectPrefix, ""));
+            if (ship.type != newShipType) setType(ship, newShipType);
+          }
         break;
       }
-      else selectship(ship,false,true);
       break;
     case "ship_destroyed":
       let killer = event.killer;
