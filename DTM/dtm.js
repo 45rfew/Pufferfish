@@ -1036,8 +1036,9 @@ var secondary = function (game){
 var ships_list = [["Battleship","Lunar Blade","Lobos","Phaser","Falling Star","Invader","Tarantula","Berserker","Reaper","Barricade","Solar Spear","Warder","Artillery","Interceptor"]];
 var findShipCode = function (name){
   for (let i=0;i<ships_list.length;i++)
-  for (let j=0;j<ships_list[i].length;j++)
-  if (ships_list[i][j] == name) return (i+7)*100+j+1;
+    for (let j=0;j<ships_list[i].length;j++)
+      if (ships_list[i][j] == name) return (i+7)*100+j+1;
+  return null
 }
 
 var sqrDist = function (x, y){
@@ -1183,11 +1184,10 @@ this.event = function(event,game) {
   if (ship != null) switch (event.name){
     case "ui_component_clicked":
       var component = event.id;
-      if (blockerUIs.has(component)) break;
+      if (!ship.alive || blockerUIs.has(component)) break;
       if (isMothership(ship)) {
-        if (component.includes("ability") && ship.alive) {
-          a = component.replace('ability','');
-          mothershipability.abilityeffect(ship,a);
+        if (component.startsWith("ability")) {
+          mothershipability.abilityeffect(ship, component.replace('ability',''));
         }
         break;
       }
@@ -1201,7 +1201,7 @@ this.event = function(event,game) {
         default:
           if (component.startsWith(shipSelectPrefix)) {
             let newShipType = findShipCode(component.replace(shipSelectPrefix, ""));
-            if (ship.type != newShipType) setType(ship, newShipType);
+            if (newShipType != null && ship.type != newShipType) setType(ship, newShipType);
           }
         break;
       }
