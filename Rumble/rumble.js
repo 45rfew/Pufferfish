@@ -1979,7 +1979,7 @@ let maxShip = function (ship) {
 
 this.event = function(event, game){
   let ship = event.ship;
-  if (ship != null) switch (event.name){
+  if (ship != null && ship.id != null) switch (event.name){
     case "ship_destroyed":
       if (game.custom.kicked_ids.indexOf(ship.id) == -1) {
         let killer = event.killer;
