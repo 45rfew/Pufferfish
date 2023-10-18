@@ -101,15 +101,17 @@ var shuffle = function (array,yeetus){
   return array;
 }
 
-var getRandByRatio = function (tierratio){
-  let idx = Math.floor(Math.random()*101);
-  for (let item of tierratio){
-    if (idx >= item.r[0] && idx <= item.r[1]) return item.t;
-  }
+var randInt = function (num) {
+  return Math.floor(Math.random() * num);
+}
+
+var randItem = function (array) {
+  return array[randInt(array.length)];
 }
 
 var chooseships,maps = [1761,1749,77,45,4360,3604,5575,4990],music = ["warp_drive.mp3","crystals.mp3","argon.mp3"],
-tierratio = [{t:3,r:[0,6]},{t:4,r:[7,16]},{t:5,r:[17,41]},{t:6,r:[42,74]},{t:7,r:[75,100]}/*6,17,25,33,17*/];
+tierratio = [0, 0, 0, 6, 12, 22, 40, 20]; // index = tier
+tierratio = shuffle(tierratio.map((e,i) => new Array(e).fill(i)).flat());
 var colors = [
   {team:"Red",hue:0,team2:"Blue",hue2:240},
   {team:"Yellow",hue:60,team2:"Pink",hue2:300},
@@ -119,8 +121,8 @@ var colors = [
 if (!game.custom.initialized){
   game.custom.initialized = true;
   game.custom.kicked_ids = [];
-  if (modifier.friendly_fire == "random") modifier.friendly_fire = Math.floor(Math.random() * 25) === 0;
-  if (modifier.round_ship_tier === "random") modifier.round_ship_tier = getRandByRatio(tierratio);
+  if (modifier.friendly_fire == "random") modifier.friendly_fire = randInt(25) === 0;
+  if (modifier.round_ship_tier === "random") modifier.round_ship_tier = randItem(tierratio);
   var tier = modifier.round_ship_tier,ship_name,rand_ships,ship_choices = 4;
   switch (modifier.round_ship_tier){
     case 3:
