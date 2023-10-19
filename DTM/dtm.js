@@ -308,6 +308,7 @@ var vocabulary = [
 
 this.options = {
   hues: [180,42],
+  choose_ship: [101],
   vocabulary: vocabulary,
   friendly_colors: 2,
   root_mode: "",
@@ -326,7 +327,7 @@ this.options = {
 };
 
 var def_clr = "hsla(210, 50%, 87%, 1)";
-var teams = {
+var teams = game.custom.teams = {
   names: ["Lunatic","Solarium"],
   points: [0,0],
   count: [0,0],
@@ -337,6 +338,7 @@ var teams = {
   motherships: [0,0],
   motherships_health: [mothership_health, mothership_health],
   pmh: [mothership_health, mothership_health],
+  last_set: [0, 0]
 };
 
 var blockerUIs = {
@@ -380,7 +382,7 @@ var modUtils = {
 };
 
 var sendUI = function(ship, UI) {
-  if (ship != null && typeof ship.setUIComponent == "function") {
+  if (ship != null && (ship === game || (ship.id != null && ship.custom.init)) && typeof ship.setUIComponent == "function") {
     if (UI.visible || UI.visible == null) ship.setUIComponent(UI);
     else ship.setUIComponent({id: UI.id, position: [0,0,0,0], visible: false});
   }
@@ -560,6 +562,7 @@ var configMothership = function (i, isReAssign){
   let ship = game.findShip(teams.motherships[i]);
   if (ship != null) {
     let options = {type:791,shield:Math.max(teams.motherships_health[i], 0) || 0,hue:c[i]}
+    teams.last_set[i] = game.step;
     options.x = i?120:-120;
     ship.set(options);
     if (isReAssign) teams.reassignments[i]++;
@@ -590,11 +593,12 @@ this.tick = function(game){
     echoc("Round started","#ccccfe");
   }
   if (game.step % 30 === 0){
-    if (game.ships.length < 2 && !game.custom.okay) delay = game.step+delay_d;
+    if (game.ships.filter(s => s.custom.init).length < 2 && !game.custom.okay) delay = game.step+delay_d;
     teams.count = [0,0];
     teams.ships = [[],[]];
     for (let ship of game.ships){
-      if (!ship.custom.init){
+      if (ship == null || ship.id == null) continue;
+      if (!ship.custom.init && ship.alive){
         ship.custom.init = true;
         ship.frags = 0;
         ship.deaths = 0;
@@ -614,9 +618,11 @@ this.tick = function(game){
         ship.custom.exited = true;
         modUtils.setTimeout(function(){gameover(ship)},300);
       }
-      teams.count[ship.custom.team]++;
-      teams.ships[ship.custom.team].push(ship.id);
-      shipshield(ship);
+      if (ship.custom.init) {
+        teams.count[ship.custom.team]++;
+        teams.ships[ship.custom.team].push(ship.id);
+        shipshield(ship);
+      }
     }
     if (game.step < delay){
       for (let ship of game.ships){
@@ -652,7 +658,7 @@ this.tick = function(game){
         let succ = teams.motherships.findIndex((v,i) => isMothershipDied(i));
         if (succ != -1) {
           if (!game.findShip(teams.motherships[succ]) || teams.pmh[succ] >= minimum_abnormal_shield_decrease) {
-            let suc = !1, max_reassignments = teams.reassignments[succ] < maximum_mothership_reassignments_per_team;
+            let suc = false, max_reassignments = teams.reassignments[succ] < maximum_mothership_reassignments_per_team;
             if (teams.ships[succ].length > 0 && max_reassignments) {
               for (let sus of teams.ships[succ]) {
                 let suship = game.findShip(sus);
@@ -660,7 +666,7 @@ this.tick = function(game){
                   teams.motherships[succ] = sus;
                   teams.motherships_health[succ] = teams.pmh[succ];
                   configMothership(succ, true);
-                  suc = !0;
+                  suc = true;
                   break;
                 }
               }
@@ -863,10 +869,11 @@ var endgame = function (game, succ, ...message){
 
 var checkteambase = function (game){
   for (let ship of game.ships){
+    if (ship == null || ship.id == null || !ship.custom.init) continue;
     let t = ship.custom.team;
     if (isMothership(ship)) {
       if (dist2points(ship.x, ship.y, teams.x[t], 0) <= base_AoE_radius) {
-        if (game.step-delay > 3600/2){
+        if (game.step-delay > 3600/2 && game.step - teams.last_set[t] > 60){
           rekt(ship,mothership_health/180);
           sendUI(ship, {
             id: "warnin",
@@ -879,7 +886,7 @@ var checkteambase = function (game){
         selectship(ship,false,true);
       }
       else sendUI(ship, {id:"warnin",visible:false});
-      return;
+      continue;
     }
     if (dist2points(ship.x, ship.y, teams.x[t], 0) <= base_AoE_radius){
       ship.set({invulnerable:100,generator:0});
@@ -1134,10 +1141,7 @@ var updateScoreboard = function(game){
   }
   let icons = ["\u{2693}","\u{2694}","\u{1F9C0}","\u{1F52B}","\u{1F320}","\u{1F47E}","\u{1F577}","\u{1F43B}","\u{1F480}","\u{1F512}","\u{1F531}","\u{1F41F}","\u{1F340}","\u{1F5E1}"];
   let line = 0, line2 = 0;
-  let sa = []
-  for (let i=0; i<game.ships.length; i++)
-  sa[i] = game.ships[i];
-  let sc = sa.sort((a,b) => b.score - a.score);
+  let sc = game.ships.filter(e => e.custom.init).sort((a,b) => b.score - a.score);
   for (let i=0; i<sc.length; i++){
     let ship = sc[i];
     let shipicon = icons[(ship.type-700)-1];
@@ -1172,6 +1176,7 @@ var updateScoreboard = function(game){
 
 var outputScoreboard = function(game){
   for (let ship of game.ships) {
+    if (ship == null || ship.id == null || !ship.custom.init) continue;
     let o = [...scoreboard.components], t = scoreboard.components.map(x => (x.id != null)?x.id:-1).indexOf(ship.id);
     if (t != -1) scoreboard.components.splice(t,0,{type:"box",position:scoreboard.components[t].position.map((j,i) => (i==2)?100:j),fill:"hsla(210,24.3%,29%,0.5)"});
     sendUI(ship, scoreboard);
