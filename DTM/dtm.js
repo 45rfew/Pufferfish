@@ -923,7 +923,7 @@ var checkteambase = function (game){
         id: "warning",
         position: [34,20,40,40],
         visible: true,
-        components: [{type:"text",position:[0,0,80,33],value:"You are in the emeny's base - your ship will take damage!",color:"hsla(0, 88%, 80%, 1)"}]
+        components: [{type:"text",position:[0,0,80,33],value:"You are in the enemy's base - your ship will take damage!",color:"hsla(0, 88%, 80%, 1)"}]
       });
     } else sendUI(ship, {id:"warning",visible:false});
   }
