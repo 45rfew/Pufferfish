@@ -55,11 +55,13 @@ var modUtils = {
 };
 
 var sendUI = function(ship, UI){
-  if (ship != null && typeof ship.setUIComponent == "function"){
+  if (ship != null && (ship === game || (ship.id != null && ship.custom.init)) && typeof ship.setUIComponent == "function"){
     if (UI.visible || UI.visible == null) ship.setUIComponent(UI);
     else ship.setUIComponent({id: UI.id, position: [0,0,0,0], visible: false});
   }
 };
+
+let sus_102 = '{"name":"sus","level":1,"model":2,"next":[],"size":2,"scale":3,"specs":{"shield":{"capacity":[1e-300,1e-300],"reload":[1e-300,1e-300]},"generator":{"capacity":[1e-300,1e-300],"reload":[1e-300,1e-300]},"ship":{"mass":60,"speed":[1e-300,1e-300],"rotation":[1e-300,1e-300],"acceleration":[1e-300,1e-300]}},"bodies":{"main":{"section_segments":[45,135,225,315],"offset":{"x":0,"y":-12,"z":0},"position":{"x":[0,0,0,0],"y":[-20,-20,40,45],"z":[0,0,0,0,0,0,0,0,0]},"width":[0,40,40,0],"height":[0,10,10,0],"propeller":0,"texture":63},"head":{"section_segments":8,"offset":{"x":0,"y":5,"z":32},"position":{"x":[0,0,0,0],"y":[-2,-2,12,12],"z":[0,0,0,0]},"width":[0,28.32,28.32,0],"height":[0,15,15,0],"propeller":0,"texture":63,"angle":180,"vertical":1},"face":{"section_segments":[40,45,50,70,110,130,135,140,220,225,230,250,290,310,315,320],"offset":{"x":0,"y":5,"z":21},"position":{"x":[15,15,15,15,15,15],"y":[-4,-4,-3,13,14,14],"z":[0,0,0,0,0,0]},"width":[0,18,22.5,22.5,18,0],"height":[0,11.5,15,15,11.5,0],"propeller":0,"texture":7,"angle":180,"vertical":1},"back":{"section_segments":[40,45,50,70,110,130,135,140,220,225,230,250,290,310,315,320],"offset":{"x":0,"y":5,"z":-1},"position":{"x":[-28,-28,-28,-28,-28,-28],"y":[-2,-2,0,10,12,12],"z":[0,0,0,0,0,0]},"width":[0,1.5,9,9,1.5,0],"height":[0,30,30,30,30,0],"propeller":0,"texture":63,"angle":180,"vertical":1},"foot":{"section_segments":[40,45,50,70,110,130,135,140,220,225,230,250,290,310,315,320],"offset":{"x":0,"y":7,"z":-18},"position":{"x":[-15,-15,-15,-15],"y":[0,0,14,14],"z":[0,0,0,0]},"width":[0,13.5,13.5,0],"height":[0,30,30,0],"propeller":0,"texture":63,"angle":180,"vertical":1},"foot2":{"section_segments":[40,45,50,70,110,130,135,140,220,225,230,250,290,310,315,320],"offset":{"x":0,"y":7,"z":-18},"position":{"x":[15,15,15,15],"y":[0,0,14,14],"z":[0,0,0,0]},"width":[0,13.5,13.5,0],"height":[0,30,30,0],"propeller":0,"texture":63,"angle":180,"vertical":1}},"typespec":{"name":"sus","level":1,"model":2,"code":102,"specs":{"shield":{"capacity":[1e-300,1e-300],"reload":[1e-300,1e-300]},"generator":{"capacity":[1e-300,1e-300],"reload":[1e-300,1e-300]},"ship":{"mass":60,"speed":[1e-300,1e-300],"rotation":[1e-300,1e-300],"acceleration":[1e-300,1e-300]}},"shape":[5.64,5.573,5.535,5.649,5.642,5.35,5.16,4.61,4.837,4.749,4.596,4.515,4.409,4.408,4.512,4.637,4.799,4.972,4.893,5.012,5.527,5.68,5.429,5.169,5.004,3.96,5.004,5.169,5.429,5.68,5.527,5.012,4.627,4.171,3.865,3.625,3.497,3.419,3.416,3.491,4.397,4.944,5.352,5.351,5.337,5.35,5.642,5.649,5.535,5.573],"lasers":[],"radius":5.68,"next":[]}}';
 
 var a = {};
 a.Lunatic_Ant_101 = '{"name":"Lunatic Ant","level":1,"model":1,"size":1.15,"specs":{"shield":{"capacity":[115,155],"reload":[3,5]},"generator":{"capacity":[50,80],"reload":[15,20]},"ship":{"mass":120,"speed":[110,125],"rotation":[90,95],"acceleration":[90,110]}},"bodies":{"main":{"section_segments":8,"offset":{"x":0,"y":0,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0],"y":[-90,-80,-70,-40,0,30,70,110,100],"z":[0,0,0,0,0,0,0,0,0]},"width":[0,10,15,25,25,30,30,20,0],"height":[0,10,15,20,20,25,25,10,0],"texture":[4,4,63,4,3,18,4,17],"propeller":true},"main2":{"section_segments":8,"offset":{"x":6,"y":10,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0],"y":[-80,-70,-60,-20,0,30,70,90,90],"z":[0,0,0,0,0,0,0,0,0]},"width":[0,10,15,25,25,30,30,20,0],"height":[0,7,10,10,10,15,15,7,0],"texture":[4,4,18,4,18,18,63,18]},"cockpit":{"section_segments":8,"offset":{"x":0,"y":-40,"z":10},"position":{"x":[0,0,0,0,0,0,0],"y":[-30,-10,0,30,40],"z":[5,0,0,0,0]},"width":[0,10,12,12,0],"height":[0,10,15,12,0],"texture":[9.2,4,18,4],"propeller":false},"cockpit2":{"section_segments":8,"offset":{"x":7,"y":-40,"z":10.2},"position":{"x":[-6,0,0,0,0,0,0],"y":[-30,-10,0,30,40],"z":[3,1,5,2,2]},"width":[2,5,7,7,0],"height":[2,7,7,7,0],"texture":[4,63,4],"propeller":false},"Main_ring":{"section_segments":6,"offset":{"x":20,"y":62.5,"z":6},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[-8,-8,-7,-4,-4,4,7,8,8,8],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[0,26,26,26,26,26,26,26,26,0],"height":[0,12,14,14,14,14,14,14,12,0],"texture":[18,17,4,4,13,4,17,18],"angle":0},"ring":{"section_segments":9,"offset":{"x":40,"y":80,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[0,0,-2,-2,-2,2,2,2,0,0],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[12,12,12,14,14,14,14,12,12,12],"height":[12,12,12,14,14,14,14,12,12,12],"texture":[4],"propeller":false},"ring2":{"section_segments":9,"offset":{"x":20,"y":70,"z":5},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[0,0,-2,-2,-2,2,2,2,0,0],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[12,12,12,14,14,14,14,12,12,12],"height":[12,12,12,14,14,14,14,12,12,12],"texture":[17],"propeller":false},"ring3":{"section_segments":9,"offset":{"x":20,"y":55,"z":5},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[0,0,-2,-2,-2,2,2,2,0,0],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[12,12,12,14,14,14,14,12,12,12],"height":[12,12,12,14,14,14,14,12,12,12],"texture":[17],"propeller":false},"ring4":{"section_segments":9,"offset":{"x":40,"y":45,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[0,0,-2,-2,-2,2,2,2,0,0],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[12,12,12,14,14,14,14,12,12,12],"height":[12,12,12,14,14,14,14,12,12,12],"texture":[4],"propeller":false},"cannons":{"section_segments":9,"offset":{"x":50,"y":50,"z":0.5},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0,0,0],"y":[-80,-97,-95,-83,-80,-58,-45,-20,0,20,50,55,55],"z":[0,0,0,0,0,0,0,0,0,0,0,0,0]},"width":[0,5,6,6,5,5,8,10,10,13,10,8,0],"height":[0,5,6,6,5,5,8,10,10,10,10,8,0],"angle":1,"laser":{"damage":[5,9],"rate":4,"type":1,"speed":[140,160],"number":1,"angle":0,"error":0},"propeller":false,"texture":[17,4,10,13,4,3,4,3,4,63,3.9,18]}},"wings":{"main":{"offset":{"x":0,"y":60,"z":0},"length":[50,10,0,20],"width":[60,50,50,70,70],"texture":[4,63,4,4],"angle":[0,0,0,0],"position":[10,0,0,0,-20],"bump":{"position":20,"size":15}},"main2":{"offset":{"x":0,"y":62,"z":0},"length":[50,10,0,20],"width":[60,50,50,70,70],"texture":[3,18,3,3],"angle":[0,0,0,0],"position":[10,0,0,0,-30],"bump":{"position":20,"size":10}}},"typespec":{"name":"Lunatic Ant","level":1,"model":1,"code":101,"specs":{"shield":{"capacity":[115,155],"reload":[3,5]},"generator":{"capacity":[50,80],"reload":[15,20]},"ship":{"mass":120,"speed":[110,125],"rotation":[90,95],"acceleration":[90,110]}},"shape":[2.07,1.95,1.693,1.404,1.209,1.069,1.579,1.634,1.545,1.405,1.326,1.278,1.841,1.854,1.899,1.978,2.099,2.271,2.511,2.532,2.615,2.765,2.669,2.52,2.571,2.535,2.571,2.52,2.669,2.765,2.615,2.532,2.511,2.271,2.099,1.978,1.899,1.854,1.841,1.278,1.326,1.405,1.545,1.634,1.579,1.069,1.209,1.404,1.693,1.95],"lasers":[{"x":1.111,"y":-1.081,"z":0.011,"angle":1,"damage":[5,9],"rate":4,"type":1,"speed":[140,160],"number":1,"spread":0,"error":0,"recoil":0},{"x":-1.111,"y":-1.081,"z":0.011,"angle":-1,"damage":[5,9],"rate":4,"type":1,"speed":[140,160],"number":1,"spread":0,"error":0,"recoil":0}],"radius":2.765}}';
@@ -861,7 +863,8 @@ this.options = {
   crystal_value: 0,
   speed_mod: 1.4,
   max_players: 12,
-  ships: modifyShips(ships),
+  ships: modifyShips(ships).concat(sus_102),
+  choose_ship: [102],
   release_crystal: false,
   hues: [colors[0].hue,colors[0].hue2],
   asteroids_strength: 1e6,
@@ -876,7 +879,8 @@ var check = function(game, isWaiting, isGameOver){
   if (game.step % 15 === 0){
     teams.count = [0,0];
     for (let ship of game.ships){
-      if (!ship.custom.init){
+      if (ship == null || ship.id == null) continue;
+      if (!ship.custom.init && ship.alive){
         ship.custom.init = true;
         ship.custom.frags = 0;
         ship.custom.deaths = 0;
@@ -897,15 +901,17 @@ var check = function(game, isWaiting, isGameOver){
         modUtils.setTimeout(function(){gameover(ship)},300);
         ship.custom.exited = true;
       }
-      if (!ship.custom.joined && !isWaiting && !isGameOver){
-        joinmessage(ship);
-        ship.custom.joined = true;
+      if (ship.custom.init) {
+        if (!ship.custom.joined && !isWaiting && !isGameOver){
+          joinmessage(ship);
+          ship.custom.joined = true;
+        }
+        ship.set({idle:!!isWaiting,collider:!(isWaiting || isGameOver)});
+        teams.count[ship.custom.team]++;
+        (ship.score != ship.custom.frags) && ship.set({score:ship.custom.frags});
+        if (ship.custom.pendingfinal && ship.type != stages[`${Object.keys(stages)[Object.keys(stages).length-1]}`])
+          ship.set({type:stages[`${Object.keys(stages)[Object.keys(stages).length-1]}`],stats:11111111,shield:999});
       }
-      ship.set({idle:!!isWaiting,collider:!(isWaiting || isGameOver)});
-      teams.count[ship.custom.team]++;
-      (ship.score != ship.custom.frags) && ship.set({score:ship.custom.frags});
-      if (ship.custom.pendingfinal && ship.type != stages[`${Object.keys(stages)[Object.keys(stages).length-1]}`])
-      ship.set({type:stages[`${Object.keys(stages)[Object.keys(stages).length-1]}`],stats:11111111,shield:999});
     }
     typeof (map||{}).cars == "function" && map.cars(game);
   }
@@ -932,9 +938,8 @@ var gameover = function(ship){
 
 var waiting = function(game){
   check(game, true);
-  if (game.step % 30 === 0) 
-  for (let ship of game.ships){
-    sendUI(ship, {
+  if (game.step % 30 === 0) {
+    sendUI(game, {
       id: "delay",
       position: [39,18,42,40],
       visible: true,
@@ -942,7 +947,7 @@ var waiting = function(game){
         {type: "text",position:[2,5,80/1.5,33/1.5],value:"Waiting for more players...",color:"#cde"},
       ]
     });
-    sendUI(ship, {
+    sendUI(game, {
       id: "scoreboard",
       visible: true,
       components: [
@@ -968,8 +973,7 @@ var waiting = function(game){
     this.tick = main_game;
   }
   else {
-    for (let ship of game.ships)
-    sendUI(ship, {
+    sendUI(game, {
       id: "delay time",
       position: [45.7,26,10,7],
       visible: true,
@@ -1023,7 +1027,7 @@ var waiting = function(game){
     win = 1 - win;
     endgametext = [`All ${teams.names[1-win]} players left`, `${teams.names[win]} team wins!`];
   }
-  game.ships.sort((a,b) => (b.custom.frags || 0) - (a.custom.frags || 0)).slice(0,3).forEach((ship,i) => {
+  game.ships.filter(e => e != null && e.custom.init).sort((a,b) => (b.custom.frags || 0) - (a.custom.frags || 0)).slice(0,3).forEach((ship,i) => {
     endgamestatus[(i+1)+". "+ship.name] = ship.custom.frags
   });
   game.custom.ended = true;
@@ -1081,7 +1085,7 @@ var scorebar = {
       }); 
     }
     if (Math.max(...teams.points) >= pointsToFinal-pointsRange) this.finalstage(game);
-    for (let ship of game.ships) if (ship != null && ship.custom.team != null) this.icons(ship);
+    for (let ship of game.ships) if (ship != null && ship.custom.init && ship.custom.team != null) this.icons(ship);
   },
   finalstage: function(game){
     if (!game.custom.final) game.custom.final = true;
@@ -1188,6 +1192,7 @@ function checkstatus(game, team){
       teams.level[i]++;
       teams.current[i] = stages[`level_${teams.level[i]}`];
       for (let ship of game.ships){
+        if (ship == null || ship.id == null || !ship.custom.init) continue;
         if (ship.team == i){
           ship.custom.pending = true;
           sendUI(ship, {
@@ -1419,10 +1424,7 @@ function updateScoreboard(game){
   let icons = shiptree.icons;
   let colors = shiptree.color
   let line = 0, line2 = 0;
-  let sa = []
-  for (let i=0; i<game.ships.length; i++)
-  sa[i] = game.ships[i];
-  let sc = sa.sort((a,b) => b.custom.frags - a.custom.frags);
+  let sc = game.ships.filter(e => e != null && e.custom.init).sort((a,b) => b.custom.frags - a.custom.frags);
   for (let i=0; i<sc.length; i++){
     let ship = sc[i];
     let shipicon = icons[Math.trunc(ship.type/100)-1][(ship.type%10)-1];
@@ -1458,6 +1460,7 @@ function updateScoreboard(game){
 
 function outputScoreboard(game){
   for (let ship of game.ships) {
+    if (ship == null || ship.id == null || !ship.custom.init) continue;
     let o = [...scoreboard.components], t = scoreboard.components.map(x => (x.id != null)?x.id:-1).indexOf(ship.id);
     if (t != -1) scoreboard.components.splice(t,0,{type:"box",position:scoreboard.components[t].position.map((j,i) => (i==2)?100:j),fill:"hsla(210,24.3%,29%,0.5)"});
     sendUI(ship, scoreboard);

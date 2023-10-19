@@ -524,6 +524,7 @@ var mothershipability = {
     });
     modUtils.setTimeout(function(){
       for (let ship of game.ships){
+        if (ship == null || ship.id == null || !ship.custom.init) continue;
         if (ship.custom.team === t)
         if (dist2points(ship.x, ship.y, x, y) <= burst_heal_radius) ship.set({shield:ship.shield+9999});
       }
@@ -583,9 +584,10 @@ this.tick = function(game){
   modUtils.tick();
   if (game.step === delay){
     modUtils.setTimeout(function(){sendUI(game, {id:"delay time",visible:false});},10);
+    sendUI(game, {id:"delay",visible:false});
     for (let ship of game.ships){
+      if (ship == null || ship.id == null || !ship.custom.init) continue;
       ship.set({idle:false,collider:true,angle:ship.team*180});
-      sendUI(ship, {id:"delay",visible:false});
       if (ship.custom.wait){
         ship.custom.wait = false;
       }
@@ -593,7 +595,6 @@ this.tick = function(game){
     echoc("Round started","#ccccfe");
   }
   if (game.step % 30 === 0){
-    if (game.ships.filter(s => s.custom.init).length < 2 && !game.custom.okay) delay = game.step+delay_d;
     teams.count = [0,0];
     teams.ships = [[],[]];
     for (let ship of game.ships){
@@ -624,18 +625,20 @@ this.tick = function(game){
         shipshield(ship);
       }
     }
+    if (game.ships.filter(s => s != null && s.custom.init).length < 2 && !game.custom.okay) delay = game.step+delay_d;
     if (game.step < delay){
       for (let ship of game.ships){
+        if (ship == null || ship.id == null || !ship.custom.init) continue;
         ship.set({idle:true,vx:0,vy:0,collider:false});
-        sendUI(ship, {
-          id:"delay",position:[39,18,42,40],visible:true,
-          components: [{type: "text",position:[2,5,80/1.5,33/1.5],value:"Waiting for more players...",color:def_clr}]
-        });
-        sendUI(ship, {
-          id:"scoreboard",visible:true,
-          components: [{type: "text",position:[15,0,70,10],value:"Waiting for more players...",color:def_clr}]
-        });
       }
+      sendUI(game, {
+        id:"delay",position:[39,18,42,40],visible:true,
+        components: [{type: "text",position:[2,5,80/1.5,33/1.5],value:"Waiting for more players...",color:def_clr}]
+      });
+      sendUI(game, {
+        id:"scoreboard",visible:true,
+        components: [{type: "text",position:[15,0,70,10],value:"Waiting for more players...",color:def_clr}]
+      });
     } else {
       game.custom.okay = true;
       if (!game.custom.motherships){
@@ -644,6 +647,7 @@ this.tick = function(game){
         teams.motherships.forEach((e,i) => configMothership(i));
       }
       for (let ship of game.ships){
+        if (ship == null || ship.id == null || !ship.custom.init) continue;
         for (let i=0; i<2; i++){
           if (ship.id != teams.motherships[i]) {
             let mth = game.findShip(teams.motherships[i]);
@@ -694,7 +698,7 @@ this.tick = function(game){
     let time = delay+delay_d;
     if (game.step < time){
       if (game.step < delay){
-        if (game.custom.delayed && game.ships.length > 1){
+        if (game.custom.delayed && game.ships.filter(e => e != null && e.custom.init).length > 1){
           sendUI(game,  {
             id: "delay time",
             position: [45.7,26,10,7],
@@ -710,6 +714,7 @@ this.tick = function(game){
   }
   if (game.step % 15 === 0){
     for (let ship of game.ships){
+      if (ship == null || ship.id == null || !ship.custom.init) continue;
       // check for barriers
       if (Math.abs(ship.x)>742) if (isMothership(ship)) ship.set({shield:Math.max(ship.shield-1500, 0)});
       else ship.set({kill:true});
@@ -724,6 +729,7 @@ this.tick = function(game){
     updateScoreboard(game);
     mothershiphealthbar(game);
     for (let ship of game.ships){
+      if (ship == null || ship.id == null || !ship.custom.init) continue;
       if (isMothership(ship)) mothershipability.tick(ship);
       else {
         mothershipability.disableUIs(ship);
@@ -849,7 +855,10 @@ var match_winner = "Unknown";
 var endgame = function (game, succ, ...message){
   game.custom.ended = true;
   game.setOpen(false);
-  game.ships.forEach(ship => ship.set({collider: false}));
+  for (let ship of game.ships) {
+    if (ship == null || ship.id == null || !ship.custom.init) continue;
+    ship.set({collider: false});
+  }
   teams.motherships[succ] = null;
   let winner = Math.abs(succ-1), endmessage = `${teams.names[succ]}'s mothership ${message[0]}!`, winmessage = `${teams.names[winner]} team wins the game!`;
   sendUI(game,  {
@@ -1141,7 +1150,7 @@ var updateScoreboard = function(game){
   }
   let icons = ["\u{2693}","\u{2694}","\u{1F9C0}","\u{1F52B}","\u{1F320}","\u{1F47E}","\u{1F577}","\u{1F43B}","\u{1F480}","\u{1F512}","\u{1F531}","\u{1F41F}","\u{1F340}","\u{1F5E1}"];
   let line = 0, line2 = 0;
-  let sc = game.ships.filter(e => e.custom.init).sort((a,b) => b.score - a.score);
+  let sc = game.ships.filter(e => e != null && e.custom.init).sort((a,b) => b.score - a.score);
   for (let i=0; i<sc.length; i++){
     let ship = sc[i];
     let shipicon = icons[(ship.type-700)-1];
