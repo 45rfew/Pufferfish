@@ -1,12 +1,21 @@
-//Thanks to Destroy & Dimed for the idea & Bhpsngum for code help
-//Based on Team Rumble from Fortnite
+/*
++++ Rumble +++
+CREDITS:
+* Idea: Dimed and Destroy
+* Coding: 45rfew (with help from Bhpsngum)
+* Maps: Liberal, rob0nuko, Healer, X7, GumZ, Paindemic, EDEN, little-dino123, crispybreads, SChickenMan and 45rfew
+* Testing and debugging: 45rfew, Bhpsngum
+* Based on Team Rumble from Fortnite
+*/
+
 var modifier = {
   map_size: 60,
   crystal_value: 0,
   max_players: 20,
   kills_to_win: 100,
   yeet_gems: true,
-  healer_button: false,
+  healer_button: Math.random() * 100 <= 5,
+  healing_ratio: 0.5,
   round_timer: 30, // in minutes
   game_delay: 60, // in seconds
   round_ship_tier: "random", // choose from 3-7 or "random"
@@ -1887,7 +1896,7 @@ let createInfoMessage = function(id, height_per_line, duration, ...messages) {
 
 let infoMessages = [
   createInfoMessage("join_info", null, 60 * 10, `First team to reach ${modifier.kills_to_win} points wins`, "Kill an enemy to earn 1 point for your team", "Good luck and have fun!"),
-  createInfoMessage("tips", 3, 60 * 10, "Please DO NOT try to mine the asteroids", "Mining is pointless! Asteroids are unbreakable", "Suicide deduces 1 point from your team. Be careful!")
+  createInfoMessage("tips", 3, 60 * 10, /*"Please DO NOT try to mine the asteroids", "Mining is pointless! Asteroids are unbreakable", */"Suicide deduces 1 point from your team. Be careful!")
 ];
 
 
