@@ -866,7 +866,7 @@ this.options = {
   starting_ship: 801,
   crystal_value: 0,
   speed_mod: 1.4,
-  max_players: 12,
+  max_players: 18,
   ships: modifyShips(ships).concat(sus_102),
   choose_ship: [102],
   release_crystal: false,
