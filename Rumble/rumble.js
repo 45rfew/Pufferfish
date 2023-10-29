@@ -11,7 +11,7 @@ CREDITS:
 var modifier = {
   map_size: 60,
   crystal_value: 0,
-  max_players: 20,
+  max_players: 24,
   kills_to_win: 100,
   yeet_gems: true,
   healer_button: Math.random() * 100 <= 5,
