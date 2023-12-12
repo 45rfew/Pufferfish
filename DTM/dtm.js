@@ -12,7 +12,7 @@ REQUIREMENTS: ES2020 (Chrome & Edge 80, Firefox 74, Opera 67, Safari 13.1, NodeJ
 
 CHANGELOG 1.4.0: 
   * Map size reduced - 150 -> 90
-  * Mothership health reduced - 300000 -> 200000
+  * Mothership health reduced - 300000 -> 240000
   * Mothership ability cooldown reduced - 120 seconds -> 72 seconds
 CHANGELOG 1.3.0:
   * Small fixes and enhancements
@@ -45,7 +45,7 @@ BALANCING:
     * Solarium Berserker: Energy Regen Decrease (145->130)
 */
 
-var mothership_health = 300000/1.5;
+var mothership_health = 240000;
 var map_size = 150;
 var base_AoE_radius = 90;
 var burst_heal_radius = 120;
