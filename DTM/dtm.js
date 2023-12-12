@@ -10,9 +10,13 @@ CREDITS:
 
 REQUIREMENTS: ES2020 (Chrome & Edge 80, Firefox 74, Opera 67, Safari 13.1, NodeJS v14.0.0, fck IE) and above
 
-CHANGELOG 1.3.0
+CHANGELOG 1.4.0: 
+  * Map size reduced - 150 -> 90
+  * Mothership health reduced - 300000 -> 200000
+  * Mothership ability cooldown reduced - 120 seconds -> 72 seconds
+CHANGELOG 1.3.0:
   * Small fixes and enhancements
-CHANGELOG 1.2.5
+CHANGELOG 1.2.5:
   * Fixed scoreboard positioning
   * Motherships are now teleported near the center when game starts
   * Patched Solar blade infinite firerate bug
@@ -41,11 +45,11 @@ BALANCING:
     * Solarium Berserker: Energy Regen Decrease (145->130)
 */
 
-var mothership_health = 300000;
+var mothership_health = 300000/1.5;
 var map_size = 150;
 var base_AoE_radius = 90;
 var burst_heal_radius = 120;
-var ability_delay = 60 * 2; // in seconds
+var ability_delay = 60 * 1.2; // in seconds
 var waiting_delay = 60; // in seconds
 var ability_duration = { // in seconds
   hyperspeed: 1,
@@ -53,7 +57,7 @@ var ability_duration = { // in seconds
   absolute_control: 5,
   burst_heal: 5,
   overdrive: 5
-}
+};
 var maximum_mothership_reassignments_per_team = Infinity;
 // after this number of mothership reassignments in one team
 // if the mothership in the same team leaves, that team will lose
@@ -214,6 +218,22 @@ var map =
 "9         9    9    6          6       6           9  9  6    66        6    6        66    6                 9       6    9     9                   9\n"+
 "9      6                         6                         66      6              6      66                         6                         6      9";
 
+var newSize = 90;
+var rows = map.split('\n');
+var newMap = '';
+var r = rows.length / newSize;
+for (let i = 0; i < rows.length; i += r){
+  let data = rows[Math.floor(i)].split('');
+  let newR = '';
+  for (let j = 0; j < data.length; j += r){
+      newR += data[Math.floor(j)];
+  }
+  if (newR.length > 0){
+    newMap += newR + '\n';
+  }
+}
+base_AoE_radius /= r;
+
 var Fly2 = '{"name":"Fly2","level":2,"model":1,"size":1,"scale":3,"specs":{"shield":{"capacity":[75,100],"reload":[2,3]},"generator":{"capacity":[40,60],"reload":[10,15]},"ship":{"mass":60,"speed":[125,145],"rotation":[110,130],"acceleration":[100,120]}},"bodies":{"main":{"section_segments":12,"offset":{"x":0,"y":0,"z":10},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[-65,-60,-50,-20,10,30,55,75,60],"z":[0,0,0,0,0,0,0,0,0]},"width":[0,8,10,30,25,30,18,15,0],"height":[0,6,8,12,20,20,18,15,0],"propeller":true,"texture":[4,63,10,1,1,1,12,17]},"cockpit":{"section_segments":12,"offset":{"x":0,"y":0,"z":20},"position":{"x":[0,0,0,0,0,0,0],"y":[-15,0,20,30,60],"z":[0,0,0,0,0]},"width":[0,13,17,10,5],"height":[0,18,25,18,5],"propeller":false,"texture":[7,9,9,4,4]},"cannon":{"section_segments":6,"offset":{"x":0,"y":-15,"z":-10},"position":{"x":[0,0,0,0,0,0],"y":[-40,-50,-20,0,20,30],"z":[0,0,0,0,0,20]},"width":[0,5,8,11,7,0],"height":[0,5,8,11,10,0],"angle":0,"laser":{"damage":[5,6],"rate":4,"type":1,"speed":[160,180],"number":1,"error":2.5},"propeller":false,"texture":[3,3,10,3]}},"wings":{"main":{"length":[60,20],"width":[100,50,40],"angle":[-10,10],"position":[0,20,10],"doubleside":true,"offset":{"x":0,"y":10,"z":5},"bump":{"position":30,"size":20},"texture":[11,63]}},"typespec":{"name":"Fly2","level":2,"model":1,"code":201,"specs":{"shield":{"capacity":[75,100],"reload":[2,3]},"generator":{"capacity":[40,60],"reload":[10,15]},"ship":{"mass":60,"speed":[125,145],"rotation":[110,130],"acceleration":[100,120]}},"shape":[3.908,3.909,3.122,2.757,2.523,2.363,2.259,2.191,2.165,2.219,2.42,2.717,3.12,4.762,4.877,5.075,5.301,5.22,4.983,4.82,4.356,4.044,3.815,4.589,4.581,4.509,4.581,4.589,3.815,4.044,4.356,4.82,4.983,5.22,5.301,5.075,4.877,4.762,4.727,2.717,2.42,2.219,2.165,2.191,2.259,2.363,2.523,2.757,3.122,3.909],"lasers":[{"x":0,"y":-1.3,"z":-0.2,"angle":0,"damage":[5,6],"rate":4,"type":1,"speed":[160,180],"number":1,"spread":0,"error":2.5,"recoil":0}],"radius":5.301}}';
 var Fly3 = '{"name":"Fly3","level":2,"model":2,"size":1,"scale":3,"specs":{"shield":{"capacity":[75,100],"reload":[2,3]},"generator":{"capacity":[40,60],"reload":[10,15]},"ship":{"mass":60,"speed":[125,145],"rotation":[110,130],"acceleration":[100,120]}},"bodies":{"main":{"section_segments":12,"offset":{"x":0,"y":0,"z":10},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[-65,-60,-50,-20,10,30,55,75,60],"z":[0,0,0,0,0,0,0,0,0]},"width":[0,8,10,30,25,30,18,15,0],"height":[0,6,8,12,20,20,18,15,0],"propeller":true,"texture":[4,63,10,1,1,1,12,17]},"cockpit":{"section_segments":12,"offset":{"x":0,"y":0,"z":20},"position":{"x":[0,0,0,0,0,0,0],"y":[-15,0,20,30,60],"z":[0,0,0,0,0]},"width":[0,13,17,10,5],"height":[0,18,25,18,5],"propeller":false,"texture":[7,9,9,4,4]},"cannon":{"section_segments":6,"offset":{"x":0,"y":-15,"z":-10},"position":{"x":[0,0,0,0,0,0],"y":[-40,-50,-20,0,20,30],"z":[0,0,0,0,0,20]},"width":[0,5,8,11,7,0],"height":[0,5,8,11,10,0],"angle":0,"laser":{"damage":[5,6],"rate":4,"type":1,"speed":[160,180],"number":1,"error":2.5},"propeller":false,"texture":[3,3,10,3]}},"wings":{"main":{"length":[60,20],"width":[100,50,40],"angle":[-10,10],"position":[0,20,10],"doubleside":true,"offset":{"x":0,"y":10,"z":5},"bump":{"position":30,"size":20},"texture":[11,63]}},"typespec":{"name":"Fly3","level":2,"model":2,"code":202,"specs":{"shield":{"capacity":[75,100],"reload":[2,3]},"generator":{"capacity":[40,60],"reload":[10,15]},"ship":{"mass":60,"speed":[125,145],"rotation":[110,130],"acceleration":[100,120]}},"shape":[3.908,3.909,3.122,2.757,2.523,2.363,2.259,2.191,2.165,2.219,2.42,2.717,3.12,4.762,4.877,5.075,5.301,5.22,4.983,4.82,4.356,4.044,3.815,4.589,4.581,4.509,4.581,4.589,3.815,4.044,4.356,4.82,4.983,5.22,5.301,5.075,4.877,4.762,4.727,2.717,2.42,2.219,2.165,2.191,2.259,2.363,2.523,2.757,3.122,3.909],"lasers":[{"x":0,"y":-1.3,"z":-0.2,"angle":0,"damage":[5,6],"rate":4,"type":1,"speed":[160,180],"number":1,"spread":0,"error":2.5,"recoil":0}],"radius":5.301}}';
 var Lunatic = '{"name":"Lunatic","level":1,"model":1,"size":1.15,"next":[701,714],"specs":{"shield":{"capacity":[115,155],"reload":[3,5]},"generator":{"capacity":[50,80],"reload":[35,45]},"ship":{"mass":120,"speed":[110,135],"rotation":[90,95],"acceleration":[90,110]}},"bodies":{"main":{"section_segments":8,"offset":{"x":0,"y":0,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0],"y":[-90,-80,-70,-40,0,30,70,110,100],"z":[0,0,0,0,0,0,0,0,0]},"width":[0,10,15,25,25,30,30,20,0],"height":[0,10,15,20,20,25,25,10,0],"texture":[4,4,63,4,3,18,4,17],"propeller":true},"main2":{"section_segments":8,"offset":{"x":6,"y":10,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0],"y":[-80,-70,-60,-20,0,30,70,90,90],"z":[0,0,0,0,0,0,0,0,0]},"width":[0,10,15,25,25,30,30,20,0],"height":[0,7,10,10,10,15,15,7,0],"texture":[4,4,18,4,18,18,63,18]},"cockpit":{"section_segments":8,"offset":{"x":0,"y":-40,"z":10},"position":{"x":[0,0,0,0,0,0,0],"y":[-30,-10,0,30,40],"z":[5,0,0,0,0]},"width":[0,10,12,12,0],"height":[0,10,15,12,0],"texture":[9.2,4,18,4],"propeller":false},"cockpit2":{"section_segments":8,"offset":{"x":7,"y":-40,"z":10.2},"position":{"x":[-6,0,0,0,0,0,0],"y":[-30,-10,0,30,40],"z":[3,1,5,2,2]},"width":[2,5,7,7,0],"height":[2,7,7,7,0],"texture":[4,63,4],"propeller":false},"Main_ring":{"section_segments":6,"offset":{"x":20,"y":62.5,"z":6},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[-8,-8,-7,-4,-4,4,7,8,8,8],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[0,26,26,26,26,26,26,26,26,0],"height":[0,12,14,14,14,14,14,14,12,0],"texture":[18,17,4,4,13,4,17,18],"angle":0},"ring":{"section_segments":9,"offset":{"x":40,"y":80,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[0,0,-2,-2,-2,2,2,2,0,0],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[12,12,12,14,14,14,14,12,12,12],"height":[12,12,12,14,14,14,14,12,12,12],"texture":[4],"propeller":false},"ring2":{"section_segments":9,"offset":{"x":20,"y":70,"z":5},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[0,0,-2,-2,-2,2,2,2,0,0],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[12,12,12,14,14,14,14,12,12,12],"height":[12,12,12,14,14,14,14,12,12,12],"texture":[17],"propeller":false},"ring3":{"section_segments":9,"offset":{"x":20,"y":55,"z":5},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[0,0,-2,-2,-2,2,2,2,0,0],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[12,12,12,14,14,14,14,12,12,12],"height":[12,12,12,14,14,14,14,12,12,12],"texture":[17],"propeller":false},"ring4":{"section_segments":9,"offset":{"x":40,"y":45,"z":0},"position":{"x":[0,0,0,0,0,0,0,0,0,0],"y":[0,0,-2,-2,-2,2,2,2,0,0],"z":[0,0,0,0,0,0,0,0,0,0]},"width":[12,12,12,14,14,14,14,12,12,12],"height":[12,12,12,14,14,14,14,12,12,12],"texture":[4],"propeller":false},"cannons":{"section_segments":9,"offset":{"x":50,"y":50,"z":0.5},"position":{"x":[0,0,0,0,0,0,0,0,0,0,0,0,0],"y":[-80,-97,-95,-83,-80,-58,-45,-20,0,20,50,55,55],"z":[0,0,0,0,0,0,0,0,0,0,0,0,0]},"width":[0,5,6,6,5,5,8,10,10,13,10,8,0],"height":[0,5,6,6,5,5,8,10,10,10,10,8,0],"angle":1,"laser":{"damage":[5,9],"rate":4,"type":1,"speed":[140,170],"number":1,"angle":0,"error":0},"propeller":false,"texture":[17,4,10,13,4,3,4,3,4,63,3.9,18]}},"wings":{"main":{"offset":{"x":0,"y":60,"z":0},"length":[50,10,0,20],"width":[60,50,50,70,70],"texture":[4,63,4,4],"angle":[0,0,0,0],"position":[10,0,0,0,-20],"bump":{"position":20,"size":15}},"main2":{"offset":{"x":0,"y":62,"z":0},"length":[50,10,0,20],"width":[60,50,50,70,70],"texture":[3,18,3,3],"angle":[0,0,0,0],"position":[10,0,0,0,-30],"bump":{"position":20,"size":10}}},"typespec":{"name":"Lunatic","level":1,"model":1,"code":101,"specs":{"shield":{"capacity":[115,155],"reload":[3,5]},"generator":{"capacity":[50,80],"reload":[35,45]},"ship":{"mass":120,"speed":[110,135],"rotation":[90,95],"acceleration":[90,110]}},"shape":[2.07,1.95,1.693,1.404,1.209,1.069,1.579,1.634,1.545,1.405,1.326,1.278,1.841,1.854,1.899,1.978,2.099,2.271,2.511,2.532,2.615,2.765,2.669,2.52,2.571,2.535,2.571,2.52,2.669,2.765,2.615,2.532,2.511,2.271,2.099,1.978,1.899,1.854,1.841,1.278,1.326,1.405,1.545,1.634,1.579,1.069,1.209,1.404,1.693,1.95],"lasers":[{"x":1.111,"y":-1.081,"z":0.011,"angle":1,"damage":[5,9],"rate":4,"type":1,"speed":[140,170],"number":1,"spread":0,"error":0,"recoil":0},{"x":-1.111,"y":-1.081,"z":0.011,"angle":-1,"damage":[5,9],"rate":4,"type":1,"speed":[140,170],"number":1,"spread":0,"error":0,"recoil":0}],"radius":2.765,"next":[701,714]}}';
@@ -316,12 +336,12 @@ this.options = {
   ships: ships,
   reset_tree: true,
   starting_ship: 801,
-  map_size: map_size,
+  map_size: newSize,
   crystal_value: 0,
   asteroids_strength: 1.5,
   radar_zoom: 2,
   survival_level: 8,
-  custom_map: map,
+  custom_map: newMap,
   crystal_drop: 0,
   weapons_store: false
 };
@@ -333,7 +353,7 @@ var teams = game.custom.teams = {
   count: [0,0],
   ships: [[],[]],
   hues: [180,42],
-  x: [-400,400],
+  x: [-400/r,400/r],
   reassignments: [0,0],
   motherships: [0,0],
   motherships_health: [mothership_health, mothership_health],
@@ -567,7 +587,7 @@ var configMothership = function (i, isReAssign){
     options.x = i?120:-120;
     ship.set(options);
     if (isReAssign) teams.reassignments[i]++;
-    echoc(teams.names[i]+" Mothership have been "+(isReAssign?"re":"")+"assigned","#fecce5");
+    echoc(teams.names[i]+" Mothership has been "+(isReAssign?"re":"")+"assigned","#fecce5");
   }
 }
 
@@ -675,7 +695,7 @@ this.tick = function(game){
                 }
               }
             }
-            if (!suc) endgame(game, succ, "left the game", max_reassignments?"Noone's responsible for being mothership anymore":"Maximum mothership reassignments reached");
+            if (!suc) endgame(game, succ, "left the game", max_reassignments?"No one's responsible for being mothership anymore":"Maximum mothership reassignments reached");
             else {
               sendUI(game,  {
                 id: "reset",
@@ -691,7 +711,7 @@ this.tick = function(game){
               },280);
             }
           }
-          else endgame(game, succ, "has been killed", "It's not here anymore");
+          else endgame(game, succ, "has been killed", "Mothership is not here anymore");
         }
       }
     }
@@ -716,7 +736,7 @@ this.tick = function(game){
     for (let ship of game.ships){
       if (ship == null || ship.id == null || !ship.custom.init) continue;
       // check for barriers
-      if (Math.abs(ship.x)>742) if (isMothership(ship)) ship.set({shield:Math.max(ship.shield-1500, 0)});
+      if (Math.abs(ship.x)>742/r) if (isMothership(ship)) ship.set({shield:Math.max(ship.shield-1500, 0)});
       else ship.set({kill:true});
       if (ship.custom.spam){
         ship.emptyWeapons();
@@ -997,13 +1017,13 @@ var selectship = function (ship,open,close){
     let t2color = ["hsla(20, 60%, 35%, 1)","hsla(0, 0%, 70%, 1)","hsla(46, 100%, 55%, 1)","hsla(24, 100%, 50%, 1)","hsla(187, 100%, 45%, 1)","hsla(142, 100%, 40%, 1)","hsla(270, 100%, 70%, 1)"];
     if (open){
       for (let i=0; i<7; i++)
-      drawshipbutton(ship,10+i*10,70,t2names[i],t2color[i],true,""+(i+1),t2names[i],t2icons[i],"Solarium");
+      drawshipbutton(ship,10+i*10,70,shipSelectPrefix + t2names[i],t2color[i],true,""+(i+1),t2names[i],t2icons[i],"Solarium");
       drawbutton(ship,15.5,85,"close",bcl,def_clr,def_clr,true,"8","Close",5);
       drawbutton(ship,65.5,85,"nextpage",bcl,def_clr,def_clr,true,"9","Next page",5);
     }
     if (close){
       for (let i=0; i<7; i++)
-      drawshipbutton(ship,10+i*10,70,t2names[i],"",false,"","","","");
+      drawshipbutton(ship,10+i*10,70,shipSelectPrefix + t2names[i],"",false,"","","","");
       drawbutton(ship,15.5,85,"close",bcl,def_clr,def_clr,false,"8","Close",5);
       drawbutton(ship,65.5,85,"nextpage",bcl,def_clr,def_clr,false,"9","Next page",5);
     }
@@ -1015,10 +1035,10 @@ var getcolor = function (color,alpha = 1){
 }
 
 var transform = {
-  zoom: () => 10/map_size,
+  zoom: () => 10/newSize,
   scale: 1.5,
-  X: x => x+map_size*5,
-  Y: y => -y+map_size*5
+  X: x => x+newSize*5,
+  Y: y => -y+newSize*5
 };
 let t = num => Math.max(num,0) || 0;
 
@@ -1069,7 +1089,7 @@ var dist2points = function (x, y, z, t){
   return Math.sqrt((z-x)**2+(t-y)**2);
 }
 
-var ms = 150;
+var ms = newSize;
 var shortestPath = function (x1, y1, x2, y2, wrapV = true, wrapH = true){
   var shortestDist = 10000;
   var map_size = ms*5;
@@ -1213,8 +1233,13 @@ this.event = function(event,game) {
           selectship(ship,false,true);
           break;
         default:
+        console.log(component.name)
+        console.log(component)
           if (component.startsWith(shipSelectPrefix)) {
+            
             let newShipType = findShipCode(component.replace(shipSelectPrefix, ""));
+            console.log(component.replace(shipSelectPrefix, ""))
+            console.log(ship.type)
             if (newShipType != null && ship.type != newShipType) setType(ship, newShipType);
           }
         break;
@@ -1228,7 +1253,7 @@ this.event = function(event,game) {
       }
       if (ship != null){
         ship.deaths++;
-        ship.set({score:ship.score/2,collider:true});
+        ship.set({x:teams.x[ship.custom.team],score:ship.score/2,collider:true});
       }
       break;
     case "ship_spawned":
@@ -1250,7 +1275,7 @@ var M = {
 game.setObject({
   id: "M-1",
   type: M,
-  position: {x:-400,y:0,z:-50},
+  position: {x:-400/r,y:0,z:-50},
   scale: {x:15,y:15,z:15},
   rotation: {x:1.2,y:~~(Math.random()*10),z:90}
 });
@@ -1268,7 +1293,7 @@ var M2 = {
 game.setObject({
   id: "M-2",
   type: M2,
-  position: {x:400,y:0,z:-50},
+  position: {x:400/r,y:0,z:-50},
   scale: {x:15,y:15,z:15},
   rotation: {x:1.2,y:~~(Math.random()*10),z:90}
 });
@@ -1288,8 +1313,8 @@ var M3 = {
 game.setObject({
   id: "M-3",
   type: M3,
-  position: {x:170,y:140,z:-100},
-  scale: {x:15,y:15,z:15},
+  position: {x:170/r,y:140/r,z:-100},
+  scale: {x:15/r,y:15/r,z:15/r},
   rotation: {x:0.4,y:0,z:90}
 });
 
@@ -1307,8 +1332,8 @@ var M4 = {
 game.setObject({
   id: "M-4",
   type: M4,
-  position: {x:-180,y:-380,z:-100},
-  scale: {x:6,y:6,z:6},
+  position: {x:-180/r,y:-380/r,z:-100},
+  scale: {x:6/r,y:6/r,z:6/r},
   rotation: {x:0,y:Math.PI,z:Math.random()*Math.PI}
 });
 
@@ -1325,8 +1350,8 @@ var M5 = {
 game.setObject({
   id: "M-5",
   type: M5,
-  position: {x:-80,y:460,z:-100},
-  scale: {x:6,y:6,z:6},
+  position: {x:-80/r,y:460/r,z:-100},
+  scale: {x:6/r,y:6/r,z:6/r},
   rotation: {x:0,y:0,z:Math.random()*Math.PI*2}
 });
 
@@ -1337,18 +1362,18 @@ let barrier = {
   transparent: true
 };
 
-for (let i=0; i<35; i++){
+for (let i=0; i<35/r; i++){
   game.setObject({
     id: "barrier"+i,
     type: barrier,
-    position: {x:-738,y:i*43.05,z:0},
+    position: {x:-738/r,y:i*43.05,z:0},
     rotation: {x:Math.PI/2,y:Math.PI/2,z:0},
     scale: {x:25,y:20,z:4}
   });
   game.setObject({
     id: "barrier"+(i+36),
     type: barrier,
-    position: {x:738,y:i*43.05,z:0},
+    position: {x:738/r,y:i*43.05,z:0},
     rotation: {x:Math.PI/2,y:-Math.PI/2,z:0},
     scale: {x:25,y:20,z:4}
   });
