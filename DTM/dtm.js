@@ -218,15 +218,24 @@ var map =
 "9         9    9    6          6       6           9  9  6    66        6    6        66    6                 9       6    9     9                   9\n"+
 "9      6                         6                         66      6              6      66                         6                         6      9";
 
-var newSize = 90;
+var newSize = 90; 
 var rows = map.split('\n');
+var r = Math.floor(rows[0].length / newMapSize);
 var newMap = '';
-var r = rows.length / newSize;
+
+function replaceColumn(row, index){
+  return row.substring(0, index) + '9' + row.substring(index + 1);
+}
+
 for (let i = 0; i < rows.length; i += r){
-  let data = rows[Math.floor(i)].split('');
+  let data = rows[i];
   let newR = '';
-  for (let j = 0; j < data.length; j += r){
-      newR += data[Math.floor(j)];
+  for (let j = 0; j < data.length; j++){
+    if (j === 0 || j === data.length - 1){
+      newR += '9'; 
+    } else if (j % r === 0 && newR.length < newSize - 1){
+      newR += data[j];
+    }
   }
   if (newR.length > 0){
     newMap += newR + '\n';
