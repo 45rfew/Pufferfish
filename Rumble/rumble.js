@@ -21,7 +21,7 @@ var modifier = {
   round_ship_tier: "random", // choose from 3-7 or "random"
   gems_upon_spawning: 0, // removed
   laggy_objs: false,
-  friendly_fire: "random", // toggle friendly fire (ability to kill teammates), or "random" (4% true, 96% false)
+  friendly_fire: false, // toggle friendly fire (ability to kill teammates), or "random" (4% true, 96% false)
   max_troll_attempts: 3
 };
 
