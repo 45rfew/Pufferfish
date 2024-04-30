@@ -1745,7 +1745,6 @@ var setteam = function (ship){
   else t = teams.count.indexOf(Math.min(...teams.count));
   ship.custom.team = t;
   configship(ship, t);
-  echo(teams.count);
 }
 
 var configship = function (ship,t){
