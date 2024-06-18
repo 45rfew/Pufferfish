@@ -1222,27 +1222,12 @@ var outputScoreboard = function(game){
   }
 }
 
-let safeToString = function (val) {
-  // converts anything to string
-  try {
-    return String(val) || "";
-  }
-  catch (e) {
-    try {
-      return JSON.stringify(val) || "";
-    }
-    catch (e) {}
-  }
-
-  return "";
-}
-
 this.event = function(event,game) {
   var ship = event.ship;
   if (ship != null) switch (event.name){
     case "ui_component_clicked":
-      var component = safeToString(event.id);
-      if (!ship.alive || blockerUIs.has(component)) break;
+      var component = event.id;
+      if (!ship.alive || "string" != typeof component || blockerUIs.has(component)) break;
       if (isMothership(ship)) {
         if (component.startsWith("ability")) {
           mothershipability.abilityeffect(ship, component.replace('ability',''));

@@ -2074,7 +2074,8 @@ this.event = function(event, game){
       update = 1;
       break;
     case "ui_component_clicked":
-      let component = safeToString(event.id);
+      let component = event.id;
+      if ("string" != typeof component) break;
       if (ship.custom.buttons && !blockerUIs.has(component)) {
         switch (component){
           case "open": ship.custom.opened = true; break;
