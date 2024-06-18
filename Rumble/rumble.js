@@ -1999,6 +1999,21 @@ let maxShip = function (ship) {
   if (ship != null) ship.set({stats:1e8 - 1,shield:1e4,collider:true,generator: 1e5})
 }
 
+let safeToString = function (val) {
+  // converts anything to string
+  try {
+    return String(val) || "";
+  }
+  catch (e) {
+    try {
+      return JSON.stringify(val) || "";
+    }
+    catch (e) {}
+  }
+
+  return "";
+}
+
 this.event = function(event, game){
   let ship = event.ship;
   if (ship != null && ship.id != null) switch (event.name){
@@ -2059,7 +2074,7 @@ this.event = function(event, game){
       update = 1;
       break;
     case "ui_component_clicked":
-      let component = event.id;
+      let component = safeToString(event.id);
       if (ship.custom.buttons && !blockerUIs.has(component)) {
         switch (component){
           case "open": ship.custom.opened = true; break;

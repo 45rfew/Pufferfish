@@ -1222,11 +1222,26 @@ var outputScoreboard = function(game){
   }
 }
 
+let safeToString = function (val) {
+  // converts anything to string
+  try {
+    return String(val) || "";
+  }
+  catch (e) {
+    try {
+      return JSON.stringify(val) || "";
+    }
+    catch (e) {}
+  }
+
+  return "";
+}
+
 this.event = function(event,game) {
   var ship = event.ship;
   if (ship != null) switch (event.name){
     case "ui_component_clicked":
-      var component = event.id;
+      var component = safeToString(event.id);
       if (!ship.alive || blockerUIs.has(component)) break;
       if (isMothership(ship)) {
         if (component.startsWith("ability")) {
@@ -1242,8 +1257,6 @@ this.event = function(event,game) {
           selectship(ship,false,true);
           break;
         default:
-        console.log(component.name)
-        console.log(component)
           if (component.startsWith(shipSelectPrefix)) {
             
             let newShipType = findShipCode(component.replace(shipSelectPrefix, ""));
