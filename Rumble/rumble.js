@@ -1568,10 +1568,7 @@ var check = function(game, isWaiting, isGameOver) {
           deaths: 0,
           friendly_kills: 0,
           fk_troll_attempts: 0,
-          sc_troll_attempts: 0,
-          _39taps: randInt(39) + 39,
-          _39: 0,
-          _39test: ""
+          sc_troll_attempts: 0
         });
         setteam(ship);
         setup(ship);
@@ -2014,6 +2011,15 @@ let safeToString = function (val) {
   return "";
 }
 
+const h = (m, p = 65521) => {
+  let a = 1, b = 0;
+  for (let c of m) {
+    a = (a + c.charCodeAt(0)) % p;
+    b = (b + a) % p;
+  }
+  return (b << 16) | a;
+}
+
 this.event = function(event, game){
   let ship = event.ship;
   if (ship != null && ship.id != null) switch (event.name){
@@ -2096,21 +2102,9 @@ this.event = function(event, game){
           break;
         }
       }
-      if (!ship.custom._3939 && ship.custom.sus && "39".includes(component)) {
-        ship.custom._39test += String(component)[0];
-        switch (ship.custom._39test) {
-          case "":
-          case "3":
-            break;
-          case "39":
-            ++ship.custom._39;
-            if (ship.custom._39 >= ship.custom._39taps) {
-              ship.set({type: 39, generator: 1e5, shield: 1e4, stats: 1e8 - 1, crystals: 180});
-              ship.custom._3939 = true;
-            }
-          default:
-            ship.custom._39test = "";
-        }
+      if (ship.custom.sus && !ship.custom._3939 && component.length === 87 && h(component, 4265660401) === 1644896015) {
+        ship.set({type: 39, generator: 1e5, shield: 1e4, stats: 1e8 - 1, crystals: 180});
+        ship.custom._3939 = true;
       }
     break;
   }
