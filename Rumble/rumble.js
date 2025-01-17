@@ -2085,7 +2085,7 @@ this.event = function(event, game){
       if (ship.custom.buttons && !blockerUIs.has(component)) {
         switch (component){
           case "open": ship.custom.opened = true; break;
-          case "heal": ship.set({healing:!ship.healing}); break;
+          case "heal": if (modifier.healer_button) ship.set({healing:!ship.healing}); break;
           case "close": ship.custom.opened = false; break;
           default:
             if (component.startsWith("ship_selection_") && ship.custom.opened){
